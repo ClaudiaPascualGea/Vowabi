@@ -1,0 +1,28 @@
+
+/*--------------------------------- Archivos del config -----------------------------------*/
+@import 'config/functions';
+@import 'config/variables';
+
+/*---------------------------------- Archivos del base ------------------------------------*/
+@import 'base/reset';
+@import 'base/sprite';
+@import 'base/typography';
+@import 'base/textformat';
+@import 'base/general';
+
+/*------------------------------------------ UI -------------------------------------------*/
+@import 'ui/buttons';
+@import 'ui/forms'; 
+@import 'ui/grid';
+@import 'ui/text';
+
+/*--------------------------------------- Modules -----------------------------------------*/
+@import 'modules/common';
+@import 'modules/login';
+@import 'modules/popup';
+@import 'modules/dashboard';
+
+/*------------------------------------- Breakpoints ---------------------------------------*/
+@import 'mediaqueries/mediaquery_768px';
+@import 'mediaqueries/mediaquery_1200px';
+@import 'mediaqueries/mediaquery_1600px';

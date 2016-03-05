@@ -1,0 +1,64 @@
+body{
+	max-width: 100%;
+	width: 100%;
+}
+
+body.fixed{
+	overflow: hidden;
+}
+
+.flash{
+	opacity: 0;
+	@include trs(opacity 0.2s ease-in-out);
+}
+
+.tooltip{
+	height: 0;
+    overflow: hidden;
+    @include trs(height 0.3s ease-in-out);
+}
+
+.button1{
+	background-color: transparent;
+	border: 1px solid $blanco;
+	color: $blanco;
+	text-transform: uppercase;
+	padding: 10px;
+	@include trs(color 0.3s ease-in-out, background-color 0.3s ease-in-out);
+
+	&:hover{
+		background-color: $blanco;
+		color: $blue1;
+	}
+}
+
+.userBar{
+	display: block;
+	width: 100%;
+	background-color: $blue1;
+	color: $blanco;
+	padding: 15px;
+	@include flexbox();
+	@include flex-align(center);
+	@include flex-justify(space-between);
+
+	img{
+		width: 50px;
+		vertical-align: middle;
+	}
+
+	.userName{
+		margin-left: 10px;
+		vertical-align: middle;
+	}
+
+	.logout{
+		margin-left: 10px;
+	}
+
+	button{
+		span{
+			display: none;
+		}
+	}
+}

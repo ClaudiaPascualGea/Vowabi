@@ -1,0 +1,214 @@
+{
+  "name": "",
+  "css_prefix_text": "icon-",
+  "css_use_suffix": false,
+  "hinting": true,
+  "units_per_em": 1000,
+  "ascent": 850,
+  "glyphs": [
+    {
+      "uid": "ccddff8e8670dcd130e3cb55fdfc2fd0",
+      "css": "down-open-1",
+      "code": 59409,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "a73c5deb486c8d66249811642e5d719a",
+      "css": "arrows-cw",
+      "code": 59423,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "4a413ef43c364dafa42766e74c31bbca",
+      "css": "cc",
+      "code": 59419,
+      "src": "entypo"
+    },
+    {
+      "uid": "72681d2825fef7fd83711278f845547b",
+      "css": "cc-by",
+      "code": 59410,
+      "src": "entypo"
+    },
+    {
+      "uid": "2d741e29010c6afbfc3784251fbf4e8b",
+      "css": "cc-nc-eu",
+      "code": 59406,
+      "src": "entypo"
+    },
+    {
+      "uid": "b92e2a918daa2f9a042df1ce942b686f",
+      "css": "cc-nd",
+      "code": 59420,
+      "src": "entypo"
+    },
+    {
+      "uid": "bcdc294bb787b15203b82f2be8096548",
+      "css": "star",
+      "code": 59393,
+      "src": "typicons"
+    },
+    {
+      "uid": "vyuzsm6wijlfwtjo4ifkoblfmsepk6g8",
+      "css": "star-filled",
+      "code": 59394,
+      "src": "typicons"
+    },
+    {
+      "uid": "bczb7qup4axmc490xmuuv8qdhcnbgeyf",
+      "css": "user",
+      "code": 59396,
+      "src": "typicons"
+    },
+    {
+      "uid": "x8m4z7b33cv1h2s784tjlam56uq40wtd",
+      "css": "users",
+      "code": 59395,
+      "src": "typicons"
+    },
+    {
+      "uid": "076f940ac56adee91dd43d6fd77dd0cf",
+      "css": "user-add",
+      "code": 59404,
+      "src": "typicons"
+    },
+    {
+      "uid": "aklhk54yg779pgovdsjr9r9w22hej00n",
+      "css": "camera",
+      "code": 59392,
+      "src": "typicons"
+    },
+    {
+      "uid": "1gf923f9wvaezxmfon515dglxa3drf0e",
+      "css": "plus",
+      "code": 59397,
+      "src": "typicons"
+    },
+    {
+      "uid": "85fda3129wk4amvn25wrq843sbj3yzl0",
+      "css": "info",
+      "code": 59421,
+      "src": "typicons"
+    },
+    {
+      "uid": "w3nzesrlbezu6f30q7ytyq919p6gdlb6",
+      "css": "home",
+      "code": 59398,
+      "src": "typicons"
+    },
+    {
+      "uid": "86157b2f942e37940f8702a4a3221a2b",
+      "css": "download-outline",
+      "code": 59399,
+      "src": "typicons"
+    },
+    {
+      "uid": "gjt8ba5q0n3nn8ptw6324sflr8qoaeam",
+      "css": "location",
+      "code": 59403,
+      "src": "typicons"
+    },
+    {
+      "uid": "wlri7uftq4zbi82q2xuf08ayd8kpijlk",
+      "css": "left-open",
+      "code": 59401,
+      "src": "typicons"
+    },
+    {
+      "uid": "6zhrgcf3co77hnljttd3b2mrc8z5fiq5",
+      "css": "right-open",
+      "code": 59400,
+      "src": "typicons"
+    },
+    {
+      "uid": "c2e02247804b8372740de0b76311f1ad",
+      "css": "beer",
+      "code": 59402,
+      "src": "typicons"
+    },
+    {
+      "uid": "8bf56386082752a2acc88a1ddf6851a8",
+      "css": "at",
+      "code": 59408,
+      "src": "typicons"
+    },
+    {
+      "uid": "5006b0f71f1a3cd3c73c04f7664cc20f",
+      "css": "flickr",
+      "code": 59407,
+      "src": "typicons"
+    },
+    {
+      "uid": "a6b6f85116fc55e4a7c83d66973035a7",
+      "css": "logout",
+      "code": 59422,
+      "src": "mfglabs"
+    },
+    {
+      "uid": "8045477f6a7ef0bd7caff130ad25b88d",
+      "css": "facebook-rect",
+      "code": 59412,
+      "src": "brandico"
+    },
+    {
+      "uid": "4c01f5d3ba5fbf029bca8630cce41e6a",
+      "css": "twitter-bird",
+      "code": 59411,
+      "src": "brandico"
+    },
+    {
+      "uid": "31483d870b3f14ac12bdfe7331a6af99",
+      "css": "vimeo-rect",
+      "code": 59413,
+      "src": "brandico"
+    },
+    {
+      "uid": "626fb97a7c0c0db53a1853fb9e96e223",
+      "css": "googleplus-rect",
+      "code": 59414,
+      "src": "brandico"
+    },
+    {
+      "uid": "5a00c877da3f63d37cdc021815e3f5a9",
+      "css": "skype-1",
+      "code": 59415,
+      "src": "brandico"
+    },
+    {
+      "uid": "a38dfae0ec2d11e1aff10800200c9a66",
+      "css": "blogger-rect",
+      "code": 59416,
+      "src": "brandico"
+    },
+    {
+      "uid": "cc20f2a7fa05a475130c406740bbbd26",
+      "css": "instagram-filled",
+      "code": 59417,
+      "src": "brandico"
+    },
+    {
+      "uid": "d52050c0a36711e29e960800200c9a66",
+      "css": "box-rect",
+      "code": 59418,
+      "src": "brandico"
+    },
+    {
+      "uid": "62b0580ee8edc3a3edfbf68a47c852d5",
+      "css": "pencil",
+      "code": 59425,
+      "src": "elusive"
+    },
+    {
+      "uid": "3ab2abf6f936d3e53ee8c184cedaed82",
+      "css": "trash",
+      "code": 59424,
+      "src": "elusive"
+    },
+    {
+      "uid": "69f76f7134f721d16c28ab23f84d4882",
+      "css": "location-1",
+      "code": 59405,
+      "src": "websymbols"
+    }
+  ]
+}

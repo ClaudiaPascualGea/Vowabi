@@ -1,0 +1,37 @@
+/* BUTTONS 
+----------------------------------------------------*/
+/* RESET */
+input[type="text"], input[type="email"], input[type="tel"],
+input[type="password"], input[type="checkbox"], input[type="number"],
+input[type="submit"], input[type="button"],
+select, button {
+	@include appearance(none);
+	border: 0;
+	outline: 0;
+	@include bdrs(0);
+	-webkit-font-smoothing: antialiased;
+}
+
+
+
+.ui-button-1 {
+	
+}
+
+.ui-button-2 {
+	
+}
+
+.ui-button-3 {
+	
+}
+
+.ui-button-4 {
+
+}
+
+.ui-button-5 {
+	
+}
+
+

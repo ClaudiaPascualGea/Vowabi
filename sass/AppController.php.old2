@@ -1,0 +1,1509 @@
+<?php
+
+class AppController extends Controller
+{
+	protected function beforeAction($action)
+	{
+		/*foreach (Yii::app()->log->routes as $route)
+		{
+			if ($route instanceof CWebLogRoute)
+			{
+				$route->enabled = false;
+			}
+		}
+		return true;*/
+            return true;
+	}
+	
+	public function filterCheckUser($filterChain)
+	{
+			$filterChain -> run(); 
+	}
+	///////////////////////////////////// ENVIO DE DATOS A LA APP ///////////////////////////////////// 	
+	/************** LOGIN ******************/
+	
+	public function actionPrueba_postman()
+	{
+            $formulario = json_decode($_POST["lote"], TRUE);
+            die(F::pre($formulario));
+        }
+        
+	public function actionComprueba_user()
+	{
+	
+		$formulario = json_decode($_POST["data"], TRUE);
+	
+		try {
+			$passwMd5 = $formulario["password"];
+                        
+			$usuario = UsuarioWeb::model()->findByAttributes(array("Email" => $formulario["usuario"], "Hash"=>$passwMd5));
+	
+			if (sizeof($usuario)== 0){
+				echo CJSON::encode(array('result'=>'KO','error'=>'120', 'errorTexto'=>'Error de Usuario o contrase&ntilde;a'));
+			} else {
+				$DataReturn = array(); // array de return
+				$idUsuario = $usuario->idNTC_UsuarioWeb;
+				$DataReturn["idUsuario"] = $idUsuario;
+				$almacenes = Almacen::model()->findAllByAttributes(array("fkNTC_UsuarioWeb" => $idUsuario));
+				foreach ($almacenes as $almacen){
+					$almaUser = array();
+					$almaUser["idAlmacen"] = $almacen->idNTC_Almacen;
+					$almaUser["NombreAlmacen"] = $almacen->Nombre;
+					$DataReturn["almacenes"][] = $almaUser;
+				}
+				echo CJSON::encode(array('result'=>'OK', 'error' => '000', 'errorTexto'=>'', 'data' => $DataReturn));
+	
+				return true;
+			}
+		} catch (Exception $e) {
+			echo CJSON::encode(array('result'=>'KO', 'error'=>'110', 'errorTexto'=>'Problema al comprobar el usuario', 'data' => ''));
+		}
+	
+	
+		return true;
+	
+	} // end actionComprueba_user
+	
+	/************ SERVICIOS *****************/
+        
+	
+	public function actionDame_imagenes_lote()
+	{
+
+		$formulario = json_decode($_POST["data"], TRUE);
+		try{
+			$lote = $formulario["idLote"];
+                        // realacionar con articulos
+                        $artisc = LoteArticulo::model()->findByAttributes(array("fkNTC_Lote" => $lote, "Quitar" => 0));
+                        if (sizeof($artisc)>0){
+                            // sacar las imagenes del articulo
+                            $imagenes = Fichero::model()->findAllByAttributes(array("fkNTC_Articulo" => $artisc->fkNTC_Articulo, "Quitar" => 0));
+
+                            foreach($imagenes as $imagen){
+                                $DataReturn[] = $imagen->Fichero;
+                            }
+                        } 
+                        echo CJSON::encode(array('result'=>'OK', 'error' => '000', 'errorTexto'=>'', 'data' => $DataReturn));
+			
+                        return true;
+		} catch (Exception $e) {
+			echo CJSON::encode(array('result'=>'KO', 'error'=>'110', 'errorTexto'=>'Problema al recuperar las imagenes', 'data' => ''));
+		}
+        }
+        
+	public function actionDame_marca()
+	{
+		$obejtoArr = array();
+		$campoID = "idNTC_Marca";
+		$campoNombre = "Nombre";
+		
+		try{
+			$objeto = Marca::model()->findAll();
+			if (sizeof($objeto)>0){
+				$i = 0;
+				foreach ($objeto as $objetoApp){
+					$DataReturn[$i][0] = $objetoApp->$campoID;
+					if (is_null($objetoApp->$campoNombre)){
+						$DataReturn[$i][1] = "";
+					} else {
+						$DataReturn[$i][1] = $objetoApp->$campoNombre;
+					}
+					
+					$i++;
+				}
+				echo CJSON::encode(array('result'=>'OK', 'error' => '000', 'errorTexto'=>'', 'data' => $DataReturn));
+			} else {
+				echo CJSON::encode(array('result'=>'KO', 'error'=>'620', 'errorTexto'=>'No hay datos', 'data' => ''));
+			}
+		} catch (Exception $e) {
+			echo CJSON::encode(array('result'=>'KO', 'error'=>'610', 'errorTexto'=>'Problema al buscar las marcas', 'data' => ''));
+		} // end try
+		return true;
+		
+	} // end actionMeter_art_cesta
+	
+	public function actionDame_tipo_zapato()
+	{
+		$DataReturn = array();
+		$campoID = "idNTC_Categoria";
+		$campoNombre = "Nombre";
+		try{
+			$criteria = new CDbCriteria();
+			$criteria->addCondition("idNTC_Categoria NOT IN (24, 25, 26)");
+			$criteria->addCondition("fkNTC_padre IS NOT NULL");
+			$criteria->addCondition("fkNTC_padre != 37");
+			$objeto = Categoria::model()->findAllByAttributes(array(), $criteria);
+			if (sizeof($objeto)>0){
+				$i = 0;
+				foreach ($objeto as $objetoApp){
+					$DataReturn[$i][0] = $objetoApp->$campoID;
+					if (is_null($objetoApp->$campoNombre)){
+						$DataReturn[$i][1] = "";
+					} else {
+						$DataReturn[$i][1] = $objetoApp->$campoNombre;
+					}
+					$i++;
+				}
+				echo CJSON::encode(array('result'=>'OK', 'error' => '000', 'errorTexto'=>'', 'data' => $DataReturn));
+			} else {
+				echo CJSON::encode(array('result'=>'KO', 'error'=>'520', 'errorTexto'=>'No hay datos', 'data' => ''));
+			}
+		} catch (Exception $e) {
+			echo CJSON::encode(array('result'=>'KO', 'error'=>'510', 'errorTexto'=>'Problema al buscar las tallas', 'data' => ''));
+		} // end try
+		return true;
+	
+	} // end actionMeter_art_cesta
+	
+	public function actionDame_tallas()
+	{
+		$DataReturn = array();
+		$campoID = "idNTC_OpcionAtributo";
+		$campoNombre = "Opcion";
+		try{
+			$objeto = OpcionAtributo::model()->findAllByAttributes(array('fkNTC_Atributo' => '4'));
+			if (sizeof($objeto)>0){
+				$i = 0;
+				foreach ($objeto as $objetoApp){
+					$DataReturn[$i][0] = $objetoApp->$campoID;
+					$arrTallas = explode(" ", $objetoApp->$campoNombre);
+					$DataReturn[$i][1] = $arrTallas[0]." - ".$arrTallas[2];
+					$i++;
+				}
+				
+				echo CJSON::encode(array('result'=>'OK', 'error' => '000', 'errorTexto'=>'', 'data' => $DataReturn));
+			} else {
+				echo CJSON::encode(array('result'=>'KO', 'error'=>'520', 'errorTexto'=>'No hay datos', 'data' => ''));
+			}
+		} catch (Exception $e) {
+			echo CJSON::encode(array('result'=>'KO', 'error'=>'510', 'errorTexto'=>'Problema al buscar las tallas', 'data' => ''));
+		} // end try
+
+		return true;
+	
+	} // end actionDame_tallas
+	
+	public function actionDame_genero()
+	{
+		$DataReturn = array();
+		$campoID = "idNTC_Categoria";
+		$campoNombre = "Titulo";
+		try{
+			$criteria = new CDbCriteria();
+			$criteria->addCondition("fkNTC_padre = 37");
+			$criteria->addCondition("fkNTC_padre IS NOT NULL");
+			$objeto = Categoria::model()->findAllByAttributes(array(), $criteria);
+			if (sizeof($objeto)>0){
+				$i = 0;
+				foreach ($objeto as $objetoApp){
+					$DataReturn[$i][0] = $objetoApp->$campoID;
+					if (is_null($objetoApp->$campoNombre)){
+						$DataReturn[$i][1] = "";
+					} else {
+						$DataReturn[$i][1] = $objetoApp->$campoNombre;
+					}
+					$i++;
+				}
+				echo CJSON::encode(array('result'=>'OK', 'error' => '000', 'errorTexto'=>'', 'data' => $DataReturn));
+			} else {
+				echo CJSON::encode(array('result'=>'KO', 'error'=>'520', 'errorTexto'=>'No hay datos', 'data' => ''));
+			}
+		} catch (Exception $e) {
+			echo CJSON::encode(array('result'=>'KO', 'error'=>'510', 'errorTexto'=>'Problema al buscar las tallas', 'data' => ''));
+		} // end try
+		return true;
+		
+	} // end actionDame_tallas
+	
+	
+	public function actionDame_almacenes()
+	{
+		$DataReturn = array();
+		
+		$formulario = json_decode($_POST["data"], TRUE);
+		try{
+			$campoID = "idNTC_Almacen";
+			$campoNombre = "Nombre";
+			if ($formulario["idUsuario"] != ""){
+				$objeto = Almacen::model()->findAllByAttributes(array("fkNTC_UsuarioWeb" => $formulario["idUsuario"]));
+			} else {
+				$objeto = Almacen::model()->findAll();
+			}
+			
+			$i = 0;
+			foreach ($objeto as $objetoApp){
+				$DataReturn[$i][0] = $objetoApp->$campoID;
+				if (is_null($objetoApp->$campoNombre)){
+					$DataReturn[$i][1] = "";
+				} else {
+					$DataReturn[$i][1] = $objetoApp->$campoNombre;
+				}
+				$i++;
+			}
+			echo CJSON::encode(array('result'=>'OK', 'error' => '000', 'errorTexto'=>'', 'data' => $DataReturn));
+		} catch (Exception $e) {
+			echo CJSON::encode(array('result'=>'KO', 'error'=>'210', 'errorTexto'=>'Problema al buscar los Almacenes', 'data' => ''));
+		} // end try
+		return true;
+	} // end actionDame_almacenes
+	
+	public function actionDame_lotes_almacen()
+	{
+	
+		$formulario = json_decode($_POST["data"], TRUE);
+		try{
+			$idAlmacen =$formulario["idAlmacen"];
+			$referencia = NULL;
+			if ($formulario["referencia"] != ""){
+				$referencia = $formulario["referencia"];
+			}
+			$DataReturn = Lote::model()->obtenerIdsTodosLotes($idAlmacen, NULL, $referencia);
+			if (sizeof($DataReturn)>0){
+				echo CJSON::encode(array('result'=>'OK', 'error' => '000', 'errorTexto'=>'', 'data' => $DataReturn));
+			} else {
+				echo CJSON::encode(array('result'=>'KO', 'error'=>'320', 'errorTexto'=>'No existen datos con ese filtro', 'data' => ''));
+			}
+				
+			return true;
+		} catch (Exception $e) {
+			echo CJSON::encode(array('result'=>'KO', 'error'=>'310', 'errorTexto'=>'Problema al buscar los Lotes del Almacen', 'data' => ''));
+		} // end try
+			
+	} // end actionDame_lotes_almacen
+	
+	public function actionDame_detalle_lote($idlote=null)
+	{
+	
+		$formulario = json_decode($_POST["data"], TRUE);
+		try{
+                        $lote = $formulario["idLote"];
+                        if($idlote!==null)
+                            $lote = $idlote;
+                        
+			// cargamos modelos y asignamos a variables fijas
+			$lotart = LoteArticulo::model()->findByAttributes(array("fkNTC_Lote" => $lote));
+			$articulo = $lotart->fkNTC_Articulo;
+			$lot = Lote::model()->findByAttributes(array("idNTC_Lote" => $lote));
+			$art = Articulo::model()->findByAttributes(array("idNTC_Articulo" => $articulo));
+			$categorias = Lote::model()->tipoLote($lote);
+			$precio_desc = DescuentoVenta::model()->findByAttributes(array("fkNTC_Articulo" => $articulo,"Quitar"=>0), array('order'=>'idNTC_DescuentoVenta DESC','limit'=>1));
+			$precio_act = TarifaVenta::model()->findByAttributes(array("fkNTC_Articulo" => $articulo,"Quitar"=>0), array('order'=>'idNTC_TarifaVenta DESC','limit'=>1));
+			$mater = ValorAtributo::model()->findAllByAttributes(array("fkNTC_Articulo" => $articulo, "fkNTC_Atributo" => 5));
+			$tamanyo = ValorAtributo::model()->findAllByAttributes(array("fkNTC_Articulo" => $articulo, "fkNTC_Atributo" => 6));
+			$colors = Lote::model()->colores($lote);
+			$genre = Lote::model()->genero($lote);
+			
+			// ARRAY DE DATOS
+			// componemos el array
+			$DataReturn["num_colors"] = sizeof($colors); 
+			$DataReturn["stock"] = $lot->Stock;
+			$DataReturn["marca"] = $art->fkNTC_Marca;
+			// TIPOS ZAPATOS
+			$DataReturn["tipo_art"] = $categorias[0]["Titulo"];
+			// PRECIO Y PRECIO ANTERIOR
+			if(sizeof($precio_desc)>0){
+				$DataReturn["precio_anterior"] = $precio_desc->ImporteDescuento;
+				$DataReturn["precio_actual"] = $precio_act->PrecioVenta;
+			} else {
+				$DataReturn["precio_actual"] = $precio_act->PrecioVenta;;
+				$DataReturn["precio_anterior"] = 0;
+			}
+			$DataReturn["precio_coste"] = $precio_act->PrecioCoste;
+			
+			$DataReturn["referencia"] = substr($art->Referencia, 0, -(strlen($art->ReferenciaColor)));
+                        $DataReturn["ref_color"] = $art->ReferenciaColor;
+			$DataReturn["referencia_interna"] = $art->ReferenciaProveedor;
+			$DataReturn["nombre_lote"] = $lot->Nombre;
+			
+			// GENERO
+			for ($c=0; $c<sizeof($genre); $c++){
+				$DataReturn["genero"][] = $genre[$c]["fkNTC_Categoria"];
+			}
+			
+			$DataReturn["surtido_libre"] = $lot->surtido_libre;
+			$DataReturn["almacen"] = $art->fkNTC_Almacen;
+			
+			// MATERIALES
+			$cosa = CJSON::decode($mater[0]->Valor, TRUE);
+			$empeine = explode(",", $cosa["Empeine"]);
+			$forro = explode(",", $cosa["Forro"]);
+			$suela = explode(",", $cosa["Suela"]);
+			$DataReturn["material"]["empeine_1"]=$empeine[0];
+			$DataReturn["material"]["empeine_2"]=$empeine[1];
+			$DataReturn["material"]["forro_1"]=$forro[0];
+			$DataReturn["material"]["forro_2"]=$forro[1];
+			$DataReturn["material"]["suela_1"]=$suela[0];
+			$DataReturn["material"]["suela_2"]=$suela[1];
+			
+			// DIMENSIONES
+			$coso = CJSON::decode($tamanyo[0]->Valor, TRUE);
+			$alto = explode(",", $coso["Alto"]);
+			$ancho = explode(",", $coso["Ancho"]);
+			$profundo = explode(",", $coso["Profundidad"]);
+			$DataReturn["dimensiones"]["alto"]=$alto[0];
+			$DataReturn["dimensiones"]["ancho"]=$ancho[0];
+			$DataReturn["dimensiones"]["profundo"]=$profundo[0];
+			
+			// TALLAS POR COLORES
+			$t = 0;
+                        $colorrs = $colors;
+			foreach($colors as $coli){
+				$DataReturn["pares"][$t]["color"]= $coli;
+				// Buscamos las tallas del lote por color
+				$tallasLot = Lote::model()->tallasDetalle($lote, $coli);
+				for($p=0; $p<sizeof($tallasLot); $p++){
+					$DataReturn["pares"][$t]["tallas"][$tallasLot[$p]["talla"]] = $tallasLot[$p]["Cantidad"];
+				}
+				$t++; 
+			}
+			
+			// COLORES
+			foreach($colorrs as $colo){
+				$DataReturn["colores"][] = $colo;
+			}
+						
+			// TIPOS ZAPATOS
+			$categorias = Lote::model()->categorias($lote);
+			foreach ($categorias as $cats => $cate){
+				$DataReturn["tipos_zapatos"][] = $cate["idNTC_Categoria"];
+			}
+			
+			
+			/*
+			 * echo "<pre>".print_r($DataReturn["pares"], 1)."</pre>";
+			$DataLote = Lote::model()->obtenerTodosArticulosDeUnLote($lote);
+			$DataReturn["num_colors"]=1;
+			[tipo_art] => Calzado
+			
+			[tallas] => 0
+			*/
+			if (sizeof($DataReturn)>0){
+				echo CJSON::encode(array('result'=>'OK', 'error' => '000', 'errorTexto'=>'', 'data' => $DataReturn));
+			} else {
+				echo CJSON::encode(array('result'=>'KO', 'error'=>'320', 'errorTexto'=>'No existen datos con ese filtro', 'data' => ''));
+			}
+		} catch (Exception $e) {
+			echo CJSON::encode(array('result'=>'KO', 'error'=>'310', 'errorTexto'=>'Problema al recuperar el Lote', 'data' => ''));
+		} // end try
+	
+		return true;
+	} // end actionDame_detalle_lote
+	
+	
+	public function actionBaja_lote()
+	{
+	
+		$formulario = json_decode($_POST["data"], TRUE);
+		try{
+			$lote = $formulario["idLote"];
+	
+			$DataReturn = Lote::model()->findByAttributes(array("idNTC_Lote" => $lote));
+			if (sizeof($DataReturn)>0){
+				$DataReturn->Quitar = 1;
+				$DataReturn->save();
+				echo CJSON::encode(array('result'=>'OK', 'error' => '000', 'errorTexto'=>'', 'data' => ''));
+			} else {
+				echo CJSON::encode(array('result'=>'KO', 'error'=>'320', 'errorTexto'=>'No existen datos con ese filtro', 'data' => ''));
+			}
+		} catch (Exception $e) {
+			echo CJSON::encode(array('result'=>'KO', 'error'=>'310', 'errorTexto'=>'Problema al recuperar el Lote', 'data' => ''));
+		} // end try
+	
+		return true;
+	} // end actionBaja_lote
+	/*
+	public function actionFormulario()
+	{
+	
+		$controler = "baja_lote";
+		$formulario = array(
+				"idLote" => "2"
+		);
+	
+	
+	
+		echo '
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="es"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="es"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="es"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="es">
+<!--<![endif]-->
+<head>
+	<!-- Posicionamiento Basico
+  ================================================== -->
+	<meta charset="utf-8">
+	<title>Pol&iacute;gono El Carr&uacute;s</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+	
+</head>
+<body>
+				';
+	
+	
+		echo "<form method='post' action='". Yii::app()->request->baseUrl.'/app/'.$controler .  "' enctype=\"multipart/form-data\">".
+				$controler."<br />".
+				"<input type='hidden' name='data' value='".json_encode($formulario) ."'/>".
+				"<input type=\"submit\" value=\"Enviar\" />".
+				"</form>";
+	
+		echo '</body></html>';
+	
+	
+	
+		return true;
+	
+	} // end actionMeter_art_cesta
+	*/
+	///////////////////////////////////// RECEPCION DE DATOS DE LA APP /////////////////////////////////////
+	
+	/*********** ARTICULOS ***********/
+	
+	public function actionIntra()
+	{
+		$formulario = array();
+		$this->renderPartial("intra", array("formulario" => $formulario));
+	}
+	
+	
+	public function actionInsertar_articulo($json=null)
+	{
+		$log = new Log();
+		try{
+			$log->Descripcion = print_r($_POST,1);
+                        $log->Files = print_r($_FILES,1);
+
+			if( $log->validate() ){
+				$log->save();
+			}
+		} catch (Exception $ex) {
+			$log->Descripcion = $ex->getMessage();
+			$log->save();
+		}
+                
+		$transaction=Yii::app()->db->beginTransaction();
+		$actionL = "";
+		try {
+			$formulario = json_decode($_POST["lote"], TRUE);
+                        if( $json!==null){
+                            $formulario = json_decode($json, TRUE);
+                            $formulario = $formulario['data'];
+                            $refAux = $formulario["referencia_interna"];
+                            $formulario["referencia_interna"] = $formulario["referencia"];
+                            $formulario["referencia"] = $refAux;
+                        }
+                        
+			//echo "<pre>".print_r($formulario, 1)."</pre>";
+			// reconstruimos el array
+			$tallas_selects = array();
+			$tallas_selects_canti = array();
+			for ($i=0; $i<$formulario["num_colors"]; $i++){
+				//$coso = $formulario["pares"][$i];
+				$coso = $formulario["pares"][$i];
+				$color_zap = $coso["color"];
+				// echo "<pre>".print_r($coso["tallas"], 1)."</pre>";
+				foreach($coso["tallas"] as $col_za => $valor){
+					$pares[$color_zap][$col_za] = $valor;
+				}
+				
+	
+				$ini_tallas = $formulario["pares"][$i]["tallas"];
+				
+				foreach($ini_tallas as $talla => $canti){
+					//echo $talla.": ".$canti." <br />";
+					$encont = false;
+					for ($z=0; $z<sizeof($tallas_selects); $z++){
+						if ($tallas_selects[$z] == $talla){
+							$encont = true;
+						}
+					}
+					if (!$encont){ $tallas_selects[] = $talla; }
+				
+				}
+				$e=0;
+				foreach ($formulario["colores"] as $color){
+					// me genero el array color talla = cantidad
+					foreach($ini_tallas = $formulario["pares"][$e]["tallas"] as $talla => $canti){
+						$tallas_selects_canti[$color][$talla] = $canti;
+					}
+					$e++;
+				}
+			
+			}
+			// Obtenemos mediante sizeof() la cantidad de elementos del array
+			// y almacenamos ese valor en la variable $n
+			$n=sizeof($tallas_selects);
+			
+			// La variable $aux cumple la funcion de auxiliar para almacenar
+			// los valores intercambiados una vez que son comparados
+			
+			for($i=1;$i<$n;$i++){
+				for($j=0;$j<($n-$i);$j++){
+					if(($tallas_selects[$j])>($tallas_selects[$j+1])){
+						$aux=$tallas_selects[$j];
+						$tallas_selects[$j]=$tallas_selects[$j+1];
+						$tallas_selects[$j+1]=$aux;
+					}
+				}
+			}
+			
+			
+			//Yii::app()->end();
+			// comprobamos si el lote es nuevo o es una modificacion
+			if (!isset($formulario["lote"])){
+				$loteN = new Lote();
+				$actionL = "nuevo";
+			} else {
+				$loteN = Lote::model()->findByPk($formulario["lote"]);
+				$loteN->Quitar = 0;
+				$loteN->save();				
+			}
+
+			// asociamos los datos del formulario al lote
+			$loteN->Quitar = 0;
+			$loteN->Stock = $formulario["stock"];
+			$loteN->Nombre = $formulario["nombre_lote"];
+			$loteN->surtido_libre = $formulario["surtido_libre"];
+				// fechas
+			$fechaHoy = date('Y-m-d');
+			$fechaHasta = date("Y-m-d", strtotime("$fechaHoy +20 days"));
+			$loteN->Nuevo_DesdeFecha = $fechaHoy;
+			$loteN->Nuevo_HastaFecha = $fechaHasta;
+			if (!$loteN->save()){
+				//echo "<pre>".print_r($loteN->getErrors())."</pre>";
+				throw new Exception("No se ha podido insertar el Lote: ".print_r($loteN->getErrors(),1));
+			}
+                        $tarifaDescN = $tarifaVenN = NULL;
+			if ($actionL == "nuevo"){
+				$articuloN = new Articulo();
+            			$tarifaVenN = new TarifaVenta();
+				$tarifaDescN = new DescuentoVenta();
+			} else {
+				$articuloAux = LoteArticulo::model()->findByAttributes(array("fkNTC_Lote" => $formulario["lote"]));
+				$articuloN = Articulo::model()->findByPk($articuloAux->Articulo->idNTC_Articulo);
+                                $tarifaVenN = TarifaVenta::model()->findByAttributes(array("fkNTC_Articulo" => $articuloN->idNTC_Articulo));
+                                $tarifaDescN = DescuentoVenta::model()->findByAttributes(array("fkNTC_Articulo" => $articuloN->idNTC_Articulo));
+			}
+
+				$articuloN->fkNTC_TipoArticulo = 1;
+				$articuloN->ReferenciaColor = $formulario["ref_color"];
+				if ($formulario["referencia"] == ""){
+					$articuloN->ReferenciaProveedor = date("Ymd").$loteN->idNTC_Lote;
+				} else {
+					$articuloN->ReferenciaProveedor = $formulario["referencia"];
+				}
+				$articuloN->Referencia = $formulario["referencia_interna"].$formulario["ref_color"];
+				$articuloN->Nombre = InflectorHelper::underscore($formulario["nombre_lote"]);
+				$articuloN->Descripcion = $formulario["nombre_lote"];
+				$articuloN->DescripcionCorta = $formulario["nombre_lote"];
+				$articuloN->Nuevo_DesdeFecha = $fechaHoy;
+				$articuloN->Nuevo_HastaFecha = $fechaHasta;
+				$articuloN->Habilitado = 1;
+				$articuloN->HabilitadoProfesionales = 1;
+				if ($formulario["tipo_art"] == "Calzado" || $formulario["tipo_art"] == "Calzados"){
+					$tipo_Conj = 1;
+					$cateArt = 25;
+				} else if ($formulario["tipo_art"] == "Bolso"){
+					$tipo_Conj = 2;
+					$cateArt = 26;
+				}
+						
+				$articuloN->fkNTC_ConjuntoAtributos = $tipo_Conj;
+				$articuloN->fkNTC_TipoIVAProducto = 1; // General
+				$articuloN->fkNTC_UnidadMedida = 1; // Unidad
+				$articuloN->fkNTC_UnidadMedidaVenta = 1; // Unidad
+				$articuloN->fkNTC_Almacen = $formulario["almacen"];
+				$articuloN->fkNTC_Marca = $formulario["marca"];
+				$articuloN->Quitar = 0;
+						
+				if (!$articuloN->save()){
+					//echo "<pre>".print_r($articuloN->getErrors(),1)."</pre>";
+					throw new Exception("No se ha podido insertar los atributos del articulo: ".print_r($articuloN->getErrors(),1));
+				}
+				$idARTICULO = $articuloN->idNTC_Articulo;
+
+					/** insertamos en articulo categoria zapato o bolso **/
+					$articuloCatN = new ArticuloCategoria();
+					$articuloCatN->fkNTC_Articulo = $idARTICULO;
+					$articuloCatN->fkNTC_Categoria = $cateArt;
+					if (!$articuloCatN->save()){
+						throw new Exception("No se ha podido insertar la Categoria del articulo: ".mysql_error());
+					}
+					/** insertamos en articulo categoria que pasa el post **/
+					foreach($formulario["tipos_zapatos"] as $tip_z){
+						$articuloCatN = new ArticuloCategoria();
+						$articuloCatN->fkNTC_Articulo = $idARTICULO;
+						$articuloCatN->fkNTC_Categoria = $tip_z;
+						if (!$articuloCatN->save()){
+							throw new Exception("No se ha podido insertar la Categoria especifica del articulo: ".mysql_error());
+						}
+	
+					}
+					/** insertamos en articulo categoria que pasa el post **/
+					foreach($formulario["genero"] as $genre){
+						$articuloCatN = new ArticuloCategoria();
+						$articuloCatN->fkNTC_Articulo = $idARTICULO;
+						$articuloCatN->fkNTC_Categoria = $genre;
+						if (!$articuloCatN->save()){
+							throw new Exception("No se ha podido insertar el genero del articulo: ".mysql_error());
+						}
+					}
+						
+						
+					/** insertamos el precio en la tarifaventa **/
+					if ($formulario["precio_anterior"] == ""){
+						$precio_actu = $formulario["precio_actual"];
+						$precio_ant = "";
+					} else {
+						$precio_actu = $formulario["precio_anterior"];
+						$precio_ant = $formulario["precio_actual"];
+					}
+
+					$precio_actu = str_replace(",", ".", $precio_actu);
+					$tarifaVenN->fkNTC_TipoTarifaVenta = 1;
+					$tarifaVenN->fkNTC_GrupoPrecioCliente = 2;
+					$tarifaVenN->fkNTC_Articulo = $idARTICULO;
+					$tarifaVenN->fkNTC_UnidadMedida = 1;
+					$tarifaVenN->fkNTC_Divisa = 1;
+					$precio_act = number_format($precio_actu, 2, ".", "");
+					$tarifaVenN->PrecioVenta = $precio_act;
+					
+					$formulario["precio_coste"] = str_replace(",", ".", $formulario["precio_coste"]);
+					$tarifaVenN->PrecioCoste = $formulario["precio_coste"];
+					//die( F::pre($tarifaVenN) );
+					if (!$tarifaVenN->save()){
+						//echo "<pre>".print_r($tarifaVenN->getErrors(), 1)."</pre>";
+						throw new Exception("No se ha podido crear el precio: ".print_r($tarifaVenN->getErrors(),1) );
+	
+					}
+						
+					if ($precio_ant != ""){
+						$precio_ant = str_replace(",", ".", $precio_ant);
+						
+						$tarifaDescN->fkNTC_TipoTarifaVenta = 1;
+						$tarifaDescN->fkNTC_TipoDescuentoVenta = 1;
+						$tarifaDescN->fkNTC_Articulo = $idARTICULO;
+						$tarifaDescN->fkNTC_Divisa = 1;
+						$tarifaDescN->fkNTC_UnidadMedida = 1;
+						$precio_desc = number_format($precio_ant, 2, ".", "");
+						$precioD = str_ireplace("&euro;", "", $precio_desc);
+						$tarifaDescN->ImporteDescuento = $precio_desc;
+						$tarifaDescN->PorcentajeDescuento = 0;
+						if (!$tarifaDescN->save()){
+							//echo "<pre>".print_r($tarifaDescN->getErrors(), 1)."</pre>";
+							throw new Exception("No se ha podido insertar el precio de descuento: ".print_r($tarifaDescN->getErrors(), 1));
+						}
+					}
+						
+						
+					$TallasA = OpcionAtributo::model()->findByAttributes(array("idNTC_OpcionAtributo" => $formulario["tallas"]));
+					$talls = explode(" ", $TallasA->Nombre);
+						
+					if ($cateArt != 26){
+						// recorremos los colores (Bucle principal de OpcionAtributo)
+						$co = 0;
+						foreach($formulario["colores"] as $colors){
+							$colorA = OpcionAtributo::model()->findByAttributes(array("Nombre" => strtolower($colors), "fkNTC_Atributo" => 1));
+							// comprobamos que exista el color en los atributos
+							if ($colorA === NULL){ // si no existe, se crea
+								$colNew = new OpcionAtributo();
+								$colNew->Nombre = strtolower($colors);
+								$colNew->Opcion = ucwords($colors);
+								$colNew->fkNTC_Atributo = 1;
+                                                                $colNew->Quitar = 0;
+                                                                $colNew->Orden = 0;
+                                                                if (!$colNew->save()){
+                                                                        //die("No va ".strtolower($colors));
+                                                                        //echo "<pre>".print_r($tarifaDescN->getErrors(), 1)."</pre>";
+                                                                        throw new Exception("No se ha podido insertar el color: ".strtolower($colors));
+                                                                }
+								$idColor = $colNew->idNTC_OpcionAtributo;
+
+							} else {
+								$idColor = $colorA->idNTC_OpcionAtributo;
+							}// end if sizeof $colorA
+	
+							// ahora comprobamos lo mismo con las tallas
+							//throw new Exception("No se ha podido modificar el atributo de tallas: ".mysql_error());
+							
+							for ($v=0; $v<sizeof($tallas_selects); $v++ ){ // recorremos las tallas
+								$tallaA = OpcionAtributo::model()->findByAttributes(array("Nombre" => strtolower($tallas_selects[$v]), "fkNTC_Atributo" => 10));
+								if (sizeof($tallaA)==0){ // si no existe, se crea
+									$tallNew = new OpcionAtributo();
+									$tallNew->Nombre = $tallas_selects[$v];
+									$tallNew->Opcion = $tallas_selects[$v];
+									$tallNew->fkNTC_Atributo = 10;
+									$tallNew->save();
+									$idTalla = $tallNew->idNTC_OpcionAtributo;
+								} else {
+									$idTalla = $tallaA->idNTC_OpcionAtributo;
+								} // end if sizeof tallaA
+								
+								// Ahora generamos primero la variante para luego asociarle los atributos
+								if ($actionL == "nuevo"){
+									$Vari = new Variante();
+								} else {
+									$Vari = Variante::model()->findByAttributes(array("Nombre" => "Talla ".$tallas_selects[$v]." - ".ucwords($colors), "fkNTC_Articulo" => $idARTICULO));
+									if (sizeof($Vari)==0){
+										$Vari = new Variante();
+									}
+								}
+								$Vari->Nombre = "Talla ".$tallas_selects[$v]." - ".ucwords($colors);
+								$Vari->fkNTC_Articulo = $idARTICULO;
+								$Vari->save();
+								$idDetVari = $Vari->idNTC_Variante;
+									
+								// creamos el detalle de variante de la talla
+								$detaVari = DetalleVariante::model()->findByAttributes(array("fkNTC_Atributo" => 10, "fkNTC_Variante" => $idDetVari));
+								if (sizeof($detaVari)==0){
+									$detaVari = new DetalleVariante();
+								}
+								$detaVari->fkNTC_Atributo = 10;
+								$detaVari->Orden = 0;
+								$detaVari->fkNTC_OpcionAtributo = $idTalla;
+								$detaVari->fkNTC_Variante = $idDetVari;
+								$detaVari->save();
+								$TallaVari = $detaVari->idNTC_DetalleVariante;
+									
+								// creamos el detalle de variante del color
+								$detaVari2 = DetalleVariante::model()->findByAttributes(array("fkNTC_Atributo" => 1, "fkNTC_Variante" => $idDetVari));
+								if (sizeof($detaVari2)==0){
+									$detaVari2 = new DetalleVariante();
+								}
+								$detaVari2->fkNTC_Atributo = 1;
+								$detaVari2->Orden = 0;
+								$detaVari2->fkNTC_OpcionAtributo = $idColor;
+								$detaVari2->fkNTC_Variante = $idDetVari;
+								$detaVari2->save();
+								$ColorVari = $detaVari2->idNTC_DetalleVariante;
+									
+								// creamos las relaciones del articulo con el lote, segun todas sus variantes
+								//$cantidad_Lote = $formulario["pares"][$co]["tallas"][$tallas_selects[$i]];
+								$cantidad_Lote = $tallas_selects_canti[$colors][$tallas_selects[$v]];
+								//throw new Exception("No se ha podido insertar las variantes del articulo: ".mysql_error());
+								$LoteArticuloN = LoteArticulo::model()->findByAttributes(array("fkNTC_Articulo" => $idARTICULO, "fkNTC_Lote" => $loteN->idNTC_Lote, "fkNTC_Variante" => $idDetVari));
+								if (sizeof($LoteArticuloN)==0){
+									$LoteArticuloN = new LoteArticulo();
+								}
+								$LoteArticuloN->fkNTC_Lote = $loteN->idNTC_Lote;
+								$LoteArticuloN->fkNTC_Articulo = $idARTICULO;
+								$LoteArticuloN->fkNTC_Variante = $idDetVari;
+								$LoteArticuloN->Cantidad = $cantidad_Lote;
+
+								if (!$LoteArticuloN->save()){
+									throw new Exception("No se ha podido insertar las variantes del articulo: ".mysql_error());
+								}
+	
+							} // end for v = talls
+							$co++;
+						} // end foreach formularios colores
+						//echo "<pre>".print_r($tallas_selects_canti, 1)."</pre>";
+						//throw new Exception("CANTIDAD LOTE: ".mysql_error());
+					} else {
+						/////////// SI EL ARTICULO ES UN BOLSO, LA VARIANTE LA CREAMOS A MANO ////////////
+						$Vari = new Variante();
+						$Vari->Nombre = "Talla Unica";
+						$Vari->fkNTC_Articulo = $idARTICULO;
+						if (!$Vari->save()){
+							throw new Exception("No se ha podido insertar las variantes del articulo: ".mysql_error());
+						}
+							
+						$idDetVari = $Vari->idNTC_Variante;
+	
+						/* VARIANTE DE TALLA UNICA DEL BOLSO */
+						$VariNew = new DetalleVariante;
+						$VariNew->fkNTC_Variante = $idDetVari;
+						$VariNew->fkNTC_Atributo = 10; // tallaje
+						$VariNew->Orden = 0;
+						$VariNew->fkNTC_OpcionAtributo = 31; // unico
+						if (!$VariNew->save()){
+							throw new Exception("No se ha podido insertar el tamano unico del bolso: ".mysql_error());
+						}
+						
+						/* VARIANTES DE COLOR DEL BOLSO */
+						$co = 0;
+						foreach($formulario["colores"] as $colors){
+							$colorA = OpcionAtributo::model()->findByAttributes(array("Nombre" => strtolower($colors), "fkNTC_Atributo" => 1));
+							// comprobamos que exista el color en los atributos
+							if (sizeof($colorA)==0){ // si no existe, se crea
+								$colNew = new OpcionAtributo();
+								$colNew->Nombre = strtolower($colors);
+								$colNew->Opcion = ucwords($colors);
+								$colNew->fkNTC_Atributo = 1;
+								if (!$colNew->save()){
+									throw new Exception("No se ha podido insertar los colores del bolso: ".print_r($colNew->getErrors(), 1));
+								}
+								$idColor->idNTC_OpcionAtributo;
+							} else {
+								$idColor = $colorA->idNTC_OpcionAtributo;
+							}// end if sizeof $colorA
+								
+							$VariNew = new DetalleVariante;
+							$VariNew->fkNTC_Variante = $idDetVari;
+							$VariNew->Orden = 0;
+							$VariNew->fkNTC_Atributo = 1; // color
+							$VariNew->fkNTC_OpcionAtributo = $idColor; // p.e.: granate
+								
+							if (!$VariNew->save()){
+								throw new Exception("No se ha podido insertar las variantes del bolso: ".print_r($VariNew->getErrors(), 1));
+							}
+							
+							$LoteArticuloN = LoteArticulo::model()->findByAttributes(array("fkNTC_Articulo" => $idARTICULO, "fkNTC_Lote" => $loteN->idNTC_Lote, "fkNTC_Variante" => $idDetVari));
+							if (sizeof($LoteArticuloN)==0){
+								$LoteArticuloN = new LoteArticulo();
+							}
+							// echo "<pre>".print_r($pares[$colors], 1)."</pre>";
+							// echo "Num de arts: ".$pares[$colors][$co][0];
+							$LoteArticuloN->fkNTC_Lote = $loteN->idNTC_Lote;
+							$LoteArticuloN->fkNTC_Articulo = $idARTICULO;
+							$LoteArticuloN->fkNTC_Variante = $idDetVari;
+							$LoteArticuloN->Cantidad = $pares[$colors][$co][0];
+							if (!$LoteArticuloN->save()){
+								throw new Exception("No se ha podido insertar las variantes del articulo: ".print_r($LoteArticuloN->getErrors(),1) );
+							}
+							$co++;
+							// throw new Exception("Excepcion propia: ".mysql_error());
+						} // end foreach colors
+					} // end if cateArt = 26
+					
+					
+					/* insertamos los materiales del articulo */
+                                        $atributos = null;
+					if ($actionL == "nuevo"){
+						$atributos = new ValorAtributo();
+						$atributos->fkNTC_Articulo = $idARTICULO;
+						$atributos->fkNTC_Atributo = 5;
+					} else {
+						$atributos = ValorAtributo::model()->findByAttributes(array("fkNTC_Articulo" => $idARTICULO, "fkNTC_Atributo" => 5));
+                                                if( $atributos === null ){
+                                                    $atributos = new ValorAtributo();
+                                                    $atributos->fkNTC_Articulo = $idARTICULO;
+                                                    $atributos->fkNTC_Atributo = 5;
+                                                }
+					}
+
+					if ($formulario["material"]["empeine_2"] == ""){
+						$empe2 = $formulario["material"]["empeine_1"];
+					} else {
+						$empe2 = $formulario["material"]["empeine_2"];
+					}
+					if ($formulario["material"]["forro_2"] == ""){
+						$forr2 = $formulario["material"]["forro_1"];
+					} else {
+						$forr2 = $formulario["material"]["forro_2"];
+					}
+					if ($formulario["material"]["suela_2"] == ""){
+						$suel2 = $formulario["material"]["suela_1"];
+					} else {
+						$suel2 = $formulario["material"]["suela_2"];
+					}
+					$atributos->Valor = "{\"Empeine\":\"".$formulario["material"]["empeine_1"].",".$empe2."\", \"Forro\":\"".$formulario["material"]["forro_1"].",".$forr2."\", \"Suela\":\"".$formulario["material"]["suela_1"].",".$suel2."\"}";
+                                       
+					if (!$atributos->save()){
+						throw new Exception("No se ha podido insertar los materiales del articulo: ".print_r($atributos->getErrors(),1) );
+					}
+						
+					/* insertamos las medidas y peso */
+					if ($actionL == "nuevo"){
+						$atributos = new ValorAtributo();
+						$atributos->fkNTC_Articulo = $idARTICULO;
+						$atributos->fkNTC_Atributo = 6;
+					} else {
+						$atributos = ValorAtributo::model()->findByAttributes(array("fkNTC_Articulo" => $idARTICULO, "fkNTC_Atributo" => 6));
+					}
+
+					$cubicaje = $cubicaje+($formulario["dimensiones"]["alto"]/100)*($formulario["dimensiones"]["ancho"]/100)*($formulario["dimensiones"]["profundo"]/100)*110;
+					$atributos->Valor = "{\"Alto\":\"".$formulario["dimensiones"]["alto"]."\", \"Ancho\":\"".$formulario["dimensiones"]["ancho"]."\", \"Profundidad\":\"".$formulario["dimensiones"]["profundo"]."\", \"Peso\":\"".number_format($cubicaje, 0, ",", ".")." Kg\"}";
+					
+					if (!$atributos->save()){
+						throw new Exception("No se han podido insertar las medidas y pesos: ".print_r($atributos->getErrors(),1) );
+					}
+						
+					/****************** ACCIONES CON LA IMAGEN ***********************/
+	
+					$tipo = 40; // tipo de la imagen (40 es foto de articulo)
+					for ($f=0; $f<5; $f++){
+						if ($_FILES["imagen".$f]["name"] != ""){
+							$_FILES["imagen".$f]["name"] = $nombreNuevo = date("Ymdhis").$_FILES["imagen".$f]["name"];
+							$nombreNuevo = $_FILES["imagen".$f]["name"];
+						}
+					}
+					$arts = Fichero::model()->findAllByAttributes(array("fkNTC_Articulo" => $idARTICULO));
+                                        if (sizeof($arts)>0){
+                                            foreach($arts as $art){
+                                                unlink(Yii::app()->basePath."/../uploads/".$art->Fichero);
+                                            }
+                                        }
+                                        Fichero::model()->deleteAllByAttributes(array("fkNTC_Articulo" => $idARTICULO));
+                                        
+                                        for ($f=0; $f<5; $f++){
+						if ($_FILES["imagen".$f]["name"] != ""){
+							//$_FILES["imagen".$f]["name"] = $nombreNuevo = date("Ymdhis").$_FILES["imagen".$f]["name"];
+							//$nombreNuevo = $_FILES["imagen".$f]["name"];
+							$modelId = $idARTICULO; // id articulo
+							$tabla = "NTC_Articulo"; // campo de la tabla fichero al que pertenece (Que se montará con el fk delante)
+								
+							$nombreCampoTipoFichero = "fk".Yii::app()->params["prefijoTablasBd"]."TipoFichero";
+							$nombreCampoIdTabla = "fk".$tabla;
+								
+                                                        $fichero = new Fichero();
+							$fichero->Fichero = $nombreNuevo;
+							$fichero->$nombreCampoTipoFichero = $tipo;
+							$fichero->$nombreCampoIdTabla = $modelId;
+							$fichero->Quitar = 0;
+								
+							$fichero->Fichero=CUploadedFile::getInstanceByName("imagen".$f);
+
+							//  		Yii::log('UPLOAD FICHERO: '.print_r($fichero->getAttributes(),1));
+								
+							if($fichero->save()){
+								$fichero->Fichero->saveAs(Yii::app()->basePath.'/../uploads/'.$fichero->Fichero);
+								if( $fichero->getPkValue() > 0 ){
+									$name = Yii::app()->basePath.'/../uploads/'.$fichero->Fichero;
+									$image = new EasyImage($name);
+									$image->resize(400);
+									$image->crop(391, 322);
+									$image->save(Yii::app()->basePath.'/../uploads/'.$fichero->Fichero, 100);
+									$image->resize(129);
+									$image->crop(129, 111);
+									$image->save(Yii::app()->basePath.'/../uploads/mid_'.$fichero->Fichero, 100);
+								}
+								else{
+									throw new Exception(Yii::t('mensaje','mensajeErrorSubirFichero','Error al subir el fichero'));
+									//echo Yii::t('mensaje','mensajeErrorSubirFichero','Error al subir el fichero');
+								}
+			
+								// echo CJSON::encode(array('result'=>'OK', 'error'=>'000', 'errorText' => '', 'data'=>''));
+							}
+							else{
+								throw new Exception("Error al guardar el fichero : ".print_r($fichero->getErrors(),1) );
+							}
+						} // end if hay nombre archivo
+					} // end for i<5 para comprobrar todas las fotos
+					$transaction->commit();
+					
+					//$this->renderPartial("intra", array("formulario" => $formulario));
+					
+					echo CJSON::encode(array('result'=>'OK', 'error'=>'000', 'errorTexto' => '', 'data'=>''));
+					
+		} catch (Exception $e) {
+			$transaction->rollback();
+			echo CJSON::encode(array('result'=>'KO', 'error'=>'410', 'errorTexto' => $e->getMessage(), 'data'=>''));
+			//echo "<pre>".print_r($e, 1)."</pre>";
+				
+		}
+			
+		//$this->redirect(Yii::app()->request->baseUrl.'/app/intra');
+		
+		return true;
+	
+	} // end actionMeter_art_cesta
+        
+	public function actionDuplica_lote()
+	{
+	
+            $formulario = json_decode($_POST["data"], TRUE);
+            try{
+                $lote = $formulario["idLote"];
+
+                ob_start();
+                $this->actionDame_detalle_lote($lote);
+                $json = ob_get_clean();
+                
+                $this->actionInsertar_articulo($json);
+ 
+
+            }catch(Exception $e){
+
+            }
+            
+            die();
+	
+		return true;
+	} // end actionDame_detalle_lote
+        
+	public function actionElimina_lote()
+	{
+	
+            $formulario = json_decode($_POST["data"], TRUE);
+            try{
+                $lote = $formulario["idLote"];
+                $artic = Lote::model()->findByPk($formulario["idLote"]);
+                $artic->Quitar = 1;
+                if (!$artic->save()){
+                    throw new Exception("No se ha podido eliminar el articulo: ".mysql_error());
+                }
+                echo CJSON::encode(array('result'=>'OK', 'error'=>'000', 'errorTexto' => '', 'data'=>''));
+            }catch (Exception $e) {
+			$transaction->rollback();
+			echo CJSON::encode(array('result'=>'KO', 'error'=>'410', 'errorTexto' => $e->getMessage(), 'data'=>''));
+			//echo "<pre>".print_r($e, 1)."</pre>";
+				
+            }
+           
+	
+		return true;
+	} // end actionDame_detalle_lote
+	
+	public function actionInsertar_articulo_desdeweb()
+	{
+		$transaction=Yii::app()->db->beginTransaction();
+		$actionL = "";
+		try {
+			//echo $_POST["lote"];
+			$formulario = json_decode($_POST["lote"], TRUE);
+                        die(F::pre($formulario));
+			//echo "<pre>".print_r($formulario, 1)."</pre>";
+			// reconstruimos el array
+			$tallas_selects = array();
+			$tallas_selects_canti = array();
+			for ($i=0; $i<$formulario["num_colors"]; $i++){
+				$coso = $formulario["pares"][$i];
+				$color_zap = $coso["color"];
+				// echo "<pre>".print_r($coso["tallas"], 1)."</pre>";
+				foreach($coso["tallas"] as $col_za => $valor){
+					$pares[$color_zap][$col_za] = $valor;
+				}
+				
+	
+				$ini_tallas = $formulario["pares"][$i]["tallas"];
+				
+				foreach($ini_tallas as $talla => $canti){
+					//echo $talla.": ".$canti." <br />";
+					$encont = false;
+					for ($z=0; $z<sizeof($tallas_selects); $z++){
+						if ($tallas_selects[$z] == $talla){
+							$encont = true;
+						}
+					}
+					if (!$encont){ $tallas_selects[] = $talla; }
+				
+				}
+				$e=0;
+				foreach ($formulario["colores"] as $color){
+					// me genero el array color talla = cantidad
+					foreach($ini_tallas = $formulario["pares"][$e]["tallas"] as $talla => $canti){
+						$tallas_selects_canti[$color][$talla] = $canti;
+					}
+					$e++;
+				}
+			
+			}
+
+			// Obtenemos mediante sizeof() la cantidad de elementos del array
+			// y almacenamos ese valor en la variable $n
+			$n=sizeof($tallas_selects);
+			
+			// La variable $aux cumple la funcion de auxiliar para almacenar
+			// los valores intercambiados una vez que son comparados
+			
+			for($i=1;$i<$n;$i++){
+				for($j=0;$j<($n-$i);$j++){
+					if(($tallas_selects[$j])>($tallas_selects[$j+1])){
+						$aux=$tallas_selects[$j];
+						$tallas_selects[$j]=$tallas_selects[$j+1];
+						$tallas_selects[$j+1]=$aux;
+					}
+				}
+			}
+			
+			
+			//Yii::app()->end();
+			
+			$loteN = new Lote();
+			// asociamos los datos del formulario al lote
+			$loteN->Quitar = $formulario["stock"];
+			$loteN->Nombre = $formulario["nombre_lote"];
+				// fechas
+			$fechaHoy = date('Y-m-d');
+			$fechaHasta = date("Y-m-d", strtotime("$fechaHoy +20 days"));
+			$loteN->Nuevo_DesdeFecha = $fechaHoy;
+			$loteN->Nuevo_HastaFecha = $fechaHasta;
+			$loteN->surtido_libre = $formulario["surtido_libre"];
+			if (!$loteN->save()){
+				//echo "<pre>".print_r($loteN->getErrors())."</pre>";
+				throw new Exception("No se ha podido insertar el Lote: ".print_r($loteN->getErrors(),1));
+			}
+						
+				$articuloN = new Articulo();
+				$articuloN->fkNTC_TipoArticulo = 1;
+                                $articuloN->ReferenciaColor = $formulario["ref_color"];
+				$articuloN->Referencia = $formulario["referencia"].$formulario["ref_color"];
+				if ($formulario["referencia_interna"] == ""){
+					$articuloN->ReferenciaProveedor = date("Ymd").$loteN->idNTC_Lote;
+				} else {
+					$articuloN->ReferenciaProveedor = $formulario["referencia_interna"];
+				}
+				$articuloN->Nombre = InflectorHelper::underscore($formulario["nombre_lote"]);
+				$articuloN->Descripcion = $formulario["nombre_lote"];
+				$articuloN->DescripcionCorta = $formulario["nombre_lote"];
+				$articuloN->Nuevo_DesdeFecha = $fechaHoy;
+				$articuloN->Nuevo_HastaFecha = $fechaHasta;
+				$articuloN->Habilitado = 1;
+				$articuloN->HabilitadoProfesionales = 1;
+				if ($formulario["tipo_art"] == "Calzado"){
+                                    $tipo_Conj = 1;
+                                    $cateArt = 25;
+                                } else if ($formulario["tipo_art"] == "Bolso"){
+                                    $tipo_Conj = 2;
+                                    $cateArt = 26;
+				}
+						
+					$articuloN->fkNTC_ConjuntoAtributos = $tipo_Conj;
+					$articuloN->fkNTC_TipoIVAProducto = 1; // General
+					$articuloN->fkNTC_UnidadMedida = 1; // Unidad
+					$articuloN->fkNTC_UnidadMedidaVenta = 1; // Unidad
+					$articuloN->fkNTC_Almacen = $formulario["almacen"];
+					$articuloN->fkNTC_Marca = $formulario["marca"];
+					$articuloN->Quitar = 0;
+						
+					if (!$articuloN->save()){
+						//echo "<pre>".print_r($articuloN->getErrors(),1)."</pre>";
+						throw new Exception("No se ha podido insertar los atributos del articulo: ".print_r($articuloN->getErrors(),1));
+					}
+						
+					$idARTICULO = $articuloN->idNTC_Articulo;
+	
+	
+					/** insertamos en articulo categoria zapato o bolso **/
+					$articuloCatN = new ArticuloCategoria();
+					$articuloCatN->fkNTC_Articulo = $idARTICULO;
+					$articuloCatN->fkNTC_Categoria = $cateArt;
+					if (!$articuloCatN->save()){
+						throw new Exception("No se ha podido insertar la Categoria del articulo: ".mysql_error());
+					}
+					/** insertamos en articulo categoria que pasa el post **/
+					foreach($formulario["tipos_zapatos"] as $tip_z){
+						$articuloCatN = new ArticuloCategoria();
+						$articuloCatN->fkNTC_Articulo = $idARTICULO;
+						$articuloCatN->fkNTC_Categoria = $tip_z;
+						if (!$articuloCatN->save()){
+							throw new Exception("No se ha podido insertar la Categoria especifica del articulo: ".mysql_error());
+						}
+	
+					}
+					/** insertamos en articulo categoria que pasa el post **/
+					foreach($formulario["genero"] as $genre){
+						$articuloCatN = new ArticuloCategoria();
+						$articuloCatN->fkNTC_Articulo = $idARTICULO;
+						$articuloCatN->fkNTC_Categoria = $genre;
+						if (!$articuloCatN->save()){
+							throw new Exception("No se ha podido insertar el genero del articulo: ".mysql_error());
+						}
+					}
+						
+					/** insertamos el precio en la tarifaventa **/
+					if ($formulario["precio_anterior"] == ""){
+						$precio_actu = $formulario["precio_actual"];
+						$precio_ant = "";
+					} else {
+						$precio_actu = $formulario["precio_anterior"];
+						$precio_ant = $formulario["precio_actual"];
+					}
+					
+					/** insertamos el precio en la tarifaventa **/
+					$precio_actu = str_replace(",", ".", $precio_actu);
+					$tarifaVenN = new TarifaVenta();
+					$tarifaVenN->fkNTC_TipoTarifaVenta = 1;
+					$tarifaVenN->fkNTC_GrupoPrecioCliente = 2;
+					$tarifaVenN->fkNTC_Articulo = $idARTICULO;
+					$tarifaVenN->fkNTC_UnidadMedida = 1;
+					$tarifaVenN->fkNTC_Divisa = 1;
+					$precio_act = number_format($precio_actu, 2, ".", "");
+					$tarifaVenN->PrecioVenta = $precio_act;
+					
+					$formulario["precio_coste"] = str_replace(",", ".", $formulario["precio_coste"]);
+					$tarifaVenN->PrecioCoste = $formulario["precio_coste"];
+					if (!$tarifaVenN->save()){
+						//echo "<pre>".print_r($tarifaVenN->getErrors(), 1)."</pre>";
+						throw new Exception("No se ha podido crear el precio: ".print_r($tarifaVenN->getErrors(),1));
+	
+					}
+						
+					if ($precio_ant != ""){
+						$precio_ant = str_replace(",", ".", $precio_ant);
+						
+						$tarifaDescN = new DescuentoVenta();
+						$tarifaDescN->fkNTC_TipoTarifaVenta = 1;
+						$tarifaDescN->fkNTC_TipoDescuentoVenta = 1;
+						$tarifaDescN->fkNTC_Articulo = $idARTICULO;
+						$tarifaDescN->fkNTC_Divisa = 1;
+						$tarifaDescN->fkNTC_UnidadMedida = 1;
+						$precio_desc = number_format($precio_ant, 2, ".", "");
+						$precioD = str_ireplace("&euro;", "", $precio_desc);
+						$tarifaDescN->ImporteDescuento = $precio_desc;
+						$tarifaDescN->PorcentajeDescuento = 0;
+						if (!$tarifaDescN->save()){
+							//echo "<pre>".print_r($tarifaDescN->getErrors(), 1)."</pre>";
+							throw new Exception("No se ha podido insertar el precio de descuento: ".print_r($tarifaDescN->getErrors(), 1));
+						}
+					}
+						
+						
+					$TallasA = OpcionAtributo::model()->findByAttributes(array("idNTC_OpcionAtributo" => $formulario["tallas"]));
+					$talls = explode(" ", $TallasA->Nombre);
+						
+					if ($cateArt != 26){
+						// recorremos los colores (Bucle principal de OpcionAtributo)
+						$co = 0;
+						foreach($formulario["colores"] as $colors){
+							$colorA = OpcionAtributo::model()->findByAttributes(array("Nombre" => strtolower($colors), "fkNTC_Atributo" => 1));
+							// comprobamos que exista el color en los atributos
+							if (sizeof($colorA)==0){ // si no existe, se crea
+								$colNew = new OpcionAtributo();
+								$colNew->Nombre = strtolower($colors);
+								$colNew->Opcion = ucwords($colors);
+								$colNew->fkNTC_Atributo = 1;
+								$colNew->save();
+								$idColor = $colNew->idNTC_OpcionAtributo;
+							} else {
+								$idColor = $colorA->idNTC_OpcionAtributo;
+							}// end if sizeof $colorA
+	
+							// ahora comprobamos lo mismo con las tallas
+							//throw new Exception("No se ha podido modificar el atributo de tallas: ".mysql_error());
+							
+							for ($v=0; $v<sizeof($tallas_selects); $v++ ){ // recorremos las tallas
+								$tallaA = OpcionAtributo::model()->findByAttributes(array("Nombre" => strtolower($tallas_selects[$v]), "fkNTC_Atributo" => 10));
+								if (sizeof($tallaA)==0){ // si no existe, se crea
+									$tallNew = new OpcionAtributo();
+									$tallNew->Nombre = $tallas_selects[$v];
+									$tallNew->Opcion = $tallas_selects[$v];
+									$tallNew->fkNTC_Atributo = 10;
+									$tallNew->save();
+									$idTalla = $tallNew->idNTC_OpcionAtributo;
+								} else {
+									$idTalla = $tallaA->idNTC_OpcionAtributo;
+								} // end if sizeof tallaA
+								
+								// Ahora generamos primero la variante para luego asociarle los atributos
+								if ($actionL == "nuevo"){
+									$Vari = new Variante();
+								} else {
+									$Vari = Variante::model()->findByAttributes(array("Nombre" => "Talla ".$tallas_selects[$v]." - ".ucwords($colors), "fkNTC_Articulo" => $idARTICULO));
+									if (sizeof($Vari)==0){
+										$Vari = new Variante();
+									}
+								}
+								$Vari->Nombre = "Talla ".$tallas_selects[$v]." - ".ucwords($colors);
+								$Vari->fkNTC_Articulo = $idARTICULO;
+								$Vari->save();
+								$idDetVari = $Vari->idNTC_Variante;
+									
+								// creamos el detalle de variante de la talla
+								$detaVari = DetalleVariante::model()->findByAttributes(array("fkNTC_Atributo" => 10, "fkNTC_Variante" => $idDetVari));
+								if (sizeof($detaVari)==0){
+									$detaVari = new DetalleVariante();
+								}
+								$detaVari->fkNTC_Atributo = 10;
+								$detaVari->Orden = 0;
+								$detaVari->fkNTC_OpcionAtributo = $idTalla;
+								$detaVari->fkNTC_Variante = $idDetVari;
+								$detaVari->save();
+								$TallaVari = $detaVari->idNTC_DetalleVariante;
+									
+								// creamos el detalle de variante del color
+								$detaVari2 = DetalleVariante::model()->findByAttributes(array("fkNTC_Atributo" => 1, "fkNTC_Variante" => $idDetVari));
+								if (sizeof($detaVari2)==0){
+									$detaVari2 = new DetalleVariante();
+								}
+								$detaVari2->fkNTC_Atributo = 1;
+								$detaVari2->Orden = 0;
+								$detaVari2->fkNTC_OpcionAtributo = $idColor;
+								$detaVari2->fkNTC_Variante = $idDetVari;
+								$detaVari2->save();
+								$ColorVari = $detaVari2->idNTC_DetalleVariante;
+									
+								// creamos las relaciones del articulo con el lote, segun todas sus variantes
+								//$cantidad_Lote = $formulario["pares"][$co]["tallas"][$tallas_selects[$i]];
+								$cantidad_Lote = $tallas_selects_canti[$colors][$tallas_selects[$v]];
+								//throw new Exception("No se ha podido insertar las variantes del articulo: ".mysql_error());
+								$LoteArticuloN = LoteArticulo::model()->findByAttributes(array("fkNTC_Articulo" => $idARTICULO, "fkNTC_Lote" => $loteN->idNTC_Lote, "fkNTC_Variante" => $idDetVari));
+								if (sizeof($LoteArticuloN)==0){
+									$LoteArticuloN = new LoteArticulo();
+								}
+								$LoteArticuloN->fkNTC_Lote = $loteN->idNTC_Lote;
+								$LoteArticuloN->fkNTC_Articulo = $idARTICULO;
+								$LoteArticuloN->fkNTC_Variante = $idDetVari;
+								$LoteArticuloN->Cantidad = $cantidad_Lote;
+
+								if (!$LoteArticuloN->save()){
+									throw new Exception("No se ha podido insertar las variantes del articulo: ".mysql_error());
+								}
+	
+							} // end for v = talls
+							$co++;
+						} // end foreach formularios colores
+						//echo "<pre>".print_r($tallas_selects_canti, 1)."</pre>";
+						//throw new Exception("CANTIDAD LOTE: ".mysql_error());
+					} else {
+						/////////// SI EL ARTICULO ES UN BOLSO, LA VARIANTE LA CREAMOS A MANO ////////////
+						$Vari = new Variante();
+						$Vari->Nombre = "Talla Unica";
+						$Vari->fkNTC_Articulo = $idARTICULO;
+						if (!$Vari->save()){
+							throw new Exception("No se ha podido insertar las variantes del articulo: ".mysql_error());
+						}
+							
+						$idDetVari = $Vari->idNTC_Variante;
+	
+						/* VARIANTE DE TALLA UNICA DEL BOLSO */
+						$VariNew = new DetalleVariante;
+						$VariNew->fkNTC_Variante = $idDetVari;
+						$VariNew->fkNTC_Atributo = 10; // tallaje
+						$VariNew->Orden = 0;
+						$VariNew->fkNTC_OpcionAtributo = 31; // unico
+						if (!$VariNew->save()){
+							throw new Exception("No se ha podido insertar el tamano unico del bolso: ".mysql_error());
+						}
+						
+						/* VARIANTES DE COLOR DEL BOLSO */
+						$co = 0;
+						foreach($formulario["colores"] as $colors){
+							$colorA = OpcionAtributo::model()->findByAttributes(array("Nombre" => strtolower($colors), "fkNTC_Atributo" => 1));
+							// comprobamos que exista el color en los atributos
+							if (sizeof($colorA)==0){ // si no existe, se crea
+								$colNew = new OpcionAtributo();
+								$colNew->Nombre = strtolower($colors);
+								$colNew->Opcion = ucwords($colors);
+								$colNew->fkNTC_Atributo = 1;
+								if (!$colNew->save()){
+									throw new Exception("No se ha podido insertar los colores del bolso: ".print_r($colNew->getErrors(), 1));
+								}
+								$idColor->idNTC_OpcionAtributo;
+							} else {
+								$idColor = $colorA->idNTC_OpcionAtributo;
+							}// end if sizeof $colorA
+								
+							$VariNew = new DetalleVariante;
+							$VariNew->fkNTC_Variante = $idDetVari;
+							$VariNew->Orden = 0;
+							$VariNew->fkNTC_Atributo = 1; // color
+							$VariNew->fkNTC_OpcionAtributo = $idColor; // p.e.: granate
+								
+							if (!$VariNew->save()){
+								throw new Exception("No se ha podido insertar las variantes del bolso: ".print_r($VariNew->getErrors(), 1));
+							}
+							
+							$LoteArticuloN = LoteArticulo::model()->findByAttributes(array("fkNTC_Articulo" => $idARTICULO, "fkNTC_Lote" => $loteN->idNTC_Lote, "fkNTC_Variante" => $idDetVari));
+							if (sizeof($LoteArticuloN)==0){
+								$LoteArticuloN = new LoteArticulo();
+							}
+							// echo "<pre>".print_r($pares[$colors], 1)."</pre>";
+							// echo "Num de arts: ".$pares[$colors][$co][0];
+							$LoteArticuloN->fkNTC_Lote = $loteN->idNTC_Lote;
+							$LoteArticuloN->fkNTC_Articulo = $idARTICULO;
+							$LoteArticuloN->fkNTC_Variante = $idDetVari;
+							$LoteArticuloN->Cantidad = $pares[$colors][$co][0];
+							if (!$LoteArticuloN->save()){
+								throw new Exception("No se ha podido insertar las variantes del articulo: ".mysql_error());
+							}
+							$co++;
+							// throw new Exception("Excepcion propia: ".mysql_error());
+						} // end foreach colors
+					} // end if cateArt = 26
+					
+					
+					/* insertamos los materiales del articulo */
+					$atributos = new ValorAtributo();
+					$atributos->fkNTC_Articulo = $idARTICULO;
+					$atributos->fkNTC_Atributo = 5;
+					if ($formulario["material"]["empeine_2"] == ""){
+						$empe2 = $formulario["material"]["empeine_1"];
+					} else {
+						$empe2 = $formulario["material"]["empeine_2"];
+					}
+					if ($formulario["material"]["forro_2"] == ""){
+						$forr2 = $formulario["material"]["forro_1"];
+					} else {
+						$forr2 = $formulario["material"]["forro_2"];
+					}
+					if ($formulario["material"]["suela_2"] == ""){
+						$suel2 = $formulario["material"]["suela_1"];
+					} else {
+						$suel2 = $formulario["material"]["suela_2"];
+					}
+					$atributos->Valor = "{\"Empeine\":\"".$formulario["material"]["empeine_1"].",".$empe2."\", \"Forro\":\"".$formulario["material"]["forro_1"].",".$forr2."\", \"Suela\":\"".$formulario["material"]["suela_1"].",".$suel2."\"}";
+					$atributos->save();
+						
+					/* insertamos las medidas y peso */
+					$atributos = new ValorAtributo();
+					$atributos->fkNTC_Articulo = $idARTICULO;
+					$atributos->fkNTC_Atributo = 6;
+					$cubicaje = $cubicaje+($formulario["dimensiones"]["alto"]/100)*($formulario["dimensiones"]["ancho"]/100)*($formulario["dimensiones"]["profundo"]/100)*110;
+					$atributos->Valor = "{\"Alto\":\"".$formulario["dimensiones"]["alto"]."\", \"Ancho\":\"".$formulario["dimensiones"]["ancho"]."\", \"Profundidad\":\"".$formulario["dimensiones"]["profundo"]."\", \"Peso\":\"".number_format($cubicaje, 0, ",", ".")." Kg\"}";
+					$atributos->save();
+						
+					/****************** ACCIONES CON LA IMAGEN ***********************/
+	
+					$tipo = 40; // tipo de la imagen (40 es foto de articulo)
+					for ($f=0; $f<5; $f++){
+						if ($_FILES["imagen".$f]["name"] != ""){
+							$_FILES["imagen".$f]["name"] = $nombreNuevo = date("Ymdhis").$_FILES["imagen".$f]["name"];
+							$nombreNuevo = $_FILES["imagen".$f]["name"];
+						}
+					}
+					
+					for ($f=0; $f<5; $f++){
+						if ($_FILES["imagen".$f]["name"] != ""){
+							//$_FILES["imagen".$f]["name"] = $nombreNuevo = date("Ymdhis").$_FILES["imagen".$f]["name"];
+							//$nombreNuevo = $_FILES["imagen".$f]["name"];
+							$modelId = $idARTICULO; // id articulo
+							$tabla = "NTC_Articulo"; // campo de la tabla fichero al que pertenece (Que se montará con el fk delante)
+								
+							$nombreCampoTipoFichero = "fk".Yii::app()->params["prefijoTablasBd"]."TipoFichero";
+							$nombreCampoIdTabla = "fk".$tabla;
+								
+							$fichero = new Fichero();
+							$fichero->Fichero = $nombreNuevo;
+							$fichero->$nombreCampoTipoFichero = $tipo;
+							$fichero->$nombreCampoIdTabla = $modelId;
+							$fichero->Quitar = 0;
+								
+							$fichero->Fichero=CUploadedFile::getInstanceByName("imagen".$f);
+
+							//  		Yii::log('UPLOAD FICHERO: '.print_r($fichero->getAttributes(),1));
+								
+							if($fichero->save()){
+								$fichero->Fichero->saveAs(Yii::app()->basePath.'/../uploads/'.$fichero->Fichero);
+								if( $fichero->getPkValue() > 0 ){
+									$name = Yii::app()->basePath.'/../uploads/'.$fichero->Fichero;
+									$image = new EasyImage($name);
+									$image->resize(400);
+									$image->crop(391, 322);
+									$image->save(Yii::app()->basePath.'/../uploads/'.$fichero->Fichero, 100);
+									$image->resize(129);
+									$image->crop(129, 111);
+									$image->save(Yii::app()->basePath.'/../uploads/mid_'.$fichero->Fichero, 100);
+								}
+								else{
+									echo Yii::t('mensaje','mensajeErrorSubirFichero','Error al subir el fichero');
+								}
+			
+								// echo CJSON::encode(array('result'=>'OK', 'error'=>'000', 'errorText' => '', 'data'=>''));
+							}
+							else{
+								print_r($fichero->getErrors());
+							}
+						} // end if hay nombre archivo
+					} // end for i<5 para comprobrar todas las fotos
+					$transaction->commit();
+					
+					$this->renderPartial("intra", array("formulario" => $formulario));
+					
+		} catch (Exception $e) {
+			$transaction->rollback();
+			echo CJSON::encode(array('result'=>'KO', 'error'=>'410', 'errorTexto' => $e->getMessage(), 'data'=>''));
+			//echo "<pre>".print_r($e, 1)."</pre>";
+				
+		}
+			
+		//$this->redirect(Yii::app()->request->baseUrl.'/app/intra');
+		
+		return true;
+	} // end actionMeter_art_cesta
+	
+}
+?>
