@@ -36,12 +36,12 @@ function comprobarSesion($email, $clave)
   $valorRet = false;
   $mysql  = 'select * from Usuario where Email="' . $email . '"';
   $mysql .= ' and Clave="' . $clave . '"';
-  $mysql .= ' and UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(TIEMPO)<' . $tiempo_de_sesion;
+  $mysql .= ' and UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(Tiempo)<' . $tiempo_de_sesion;
   if( $res = mysqli_query($link, $mysql) )
   {
     if(mysqli_num_rows($res)==1){
       $valorRet = true;
-      //actualizarUltimoAcceso($email, $clave);
+      actualizarUltimoAcceso($email, $clave);
     }
   }
   else
@@ -56,6 +56,21 @@ function comprobarSesion($email, $clave)
 function actualizarUltimoAcceso($email, $clave){
   global $link;
   $valorRet = false;
+
+  $mysql  = 'update Usuario set Tiempo=NOW()';
+  $mysql .= ' where Clave="' . $clave . '"';
+  $mysql .= ' and Email="' . $email . '"';
+
+  if( $res = mysqli_query($link, $mysql) )
+  {
+      $valorRet = true;
+  }
+  else
+  {
+    $RESPONSE_CODE = 500;
+    print json_encode( array('resultado' => 'error', 'descripcion' => 'Error de servidor 2.') );
+    exit();
+  }
 
   //ultimo_acceso = now
   return $valorRet;
