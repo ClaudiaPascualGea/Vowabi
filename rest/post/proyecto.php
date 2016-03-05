@@ -30,9 +30,23 @@ $RESPONSE_CODE = 200; // código de respuesta por defecto: 200 - OK
 // =================================================================================
 // Se supone que si llega aquí es porque todo ha ido bien y tenemos los datos correctos:
 $PARAMS      = $_POST;
-$nombre = mysqli_real_escape_string( $link, $PARAMS['name']);
-$descripcion = mysqli_real_escape_string( $link, $PARAMS['description']);
-$idUsuario = mysqli_real_escape_string( $link, $PARAMS['idUsuario']);
+
+$nombre = "";
+$descripcion = "";
+$idUsuario = "";
+$idProyecto = "";
+
+if(isset($PARAMS['name']))
+  $nombre = mysqli_real_escape_string( $link, $PARAMS['name']);
+
+if(isset($PARAMS['description']))
+  $descripcion = mysqli_real_escape_string( $link, $PARAMS['description']);
+
+if(isset($PARAMS['idUsuario']))
+  $idUsuario = mysqli_real_escape_string( $link, $PARAMS['idUsuario']);
+
+if(isset($PARAMS['idProyecto']))
+  $idProyecto = mysqli_real_escape_string( $link, $PARAMS['idProyecto']);
 
 if(isset($_SERVER['PHP_AUTH_USER']) &&  isset($_SERVER['PHP_AUTH_PW'])){
     $email = $_SERVER['PHP_AUTH_USER'];
@@ -44,10 +58,24 @@ if(isset($_SERVER['PHP_AUTH_USER']) &&  isset($_SERVER['PHP_AUTH_PW'])){
 
 if( !comprobarSesion($email,$clave) )
   $R = array('resultado' => 'error', 'descripcion' => 'Tiempo de sesión agotado.');
+else if($idProyecto != "" && $nombre != ""){ //Cambio de nombre
+  try{
+      mysqli_query($link, 'BEGIN');
+      $mysql  = 'update Proyecto set Nombre = "'. $nombre .'" where id = '. $idProyecto;
+
+      if( $res = mysqli_query( $link, $mysql ) )
+        $R = array('resultado' => 'ok', 'nombre' => $nombre);
+      else
+        $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido cambiar el nombre');
+      mysqli_query($link, "COMMIT");
+    } catch(Exception $e){
+      mysqli_query($link, "ROLLBACK");
+    }
+}
 else if($PARAMS['name']=='' || $PARAMS['idUsuario']=='')
 {
   $RESPONSE_CODE = 401;
-  $R = array('resultado' => 'error', 'descripcion' => 'Creación de post incorrecta');
+  $R = array('resultado' => 'error', 'descripcion' => 'Creación de proyecto incorrecta');
 }
 else
 {

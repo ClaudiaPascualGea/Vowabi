@@ -37,7 +37,7 @@ if(is_numeric($ID))
 
 
 
-  
+  /*
   $mysql = 'select e.id as idElemento, e.Nombre, e.Orden, h.HTML, c.CSS, j.JS  
               FROM proyecto p
                 LEFT JOIN elemento_usu e
@@ -51,17 +51,24 @@ if(is_numeric($ID))
               WHERE p.id=' . mysqli_real_escape_string($link,$ID) . '    
               ORDER BY e.idPadre,e.Orden
             ';
+*/
 
-            /*
-select c1.*, hu.HTML from html_usu hu,(select padre.Orden as op,hijo.Orden as oh,padre.id as p_i, hijo.id as h_i, padre.Nombre from elemento_usu padre, elemento_usu hijo
-where padre.id=hijo.idPadre
-union
-select p.Orden,0, p.id, p.id,p.Nombre from elemento_usu p
-where p.idPadre is NULL
-order by op, oh) c1
-where c1.h_i = hu.idElemento_usu
-order by op,oh
-            */
+  $mysql = 'select c1.*, h.HTML , c.CSS, j.JS from proyecto pr, html_usu hu,
+    (select padre.Orden as op,hijo.Orden as oh, padre.id as idPadre, hijo.id as idElemento, padre.Nombre, padre.idProyecto from elemento_usu padre, elemento_usu hijo
+    where padre.id=hijo.idPadre
+    union
+    select p.Orden,0, p.id, p.id,p.Nombre, p.idProyecto from elemento_usu p
+    where p.idPadre is NULL
+    order by op, oh) c1
+        LEFT JOIN html_usu h
+        ON h.idElemento_usu=c1.idElemento
+        LEFT JOIN css_usu c
+        ON c.idElemento_usu=c1.idElemento
+        LEFT JOIN js_usu j
+        ON j.idElemento_usu=c1.idElemento
+    where c1.idElemento = hu.idElemento_usu and c1.idProyecto = pr.id 
+    and pr.id = ' . mysqli_real_escape_string($link,$ID) . '  
+    order by op,oh';
 }
 else
 { // Se utilizan parámetros

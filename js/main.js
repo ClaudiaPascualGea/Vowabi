@@ -5,6 +5,8 @@ $(document).ready(function() {
     });
     checkLogin();
 
+
+
 });
 
 
@@ -151,6 +153,19 @@ function getProjects(){
 			if(window.JSON) // Comprueba si soporta JSON nativo
 				projects = window.JSON.parse( this.responseText );
 			listProjects(projects);	
+
+			var contents = $('.projectName').html();
+			$('.projectName').blur(function() {
+			    if (contents!=$(this).html()){
+			    	if($(this).html() == ""){
+				        $(this).html(contents);
+				    }else{
+				        contents = $(this).html();
+				        var idProject = $(this).parent().parent().parent().attr("data-id");
+				        changeName(contents, idProject);
+				    }
+			    }
+			});
 	};
 
 	xhr.send();
@@ -168,7 +183,7 @@ function listProjects(projects){
 
 				var div = document.createElement("div");
 				div.className = "text";
-				div.innerHTML += "<h3>"+ projects[i].Nombre +" - <span class='date'>"+ projects[i].FechaCreacion +"</span></h3>";
+				div.innerHTML += "<h3><span class='projectName' contenteditable='true'>"+ projects[i].Nombre +"</span> - <span class='date'>"+ projects[i].FechaCreacion +"</span></h3>";
 				if(projects[i].Descripcion && projects[i].Descripcion != "")
 					div.innerHTML += "<p>"+ projects[i].Descripcion +"</p>";
 
@@ -188,6 +203,34 @@ function listProjects(projects){
 		elem.innerHTML += "Todavía no tienes ningún proyecto.";
 		container.appendChild(elem);
 	}
+}
+
+
+function changeName(name, id){
+	
+	var url = 'rest/proyecto/';
+	var xhr = new XMLHttpRequest();
+	var params = '';
+	xhr.open('POST', url, true);
+
+	xhr.onload = function(){	
+			o = JSON.parse(this.responseText);	
+			console.log(o);
+			if(o.resultado == 'ok'){
+				var text = "Nombre del proyecto (" + o.nombre + ") cambiado correctamente";
+				showModal("Nombre cambiado correctamente", text, "Aceptar");		
+				getProjects();
+			}else{
+				$(".dashboard form .tooltip").html(o.descripcion);
+				$(".dashboard form .tooltip").css("height", "20px");
+			}
+	};
+
+	params = 'idProyecto='+ id + '&name='+name;
+	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhr.setRequestHeader("Authorization", "Basic " + Base64.encode(sessionStorage.usuario + ":" + sessionStorage.clave));
+	xhr.send(params);
+	return false;
 }
 
 function editProject(id){
@@ -287,27 +330,45 @@ function getProject(){
 				if(window.JSON) // Comprueba si soporta JSON nativo
 					proyecto = window.JSON.parse( this.responseText );	
 
-				var html = '';
-				var css = '';
+				var padre;
 
 				for(var i=0; i< proyecto.length; i++){
 					with(proyecto[i]){
-						document.querySelector(".project .projectContainer").innerHTML += HTML;
-						//funcion que parsea el elemento con create element
-						//for each mientras que el idPadre sea el mismo 
-						html += HTML;
-						css += CSS;
-						//Style vacio con id en el head
-						//innerHTML de ese <style>
 
-						//Los id de las clases css vienen del id del elemento
-						//parseador CSS para meter la clase
+						//Solo si son padres
+						if(idElemento == idPadre){
+
+							var id = "el-" + idElemento;
+							var padre = createHTMLElement(HTML);
+							padre.id = id;
+
+							if(CSS)
+								setCSS(CSS, id);
+
+
+							//Buscamos los hijos
+							for(var j=0; j< proyecto.length; j++){
+								var elem = proyecto[j];
+								if(elem["idPadre"] == idElemento && idElemento != elem["idElemento"] ){
+									var idHijo = "el-" + elem["idElemento"];
+									var hijo = createHTMLElement(elem["HTML"]);
+									hijo.id = idHijo;
+
+									if(elem["CSS"])
+										setCSS(elem["CSS"], idHijo);
+
+									padre.appendChild(hijo);
+								}
+							}
+
+							document.getElementById("projectContainer").appendChild(padre); 
+
+						}
+
 					}
 				}
 
-				console.log(proyecto);
-				document.querySelector(".project .projectContainer").innerHTML = html ;
-
+				
 		};
 
 		xhr.send();
@@ -316,7 +377,60 @@ function getProject(){
 		location.href="dashboard.php";
 }
 
-function parsearCSS(css){
+function setCSS(CSS, id){
+
+	var css = '';
+	var v =  CSS.split('--');
+
+	for(var i=1; i<v.length; i=i+2){
+
+		if(v[i] == "general")
+			css += '#'+id+'{';
+		else if(v)
+			css += '#'+id + v[i] + '{';
+
+		css += v[i+1];
+		css += '}';
+		
+	}
+
+	document.getElementById("projectStyle").innerHTML += css;
+}
+
+function createHTMLElement(html) {
+
+	var aux = html.split("<");
+	var aux2 = aux[1].split(">");
+	var elemName = aux2[0];
+	var elemContent = aux2[1];
+
+	var elem = document.createElement(elemName);
+	elem.innerHTML = elemContent;
+
+	return elem;
+}
+
+function parseCSS(css){
+	var aux = new Object();
+
+	var v = css.trim().split("--");
+
+	for(var i=1; i<v.length; i=i+2){
+		v2 = new Object();
+
+		var v3 = v[i+1].split(';');
+
+		v3.forEach(function(e2){
+			var regla = e2.split(':');
+			if(regla.length > 1)
+				v2[regla[0].trim()] = regla[1].trim();
+		});
+		
+		aux[v[i]] = v2;
+	}
+
+	return aux;
+	/*	
 	var v = css.split(';');
 	var aux = new Object();
 
@@ -327,12 +441,25 @@ function parsearCSS(css){
 			aux[regla[0].trim()] = regla[1].trim();
 	});
 
-	return aux;
+	return aux; */
 }
 
-/* for(var i in obj){
-	console.log(i);
-} */
+function deParse(obj){
+
+	var css = '';
+
+	for(var key in obj){
+		css += '--' + key + '--' + '\n';
+
+		if(obj[key]){
+			for(var key2 in obj[key]){
+				var el = obj[key];
+				css += key2 + ':' + el[key2] + ';' + '\n';
+			}
+		}
+	}
+}
+
 
 function closeProject(){
 	sessionStorage.removeItem("idProject");

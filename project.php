@@ -2,6 +2,7 @@
 <html>
     <head>
         <?php require_once("include/head.php"); ?>
+        <style id="projectStyle"></style>
     </head>
 
     <body onLoad="project();">
@@ -19,7 +20,7 @@
             </div>
         </header>
 
-        <div class="projectContainer">
+        <div id="projectContainer">
             
         </div>
         
