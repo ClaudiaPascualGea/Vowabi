@@ -1,5 +1,5 @@
 <?php
-// FICHERO: rest/post/login.php
+// FICHERO: rest/post/proyecto.php
 
 $METODO = $_SERVER['REQUEST_METHOD'];
 // EL METODO DEBE SER POST. SI NO LO ES, NO SE HACE NADA.
@@ -87,7 +87,8 @@ else
 
     if( $res = mysqli_query( $link, $mysql ) )
     {
-      $R = array('resultado' => 'ok', 'nombre' => $nombre);
+      $id = mysqli_insert_id($link);
+      $R = array('resultado' => 'ok', 'nombre' => $nombre, 'id'=> $id);
     }
     else
     {
@@ -95,6 +96,7 @@ else
     }
     // ******** FIN DE TRANSACCION **********
     mysqli_query($link, "COMMIT");
+
   } catch(Exception $e){
     // Se ha producido un error, se cancela la transacción.
     mysqli_query($link, "ROLLBACK");

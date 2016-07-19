@@ -1,0 +1,16 @@
+.dashboard{
+	.userContent{
+		padding: 20px;
+		@include flexbox();
+		@include flex-justify(space-between);
+		@include flex-align(flex-start);
+
+		.cont-50{
+			width: 49%;
+			float: left;
+			display: inline-block;
+			margin-bottom: 0;	
+		}
+
+	}
+}

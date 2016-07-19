@@ -1,8 +1,10 @@
 body {
-	font-size: 16px;
-	@include font($style, $weight, $size, $family);
+	font-weight: $weight;
+	font-size: $size;
+	line-height: $lineH;
+	font-family: $primarytxt;
 	color: $primarycolor;
-	background-color:#FFF;
+	background-color: #FFF;
 	position: relative;
 
 }
@@ -10,7 +12,13 @@ body {
 a{
 	color: $primarycolor;
 	text-decoration: none;
-	@include font($style, $os_medium, 16, $family);
+	font-family: $primarytxt;
+	color: $link;
+	font-size: $size;
+}
+
+button{
+	background-color: transparent;
 }
 
 .vpc {

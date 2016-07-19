@@ -1,5 +1,5 @@
 <?php
-// FICHERO: rest/post/login.php
+// FICHERO: rest/post/registro.php
 
 $METODO = $_SERVER['REQUEST_METHOD'];
 // EL METODO DEBE SER POST. SI NO LO ES, NO SE HACE NADA.

@@ -1,112 +1,74 @@
 .dashboard{
 	min-height: 100%;
-	background-size: cover;
-	background-position: center center;
-	background-image: url("../img/dashboard2.png");
+	background-color: $background-second;
+	//color: $negro;
+	font-weight: 400;
 
 	.userContent{
-		padding: 10px;
-		h2{
-			padding: 10px;
-		    text-align: center;
-		    color: $blanco;
-		    text-transform: uppercase;
-		    background-color: rgba(0,0,0,0.2);
-		}
-
-		form{
-			padding: 20px;
-		}
+		padding: 10px;	
 
 		.input-container{
 			display: block;
-			margin-bottom: 10px;
+			margin-bottom: 20px;
 
 			label{
-				margin-bottom: 5px;
 				width: 100%;
-				display: block;
-				color: $blanco;
+				display: block;	
+				margin-bottom: 5px;			
 			}
 
 			input{
 				width: 100%;
 				padding: 10px;
 				background-color: $blanco;
+				//border-bottom: 2px solid $button;
 			}
 		}
 
 		.send{
-			border: 1px solid $blanco;
-			color: $blanco;
 			width: 100%;
-			padding: 10px;
-			display: block;
-			margin-top: 10px;
-			text-transform: uppercase;
-			background-color: transparent;
-			@include trs(background-color 0.3s ease-in-out);
+		}
+		
+		.cont{
+			background-color: $hover;	
+			box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);			
+			margin-bottom: 20px;
 
-			&:hover{
-				background-color: rgba(0,0,0,0.4);
+			.title{
+				background-color: rgba(0,0,0,0.2);
+				padding: 10px;
+			}
+
+			.cont-content{
+				padding: 15px;
 			}
 		}
+		
+		.projects-list{
 
-		.tooltip{
-			display: block;
-			color: $blanco;
-		}
+			li{
+				@include flexbox();
+				@include flex-justify(space-between);
+				@include flex-align(center);
+				margin-bottom: 10px;
 
-		.left{
-			background-color: rgba(34,44,53,0.8);	
-			margin-bottom: 10px;	
-		}
+				.text{
+					width: 60%;
+				}
 
-		.right{
-			background-color: rgba(34,44,53,0.8);			
+				&:last-child{
+					margin-bottom: 0;
+				}
 
-			ul{
-				padding: 20px;
-
-				li{
-					@include trs(background-color 0.3s ease-in-out, color 0.3s ease-in-out);
-					background-color: rgba(0,0,0,0.1);
-					padding: 10px;
-					margin-bottom: 10px;
-
-					color: $blanco;
-					@include flexbox();
-					@include flex-justify(space-between);
-					@include flex-align(center);
-
-					.text{
-						width: 60%;
+				.btn{
+					margin-left: 10px;
+					&:first-child{
+						margin-left: 0;
 					}
-
-					p{
-						margin-top: 10px;
-					}
-
-					button{
-						@include trs(background-color 0.3s ease-in-out, color 0.3s ease-in-out);
-						border: 1px solid $blanco;
-						background-color: $blanco;
-						text-transform: uppercase;
-						padding: 10px;
-						margin-left: 10px;
-
-						span{
-							display: none;
-						}
-
-						&:hover{
-							background-color: transparent;
-							color: $blanco;
-						}
-					}
-
 				}
 			}
 		}
+
+	
 	}
 }

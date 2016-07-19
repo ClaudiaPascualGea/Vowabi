@@ -1,10 +1,11 @@
 /* Fuentes */
 $lato							: 'Lato', sans-serif;
-$opensans						: 'Open Sans', sans-serif;
+$opensans						: 'open sans', sans-serif;
 $futura							: 'Futura STD', sans-serif;
+$tangerine						: 'Tangerine', serif;
 
 //Rutas
-$rutaTema	: 'http://localhost/festiworld/';
+$rutaTema	: 'http://localhost/vowabi/';
 
 // Htc paths
 $pie: url(#{$rutaTema}js/lib/pie.htc);
@@ -54,6 +55,38 @@ $grey3					: #546E7A;
 
 $blue					: #103A55;
 
+//PALETA COLORES
+// $text					: #212121;
+// $text-second			: #FFFFFF;
+// $background				: #E6EBE0;
+// $button					: #ED6A5A;
+// $hover					: #E63946;
+// $hover2					: #ED6A5A;
+// $link					: #E63946;
+
+//PALETA COLORES
+$background				: #222c35;
+$background-second		: #F1FAEE;
+$text					: #FFFFFF;
+$text-second			: #FFFFFF;
+$button					: #607d8b;
+$hover					: #455A64;
+$hover2					: #8a969c;
+$link					: #F1FAEE;
+$red 					: #f27474;
+$red-hover				: #c18989;
+
+//PALETA FONDO CLARO
+// $background				: #f6f6f6;
+// $background-second		: #F1FAEE;
+// $text					: #222222;
+// $text-second			: #FFFFFF;
+// $button					: #222222;
+// $hover					: #2CD892;
+// $hover2					: #8a969c;
+// $link					: #999999;
+
+
 
 
 
@@ -67,16 +100,17 @@ $os_bold			    : 700;
 $os_extrabold			: 800;
 
 /* Parametros de inicialización */
-$base_font_size			: 16;
+$base_font_size			: 14px;
 $primarytxt				: $lato;
-$primarycolor			: $negro;
+$primarycolor			: $text;
 $primaryfont			: normal $os_medium 15px $primarytxt;
 $primaryfont			: normal $os_medium rem($base_font_size) $primarytxt;
 
 /* Font */
 $style  				: normal;  
-$weight 				: $os_light; 
-$size 					: $base_font_size; 
+$weight 				: 300; 
+$size 					: 14px; 
+$lineH 					: 16px; 
 $family  				: $lato;
 $familyOpen				: $lato;
 

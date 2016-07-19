@@ -9,26 +9,26 @@
     <body>
        
         <div class="content home">
-        	<div class="overlay"></div>
-        	<div class="flash background" style="background-image: url('img/background.jpg');"></div>
+
+            <div class=" flash image-background" style="background-image: url('img/background.jpg');"></div>
 
         	<section class="container-home">
 
-                <div class="title">
-                    <img src="img/logo.png" alt="Vowabi">
-                    <h1>Vowabi</h1>
-                    <h2>Construye de manera sencilla y dinámica tu propia web con Vowabi.</h2>
-                </div>
 
-                <ul class="tabs">
-                    <li class="active" data-tab="1"><h3>Login</h3></li>
-                    <li data-tab="2"><h3>Registro</h3></li>
+                <img class="logo" src="img/logo.png" alt="Vowabi">
+                <h1 class="title">Vowabi</h1>
+                <h2 class="text">Construye de manera sencilla y dinámica tu propia web con Vowabi.</h2>
+  
+
+                <ul class="tabs js-tabs">
+                    <li class="active" data-tab="1">Login</li>
+                    <li data-tab="2">Registro</li>
                 </ul>
                 
-                <div class="tab-content">
+                <div class="tab-content js-tab-content">
 
-                    <div class="login-container formContainer active" id="tab-1">
-                        <p>¡Hola de nuevo!</p>
+                    <div class="js-login-container formContainer active" id="tab-1">
+                        <h3 class="subtitle">¡Hola de nuevo!</h3>
                         <form onsubmit="return login(this);">
 
                             <div class="input-container">
@@ -41,15 +41,15 @@
                                 <input type="password" id="password_l" required name="password" placeholder="Password"><br>
                             </div>
 
-                            <span class="tooltip">Error de prueba</span>
+                            <span class="js-error error">Error de prueba</span>
     
-                            <input class="send" type="submit" value="Log in">
+                            <input class="send btn btn-primary" type="submit" value="Login">
                         </form>     
-                        <button>¿Forgot password?</button>
+                        <button onclick="rememberPassword()" class="link">¿Forgot password?</button>
                     </div>
 
-                    <div class="register-container formContainer" id="tab-2">
-                        <p>Regístrate gratis</p>
+                    <div class="js-register-container formContainer" id="tab-2">
+                        <h3 class="subtitle">Regístrate gratis</h3>
                          <form name="registerForm" onsubmit="return register(this);">
 
                             <div class="input-container">
@@ -60,7 +60,7 @@
                             <div class="input-container">
                                 <label for="password_r">Password</label>
                                 <input type="password" id="password_r" required name="password" placeholder="Password"
-                                pattern=".{6,}" title="Mínimo 6 caracteres"><br>
+                                pattern=".{4,}" title="Mínimo 4 caracteres"><br>
                             </div>
                             
                             <div class="input-container">
@@ -68,9 +68,9 @@
                                 <input type="password" id="password2_r" required name="password2" placeholder="Repeat password"><br>
                             </div>
 
-                            <span class="tooltip">Error de prueba</span>
+                            <span class="js-error error">Error de prueba</span>
 
-                            <input class="send" type="submit" value="Registro">
+                            <input class="send btn btn-primary" type="submit" value="Registro">
                         </form>     
                     </div>
                 </div>
@@ -81,5 +81,7 @@
         </div>
 
         <?php require_once("include/foot.php"); ?>
+        <script type='text/javascript' src="js/index.js"></script>
+
     </body>
 </html>

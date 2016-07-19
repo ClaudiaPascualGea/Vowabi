@@ -1,3 +1,24 @@
+//Sweetalert
+.sweet-alert{
+	font-weight: $weight;
+	font-size: $size;
+	line-height: $lineH;
+	font-family: $primarytxt;
+	color: $primarycolor;
+	
+	button{
+		//background-color: $button !important;
+		@include trs(background-color 0.3s ease-in-out);
+
+		&:hover{
+			//background-color: $hover !important;
+		}
+	}
+}
+
+//Fin sweetalert
+
+
 
 .md-modal {
 	position: fixed;

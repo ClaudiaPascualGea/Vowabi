@@ -21,8 +21,10 @@
 @import 'modules/login';
 @import 'modules/popup';
 @import 'modules/dashboard';
+@import 'modules/project';
 
 /*------------------------------------- Breakpoints ---------------------------------------*/
 @import 'mediaqueries/mediaquery_768px';
+@import 'mediaqueries/mediaquery_1024px';
 @import 'mediaqueries/mediaquery_1200px';
 @import 'mediaqueries/mediaquery_1600px';

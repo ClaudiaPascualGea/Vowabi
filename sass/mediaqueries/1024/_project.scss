@@ -1,0 +1,14 @@
+//MENU RIGHT
+$menu-width: 300px;
+
+.content{	
+	&.active{
+		@include trf(translate(-$menu-width, 0));
+	}
+}
+
+.menu-right{	
+	@include trf(translate($menu-width, 0));
+	width:$menu-width;	
+	background: $background;	
+}

@@ -10,48 +10,43 @@
         
         <header class="userBar">
             <div class="left">
-                <img src="img/logo2.png" alt="Vowabi">
+                <img src="img/logo.png" alt="Vowabi">
                 <span class="userName"></span>
             </div>
             <div class="right">
-                <button class="button1 logout" onclick="logout()"><i class="icon-logout"></i><span>Cerrar sesión</span></button>
+                <button class="btn btn-small btn-icon btn-primary logout" onclick="logout()"><i class="icon-logout"></i><span>Cerrar sesión</span></button>
             </div>
         </header>
         
         <div class="userContent">
-            <section class="left">
-                <h2>Crea un nuevo proyecto</h2>
+           
+            <div class="cont-50 cont">
+                <h2 class="title title-small">Crea un nuevo proyecto</h2>
 
-                <form onsubmit="return createProject(this);">
+                <form class="cont-content" onsubmit="return createProject(this);">
                     <div class="input-container">
                         <label for="name_p">Nombre</label>
-                        <input type="text" id="name_p" required name="name" placeholder="Nombre*"><br>                         
+                        <input type="text" id="name_p" required name="name" placeholder=""><br>                         
                     </div>
                     
                     <div class="input-container">
                         <label for="description_p">Descripción</label>
-                        <input type="text" id="description_p" name="description" placeholder="Descripción"><br>
+                        <input type="text" id="description_p" name="description" placeholder=""><br>
                     </div>
 
-                    <span class="tooltip">Error de prueba</span>
+                    <span class="error">Error de prueba</span>
 
-                    <input class="send" type="submit" value="Crear">
+                    <input class="send btn btn-second btn-small" type="submit" value="Crear">
                 </form>     
 
-            </section>
-            <section class="right">
-                <h2>Tus proyectos</h2>
-                <ul class="projects-list">
-                    <li>
-                        <h3>Proyeto 1 - <span class="date">2016-02-18 22:09:38</span></h3>
-                        <button><i class="icon-pencil"></i><span>Editar</span></button>
-                    </li>
-                    <li>
-                        <h3>Proyeto 2 - <span class="date">2016-02-18 22:09:38</span></h3>
-                        <button><i class="icon-pencil"></i><span>Editar</span></button>
-                    </li>
+            </div>
+
+            <div class="cont-50 cont">
+                <h2 class="title title-small">Tus proyectos</h2>
+                <ul class="projects-list cont-content">
+                    
                 </ul>
-            </section>
+            </div>
 
         </div>
        
@@ -59,5 +54,6 @@
         </div>
 
         <?php require_once("include/foot.php"); ?>
+        <script type='text/javascript' src="js/dashboard.js"></script>
     </body>
 </html>

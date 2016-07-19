@@ -1,5 +1,5 @@
 <?php
-// FICHERO: rest/get/comentario.php
+// FICHERO: rest/get/proyecto.php
 
 $METODO = $_SERVER['REQUEST_METHOD'];
 // EL METODO DEBE SER GET. SI NO LO ES, NO SE HACE NADA.
@@ -35,25 +35,7 @@ $mysql='';
 if(is_numeric($ID))
 { // Se debe devolver la información del proyecto
 
-
-
-  /*
-  $mysql = 'select e.id as idElemento, e.Nombre, e.Orden, h.HTML, c.CSS, j.JS  
-              FROM proyecto p
-                LEFT JOIN elemento_usu e
-                ON e.idProyecto=p.id
-                LEFT JOIN html_usu h
-                ON h.idElemento_usu=e.id
-                LEFT JOIN css_usu c
-                ON c.idElemento_usu=e.id
-                LEFT JOIN js_usu j
-                ON j.idElemento_usu=e.id
-              WHERE p.id=' . mysqli_real_escape_string($link,$ID) . '    
-              ORDER BY e.idPadre,e.Orden
-            ';
-*/
-
-  $mysql = 'select c1.*, h.HTML , c.CSS, j.JS from proyecto pr, html_usu hu,
+  $mysql = 'select c1.*, h.HTML , c.CSS, j.JS, pr.Nombre from proyecto pr, html_usu hu,
     (select padre.Orden as op,hijo.Orden as oh, padre.id as idPadre, hijo.id as idElemento, padre.Nombre, padre.idProyecto from elemento_usu padre, elemento_usu hijo
     where padre.id=hijo.idPadre
     union

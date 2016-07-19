@@ -1,6 +1,7 @@
 body{
 	max-width: 100%;
 	width: 100%;
+	overflow-x: hidden;
 }
 
 body.fixed{
@@ -12,30 +13,99 @@ body.fixed{
 	@include trs(opacity 0.2s ease-in-out);
 }
 
-.tooltip{
-	height: 0;
+
+.title{
+	font-size: 40px;
+	line-height: 40px;
+	text-transform: uppercase;
+	font-weight: 800;
+	text-align: center;
+	letter-spacing: 1px;
+
+	&.title-small{
+		font-weight: 600;
+		font-size: 14px;
+	}
+}
+
+.subtitle{
+	font-size: 16px;
+	line-height: 18px;
+	font-weight: 600;
+	text-align: center;
+}
+
+.btn{
+	padding: 10px;
+	font-size: 18px;
+	text-transform: uppercase;
+	@include trs(background-color 0.3s ease-in-out);
+}
+
+.btn-small{
+	font-size: 14px;
+}
+
+.error{
+	display: block;
+	font-style: italic;
+	font-size: 14px;
+    height: 0;
     overflow: hidden;
     @include trs(height 0.3s ease-in-out);
 }
 
-.button1{
-	background-color: transparent;
-	border: 1px solid $blanco;
-	color: $blanco;
-	text-transform: uppercase;
-	padding: 10px;
-	@include trs(color 0.3s ease-in-out, background-color 0.3s ease-in-out);
-
+.btn-primary{
+	background-color: $button;
+	color: $text-second;
+	
 	&:hover{
-		background-color: $blanco;
-		color: $blue1;
+		background-color: $hover;
 	}
 }
+
+.btn-second{
+	padding: 10px 25px;
+	background-color: $button;
+    color: $text-second;
+	&:hover{
+		background-color: $hover2;	
+	}
+}
+
+.btn-red{
+	background-color: $red;
+	color: $blanco;
+	&:hover{
+		background-color: $red-hover;
+	}
+}
+
+.btn-icon{
+	span{
+		display: none;
+	}
+	i{
+		display: inline-block;
+	}
+}
+
+.link{
+	display: block;
+	color: $link;
+	@include trs(color 0.3s ease-in-out);
+	font-weight: 400;
+	&:hover{
+		color: $hover2;
+	}
+}
+
+
 
 .userBar{
 	display: block;
 	width: 100%;
-	background-color: $blue1;
+	background-color: $background;
 	color: $blanco;
 	padding: 15px;
 	@include flexbox();
@@ -43,22 +113,32 @@ body.fixed{
 	@include flex-justify(space-between);
 
 	img{
-		width: 50px;
+		width: 65px;
 		vertical-align: middle;
 	}
 
 	.userName{
 		margin-left: 10px;
 		vertical-align: middle;
+		display: none;
 	}
 
 	.logout{
 		margin-left: 10px;
-	}
+	}	
+}
 
-	button{
-		span{
-			display: none;
-		}
-	}
+
+.grabbable {
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+}
+
+ /* (Optional) Apply a "closed-hand" cursor during drag operation. */
+.grabbable:active { 
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
 }

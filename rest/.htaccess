@@ -56,3 +56,41 @@ RewriteCond %{THE_REQUEST} ^DELETE
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^proyecto/(.*)$ delete/proyecto.php?prm=$1&%{QUERY_STRING} [R=307,L]
+
+
+##################################################
+### REGLAS PARA ELEMENTO
+##################################################
+# Regla que redirige a rest/get/elemento.php
+# Con esta línea de abajo, sólo acepta peticiones GET
+RewriteCond %{THE_REQUEST} ^GET
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^elemento/(.*)$ get/elemento.php?prm=$1&%{QUERY_STRING} [R=307,L]
+
+# Regla que redirige a rest/post/elemento.php
+# Con esta línea de abajo, sólo acepta peticiones POST
+RewriteCond %{THE_REQUEST} ^POST
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^elemento/(.*)$ post/elemento.php?prm=$1&%{QUERY_STRING} [R=307,L]
+
+# Regla que redirige a rest/delete/elemento.php
+# Con esta línea de abajo, sólo acepta peticiones DELETE
+RewriteCond %{THE_REQUEST} ^DELETE
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^elemento/(.*)$ delete/elemento.php?prm=$1&%{QUERY_STRING} [R=307,L]
+
+
+##################################################
+### REGLAS PARA GRUPO
+##################################################
+# Regla que redirige a rest/get/grupo.php
+# Con esta línea de abajo, sólo acepta peticiones GET
+RewriteCond %{THE_REQUEST} ^GET
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^grupo/(.*)$ get/grupo.php?prm=$1&%{QUERY_STRING} [R=307,L]
+
+

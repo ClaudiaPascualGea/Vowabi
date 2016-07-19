@@ -55,7 +55,7 @@ else if(is_numeric($ID))
 
     if( $res = mysqli_query( $link, $mysql ) )
     {
-      $R = array('resultado' => 'ok');
+        $R = array('resultado' => 'ok');
     }
     else
     {

@@ -1,5 +1,5 @@
 <?php
-// FICHERO: rest/get/foto.php
+// FICHERO: rest/get/login.php
 
 $METODO = $_SERVER['REQUEST_METHOD'];
 // EL METODO DEBE SER GET. SI NO LO ES, NO SE HACE NADA.
@@ -30,7 +30,7 @@ $RESPONSE_CODE = 200; // código de respuesta por defecto: 200 - OK
 $mysql='';
 // =================================================================================
 if(isset($email))
-{ // Se debe devolver la información de la foto
+{ // Se debe devolver la información del usuario
 	$mysql  = 'select Email from USUARIO where Email="' . mysqli_real_escape_string($link,$email) . '"';
 	if( ($res = mysqli_query($link, $mysql)) && mysqli_num_rows($res)>0 )
 		$R = array("resultado" => "ok", "disponible" => "false");

@@ -46,7 +46,7 @@ else
   try{
     // ******** INICIO DE TRANSACCION **********
     mysqli_query($link, "BEGIN");
-    $mysql = "select * from Usuario where Email='" . $usu . "'";
+    $mysql = "select * from usuario where Email='" . $usu . "'";
     if( $res = mysqli_query( $link, $mysql ) )
     {
       $row = mysqli_fetch_assoc( $res );
@@ -55,7 +55,7 @@ else
       {
           $tiempo = time();
           $key = md5( $pwd . date('YmdHis', $tiempo) );
-          $mysql  = 'update Usuario set Clave="' . $key . '", Tiempo="' . date('Y-m-d H:i:s', $tiempo);
+          $mysql  = 'update usuario set Clave="' . $key . '", Tiempo="' . date('Y-m-d H:i:s', $tiempo);
           $mysql .= '" where Email="' . $usu . '"';
           if( $res = mysqli_query( $link, $mysql ) )
           {
