@@ -60,16 +60,17 @@ else if($idproject != "" && $idgroup != "" && $order != ""){
 
   try{
 
-    $mysql = 'select g.id as grupo, e.*, h.HTML , c.CSS, j.JS from 
-                elemento e 
-                         LEFT JOIN html h
-                         ON h.idElemento=e.id
-                         LEFT JOIN css c
-                         ON c.idElemento=e.id
-                         LEFT JOIN js j
-                         ON j.idElemento=e.id
-                  JOIN grupo_elemento g ON g.id=e.idGrupo_elemento AND g.id='. mysqli_real_escape_string($link,$PARAMS['idgroup']) . '
-                  order by e.idPadre, e.Orden;';
+    $mysql = 'select g.id as grupo, ge.idPadre, ge.Orden, e.*, h.HTML , c.CSS, j.JS from 
+                  elemento e 
+                           LEFT JOIN html h
+                           ON h.idElemento=e.id
+                           LEFT JOIN css c
+                           ON c.idElemento=e.id
+                           LEFT JOIN js j
+                           ON j.idElemento=e.id
+                JOIN grupo g ON g.id= '. mysqli_real_escape_string($link,$PARAMS['idgroup']) . '
+                JOIN grupo_elemento ge ON ge.idGrupo=g.id AND ge.idElemento=e.id
+              order by ge.idPadre, ge.Orden;';
 
 
     //SELECCIONAMOS LOS ELEMENTOS DEL GRUPO
@@ -105,9 +106,9 @@ else if($idproject != "" && $idgroup != "" && $order != ""){
 
           $mysql_elemento  = 'insert into elemento_usu (idProyecto, Nombre, Orden, idPadre) values("';
           $mysql_elemento .=  $idproject . '","' . $row["Nombre"] . '","' . $orden .  '", ' . $idPadre . '); ';
-       
+          
           if( $res2 = mysqli_query( $link, $mysql_elemento ) ) {
-
+          
             $id = mysqli_insert_id($link);
             if(!$row["idPadre"]){
               $idPadre = $id;
@@ -115,27 +116,31 @@ else if($idproject != "" && $idgroup != "" && $order != ""){
             
             //COPIAMOS EL HTML, CSS Y JS DEL ELEMENTO
             $mysql_html  = 'insert into html_usu (idElemento_usu, HTML) values(';
-            $mysql_html .=  $id . ', "' . $row["HTML"] . '"); ';
+            $mysql_html .=  $id . ', "' . mysqli_real_escape_string($link, $row["HTML"]) . '"); ';
 
             $mysql_js  = ' insert into js_usu (idElemento_usu, JS) values(';
             $mysql_js .=  $id . ', "' . $row["JS"] . '" ); ';
 
             $mysql_css  = 'insert into css_usu (idElemento_usu, CSS) values(';
-            $mysql_css .=  $id . ', "' . $row["CSS"] . '"); ';
+            $mysql_css .=  $id . ', "' . mysqli_real_escape_string($link, $row["CSS"]) . '"); ';
            
 
             //echo $mysql_content;
             if( $res_html = mysqli_query( $link, $mysql_html ) && 
                 $res_js = mysqli_query( $link, $mysql_js ) &&
-                $mysql_css = mysqli_query( $link, $mysql_css )
+                $res_css = mysqli_query( $link, $mysql_css )
             ) {
                $R = array('resultado' => 'ok');
             }else{
+              print_r($mysql_elemento);
+              print_r($mysql_css);
+              print_r($mysql_html);
                $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido copiar el contenido del elemento.');
                mysqli_query($link, "ROLLBACK");
             }
 
           }else{
+
             $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido crear el elemento');
             mysqli_query($link, "ROLLBACK");
           }

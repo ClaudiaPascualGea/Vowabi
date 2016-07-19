@@ -350,14 +350,23 @@ function setCSS(CSS, id){
 
 function createHTMLElement(html) {
 
-	var aux = html.split("<");
-	var aux2 = aux[1].split(">");
-	var elemName = aux2[0];
-	var elemContent = aux2[1];
 
-	var elem = document.createElement(elemName);
-	elem.innerHTML = elemContent;
+	if( html.search("img") != -1){
+		var elem = document.createElement("img");	
+		var aux = html.split('"');
+		var aux2 = aux[1].split('"');		
+		elem.src = aux2;
+	}else{
+		var aux = html.split("<");
+		var aux2 = aux[1].split(">");
+		var elemName = aux2[0];
+		var elemContent = aux2[1];
 
+		var elem = document.createElement(elemName);
+		elem.innerHTML = elemContent;
+	}
+
+	
 	return elem;
 }
 

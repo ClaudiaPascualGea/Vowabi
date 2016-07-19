@@ -42,8 +42,11 @@ if(is_numeric($ID))
 else
 { // Se utilizan parámetros
   if( isset($PARAMS['all']) )
-  { // se piden todos los grupos
-      $mysql = 'select g.* FROM grupo_elemento g ORDER BY g.Orden';
+  { // se piden todos los grupos que tienen elementos
+      $mysql = 'select g.* FROM grupo g 
+                  JOIN grupo_elemento ge ON ge.idGrupo=g.id
+                GROUP BY g.id
+                ORDER BY g.Orden;';
   }
   else
   {
