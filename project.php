@@ -15,8 +15,8 @@
                     <span class="userName"></span>
                 </div>
                 <div class="right">
-                    <button class="btn btn-icon btn-small btn-primary button1" onclick="closeProject()"><i class="icon-left-open"></i><span>Volver</span></button>
                     <button class="btn btn-icon btn-small btn-primary button1 logout" onclick="logout()"><i class="icon-logout"></i><span>Cerrar sesión</span></button>
+                    <button class="btn btn-icon btn-small btn-primary button1" onclick="closeProject()"><i class="icon-left-open"></i><span>Volver</span></button>
                 </div>
             </header>
 
