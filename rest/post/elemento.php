@@ -69,7 +69,7 @@ else if($idproject != "" && $idgroup != "" && $order != ""){
                          LEFT JOIN js j
                          ON j.idElemento=e.id
                   JOIN grupo_elemento g ON g.id=e.idGrupo_elemento AND g.id='. mysqli_real_escape_string($link,$PARAMS['idgroup']) . '
-                  order by e.Orden;';
+                  order by e.idPadre, e.Orden;';
 
 
     //SELECCIONAMOS LOS ELEMENTOS DEL GRUPO

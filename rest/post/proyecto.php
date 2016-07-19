@@ -61,7 +61,7 @@ if( !comprobarSesion($email,$clave) )
 else if($idProyecto != "" && $nombre != ""){ //Cambio de nombre
   try{
       mysqli_query($link, 'BEGIN');
-      $mysql  = 'update Proyecto set Nombre = "'. $nombre .'" where id = '. $idProyecto;
+      $mysql  = 'update proyecto set Nombre = "'. $nombre .'" where id = '. $idProyecto;
 
       if( $res = mysqli_query( $link, $mysql ) )
         $R = array('resultado' => 'ok', 'nombre' => $nombre);
