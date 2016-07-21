@@ -4,6 +4,7 @@ function dashboard(){
 	var userName = document.querySelector('.dashboard .userBar .userName');
 	userName.innerHTML = sessionStorage.usuario;
 
+	prepareSlider();
 	getProjects();
 }
 

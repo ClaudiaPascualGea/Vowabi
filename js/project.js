@@ -51,8 +51,6 @@ function getProject(){
 					removeClass(e.target, "over");
 			    }
 
-			    elem_drop.innerHTML = '<i class="icon-plus"></i>';
-
 			    document.getElementById("projectContainer").appendChild(elem_drop); 
 				
 				var padre;				
@@ -70,7 +68,28 @@ function getProject(){
 							if(CSS)
 								setCSS(CSS, id);
 
-							padre.innerHTML = "<button class='delete-element btn btn-small btn-second' onclick='removeElement("+idElemento+")'><i class='icon-trash'></i></button>";
+
+							var element_tools = document.createElement("div");
+							element_tools.className = "element-tools";
+
+							var html = "";
+							html += "<button class='btn-blue btn btn-small'>";
+							html += "	<i class='icon-cog-1'></i>";
+							html += "</button>";
+							html += "<button class='btn-green btn btn-small' onclick='moveElement(\"down\", "+op+", "+idElemento+")'>";
+							html += "	<i class='icon-down-open'></i>";
+							html += "</button>";
+							html += "<button class='btn-green btn btn-small' onclick='moveElement(\"up\", "+op+", "+idElemento+")'>";
+							html += "	<i class='icon-up-open-1'></i>";
+							html += "</button>";
+							html += "<button class='btn btn-small btn-red' onclick='removeElement("+idElemento+")'>";
+							html += "	<i class='icon-trash'></i>";
+							html += "</button>";
+
+							element_tools.innerHTML = html;
+
+
+							padre.appendChild(element_tools);
 
 							var ordenHijos = 0;
 							//Buscamos los hijos
@@ -99,6 +118,7 @@ function getProject(){
 							var elem_drop = document.createElement("div");
 							elem_drop.dataset.order = ordenPadres;
 							elem_drop.className = "drop-element";
+						    //elem_drop.innerHTML = '<i class="icon-plus"></i>';
 
 							elem_drop.ondragover = function(e){
 						        e.preventDefault();
@@ -115,7 +135,7 @@ function getProject(){
 								removeClass(e.target, "over");
 						    }
 
-						    elem_drop.innerHTML = '<i class="icon-plus"></i>';
+
 						    //Lo insertamos despues del padre
 						    padre.parentNode.insertBefore(elem_drop, padre.nextSibling);						   
 
@@ -123,9 +143,6 @@ function getProject(){
 
 					}
 				}
-
-				//Una vez cargado todo el proyecto, actualizamos el orden de los elementos en la BD
-				updateOrder();
 				
 		};
 
@@ -136,10 +153,48 @@ function getProject(){
 }
 
 /**
-	Ordena todos los elementos en la Base de datos 
+	Mueve un elemento
 **/
-function updateOrder(){
+function moveElement(direction, order, idelement){
 
+	var numE = document.querySelectorAll("#projectContainer .project-element-parent").length;
+	var directionId = undefined;
+
+	if(direction == "up"){
+		directionId = 1;
+		order--;
+	}else{
+		directionId = 0;
+		order++;
+	}
+	console.log(order);
+	if(order >= 0 && order <= numE && idelement && directionId != undefined){
+		var url = 'rest/elemento/';
+		var xhr = new XMLHttpRequest();
+		var params = '';
+		xhr.open('POST', url, true);
+
+		xhr.onload = function(){	
+
+			o = JSON.parse(this.responseText);	
+			console.log(o);
+			if(o.resultado == 'ok'){							
+				getProject();						
+			}else{
+				swal({   
+					title: "¡Upps! Ha habido algún error moviendo el elemento",   
+					text: o.descripcion,   
+					type: "error",     
+					confirmButtonText: "Aceptar",   
+				});
+			}
+		};
+
+		params = 'idproject='+ sessionStorage.getItem("idProject") + '&idelement='+idelement + '&order='+order + '&direction=' + directionId;
+		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhr.setRequestHeader("Authorization", "Basic " + Base64.encode(sessionStorage.usuario + ":" + sessionStorage.clave));
+		xhr.send(params);
+	}
 }
 
 

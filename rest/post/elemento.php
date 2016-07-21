@@ -34,6 +34,8 @@ $PARAMS      = $_POST;
 $idgroup = "";
 $idproject = "";
 $order = "";
+$idelement = "";
+$direction = "";
 
 if(isset($PARAMS['idgroup']))
   $idgroup = mysqli_real_escape_string( $link, $PARAMS['idgroup']);
@@ -43,6 +45,12 @@ if(isset($PARAMS['idproject']))
 
 if(isset($PARAMS['order']))
   $order = mysqli_real_escape_string($link, $PARAMS['order']);
+
+if(isset($PARAMS['idelement']))
+  $idelement = mysqli_real_escape_string($link, $PARAMS['idelement']);
+
+if(isset($PARAMS['direction']))
+  $direction = mysqli_real_escape_string($link, $PARAMS['direction']);
 
 if(isset($_SERVER['PHP_AUTH_USER']) &&  isset($_SERVER['PHP_AUTH_PW'])){
     $email = $_SERVER['PHP_AUTH_USER'];
@@ -86,12 +94,16 @@ else if($idproject != "" && $idgroup != "" && $order != ""){
             $idPadre = "NULL";
             //Comprobamos si hay que hacer reajuste de orden
             //Si hay padres con orden mayor o igual al actual, les sumamos una unidad al orden
-            $mysql_orden = 'select * from elemento_usu WHERE idPadre IS NULL AND Orden >='.$orden.';';
+            $mysql_orden = 'select * from elemento_usu WHERE idPadre IS NULL AND idProyecto = '.$idproject.' AND Orden >='.$orden.';';
             $res_orden = mysqli_query( $link, $mysql_orden );
             if($res_orden){
               while( $row_orden = mysqli_fetch_assoc( $res_orden ) ){
                 $mysql_updateOrden  = 'update elemento_usu set Orden = "'. ($row_orden["Orden"]+1) .'" where id = '. $row_orden["id"];
-                mysqli_query( $link, $mysql_updateOrden);           
+                mysqli_query( $link, $mysql_updateOrden);      
+                if(!$mysql_updateOrden){
+                  $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido modificar el orden del otro elemento');
+                  mysqli_query($link, "ROLLBACK");
+                }     
               }
             }
 
@@ -155,6 +167,46 @@ else if($idproject != "" && $idgroup != "" && $order != ""){
   } catch(Exception $e){
     mysqli_query($link, "ROLLBACK");
   }
+
+}
+//Cambia el orden entre dos elementos
+else if($idproject != "" && $idelement != "" && $order != "" && $direction != ""){ 
+
+   try{
+
+      if($direction == 1) //Up
+        $orden = $order + 1;
+      else if($direction == 0) //down
+        $orden = $order - 1;
+
+      mysqli_query($link, 'BEGIN');
+
+      $mysql_update  = 'update elemento_usu set Orden = "'. ($order) .'" where id='. $idelement;
+      $res = mysqli_query( $link, $mysql_update);  
+
+      $mysql_orden = 'select * from elemento_usu WHERE idPadre IS NULL AND idProyecto = '.$idproject.' AND id!='.$idelement.' AND Orden ='.$order.';';
+      $res_orden = mysqli_query( $link, $mysql_orden );
+
+      if($res && $res_orden){
+        while( $row_orden = mysqli_fetch_assoc( $res_orden ) ){
+          $mysql_updateOrden  = 'update elemento_usu set Orden = "'. $orden .'" where id = '. $row_orden["id"];
+          $res2 = mysqli_query( $link, $mysql_updateOrden);     
+          if(!$res2){
+            $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido modificar el orden del otro elemento');
+            mysqli_query($link, "ROLLBACK");
+          }
+        }
+        $R = array('resultado' => 'ok');
+        mysqli_query($link, "COMMIT");
+      }else{
+         $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido modificar el orden');
+         mysqli_query($link, "ROLLBACK");
+      }
+
+      mysqli_query($link, "COMMIT");
+    } catch(Exception $e){
+      mysqli_query($link, "ROLLBACK");
+    }
 
 }
 else if($PARAMS['idproject']=='' || $PARAMS['idgroup']=='')

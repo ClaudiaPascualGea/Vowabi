@@ -215,6 +215,60 @@
       "css": "droplet",
       "code": 59426,
       "src": "entypo"
+    },
+    {
+      "uid": "fe6697b391355dec12f3d86d6d490397",
+      "css": "up-open",
+      "code": 59427,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "e99461abfef3923546da8d745372c995",
+      "css": "cog",
+      "code": 59428,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "289b5f92f23acf1059c93fbf401c1ad5",
+      "css": "down-open-big",
+      "code": 59429,
+      "src": "entypo"
+    },
+    {
+      "uid": "0805cca616b3c12714f35af4d0912c10",
+      "css": "up-open-big",
+      "code": 59430,
+      "src": "entypo"
+    },
+    {
+      "uid": "bc64550dd022ce21604f97309b346cea",
+      "css": "cog-1",
+      "code": 59431,
+      "src": "entypo"
+    },
+    {
+      "uid": "8704cd847a47b64265b8bb110c8b4d62",
+      "css": "down-open",
+      "code": 59432,
+      "src": "entypo"
+    },
+    {
+      "uid": "9c7ff134960bb5a82404e4aeaab366d9",
+      "css": "up-open-1",
+      "code": 59433,
+      "src": "entypo"
+    },
+    {
+      "uid": "63e91725cfc5751fe4d772325fd50830",
+      "css": "plus-1",
+      "code": 59434,
+      "src": "mfglabs"
+    },
+    {
+      "uid": "hbvhbnoivp3qj8xpyqrxa7dvq9ntnci3",
+      "css": "plus-2",
+      "code": 59435,
+      "src": "modernpics"
     }
   ]
 }

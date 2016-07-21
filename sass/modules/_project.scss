@@ -4,8 +4,8 @@
 	>div{
 		position: relative;
 	}
-
-	.delete-element{
+	
+	.element-tools{
 		position: absolute;
 		right: 0;
 		top: 0;
@@ -26,19 +26,21 @@
 		border: 2px dashed;
 		border-color: transparent;
 
-		.icon-plus{
+		&:before{
+			content: "+";
 			color: $hover2;
 			display: inline-block;
 			@include trs(transform 0.3s ease-in-out);
 			@include trf(scale(0));
-			font-size: 24px;
+			font-size: 40px;
+    		font-weight: 500;
 		}
 
 		&.over{
 			border-color: $hover2;
 
-			.icon-plus{
-				@include trf(scale(1));
+			&:before{
+				@include trf(scale(1.1));
 			}
 		}
 
@@ -200,13 +202,18 @@
 
 
 /* Shown menu */
-.show-menu .content::before, .show-menu-right .content::before  {
+.show-menu-right .content::before  {
 	opacity: 1;
 	-webkit-transition: opacity 0.3s;
 	transition: opacity 0.3s;
 	-webkit-transform: translate3d(0,0,0);
 	transform: translate3d(0,0,0);
 }
+
+.show-menu-right .content{
+	overflow: hidden;
+}
+
 
 .show-menu .menu-wrap {
 	min-width: 60px;

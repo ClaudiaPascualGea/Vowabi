@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $(window).load(function() {
-        $(".flash").css("opacity", "1");
+        $(".flash").css ("opacity","1");
     });
     checkLogin();
 });
@@ -46,6 +46,57 @@ $('.js-tabs li').on('click', function (e) {
   
 });
 /****** END TABS HOME *******/
+
+/****** BACKGROUND SLIDER ******/
+
+//Cambia de slider cada 10s
+function prepareSlider(){
+    setInterval(function() {
+        nextSlide();
+    }, 10000); 
+
+}
+
+function nextSlide() {
+
+    var trs = 300;
+
+    var obj = document.querySelector('.content .image-background');
+    var obj2 = document.querySelector('.content .image-foreground');
+
+    var max = obj.getAttribute("data-max");
+    var current = obj.dataset.current;
+    var current_image = obj.getAttribute("data-img"+current);
+    var next = parseInt(current) + 1;
+
+    if(next>max)
+        next = 1;
+
+    var image = obj.getAttribute("data-img"+next);
+
+    obj2.style.backgroundImage = "url(" + current_image + ")";
+    
+    setTimeout(function(){
+        obj.style.opacity = "0";
+    },trs);
+
+    setTimeout(function(){
+        obj.style.backgroundImage = "url(" + image + ")";
+        obj.dataset.current = next;
+    },trs*2);
+
+    setTimeout(function(){
+        obj.style.opacity = "1";
+    },trs*3);
+    
+
+   
+    
+
+}
+/****** FIN BACKGROUND SLIDER ******/
+
+
 
 /****** POPUP *******/
 var overlay = document.querySelector( '.md-overlay' );

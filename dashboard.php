@@ -2,11 +2,25 @@
 <html>
     <head>
         <?php require_once("include/head.php"); ?>
+        <meta name="description" content="Dashboard - Vowabi" />
+        <meta name="title" content="Dashboard - Vowabi">
+        <title>Dashboard - Vowabi</title>
     </head>
 
     <body onLoad="dashboard();">
        
         <div class="content dashboard">
+
+         <!-- Background Slider -->
+        <div class="overlay"></div>
+        <div class="flash image-background" style="background-image: url('img/background/background1.jpg');"
+            data-current="1" data-max="5"
+            data-img1="img/background1.jpg" data-img2="img/background/background2.jpg" data-img3="img/background/background3.jpg"
+            data-img4="img/background/background4.jpg" data-img5="img/background/background5.jpg"
+            >
+        </div>
+        <div class="flash image-foreground" style="background-image: url('img/background/background1.jpg');"></div>
+
         
         <header class="userBar">
             <div class="left">

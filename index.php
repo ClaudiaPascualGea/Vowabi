@@ -2,15 +2,24 @@
 <html>
     <head>
         <?php require_once("include/head.php"); ?>
-        <title>Vowabi</title>
         <meta name="description" content="Vowabi" />
+        <meta name="title" content="Vowabi">
+        <title>Vowabi</title>
     </head>
 
-    <body>
+    <body onLoad="prepareSlider();">
        
         <div class="content home">
-
-            <div class=" flash image-background" style="background-image: url('img/background.jpg');"></div>
+            
+            <!-- Background Slider -->
+            <div class="overlay"></div>
+            <div class="flash image-background" style="background-image: url('img/background/background1.jpg');"
+                data-current="1" data-max="5"
+                data-img1="img/background1.jpg" data-img2="img/background/background2.jpg" data-img3="img/background/background3.jpg"
+                data-img4="img/background/background4.jpg" data-img5="img/background/background5.jpg"
+                >
+            </div>
+            <div class="flash image-foreground" style="background-image: url('img/background/background1.jpg');"></div>
 
         	<section class="container-home">
 

@@ -1,8 +1,10 @@
 .dashboard{
 	min-height: 100%;
-	background-color: $background-second;
+	background-color: $background;
 	//color: $negro;
 	font-weight: 400;
+	z-index: 1;
+	position: relative;
 
 	.userContent{
 		padding: 10px;	

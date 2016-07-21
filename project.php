@@ -2,6 +2,9 @@
 <html>
     <head>
         <?php require_once("include/head.php"); ?>
+        <meta name="description" content="Vowabi" />
+        <meta name="title" content="Vowabi">
+        <title>Vowabi</title>
         <style id="projectStyle"></style>
     </head>
 
