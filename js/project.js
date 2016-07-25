@@ -486,6 +486,7 @@ function closeProject(){
 
 	var bodyEl = document.body,
 		content = document.querySelector( '.content' ),
+		overlay = document.querySelector( '.overlay' ),
 		menuRight = document.querySelector( '.menu-right' ), 
 		openbtn = document.getElementById( 'open-button' ),
 		openright = document.getElementById( 'open-right' ),
@@ -506,7 +507,7 @@ function closeProject(){
 		}
 
 		// close the menu element if the target it´s not the menu element or one of its descendants..
-		content.addEventListener( 'click', function(ev) {
+		overlay.addEventListener( 'click', function(ev) {
 			var target = ev.target;
 			if( isOpen && target !== openbtn ) {
 				toggleMenu();				

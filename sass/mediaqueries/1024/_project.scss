@@ -7,6 +7,12 @@ $menu-width: 300px;
 	}
 }
 
+.body-project.show-menu-right{
+	.menu-right-button{
+		@include trf(translate(-$menu-width, 0));
+	}
+}
+
 .menu-right{	
 	@include trf(translate($menu-width, 0));
 	width:$menu-width;	
