@@ -168,7 +168,7 @@ function moveElement(direction, order, idelement){
 		order++;
 	}
 
-	if(order >= 0 && order <= numE && idelement && directionId != undefined){
+	if(order >= 0 && order < numE && idelement && directionId != undefined){
 		var url = 'rest/elemento/';
 		var xhr = new XMLHttpRequest();
 		var params = '';
