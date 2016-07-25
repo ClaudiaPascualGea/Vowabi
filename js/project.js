@@ -167,7 +167,7 @@ function moveElement(direction, order, idelement){
 		directionId = 0;
 		order++;
 	}
-	console.log(order);
+
 	if(order >= 0 && order <= numE && idelement && directionId != undefined){
 		var url = 'rest/elemento/';
 		var xhr = new XMLHttpRequest();
@@ -177,7 +177,7 @@ function moveElement(direction, order, idelement){
 		xhr.onload = function(){	
 
 			o = JSON.parse(this.responseText);	
-			console.log(o);
+			//console.log(o);
 			if(o.resultado == 'ok'){							
 				getProject();						
 			}else{
@@ -218,13 +218,13 @@ function removeElement(idelement){
 		//Cerramos el modal
 		document.querySelector(".sa-button-container .cancel").click();
 
-		var url = 'rest/elemento/' + idelement;
+		var url = 'rest/elemento/' + idelement + "?idproject=" + sessionStorage.getItem("idProject");
 		var xhr = new XMLHttpRequest();
 		xhr.open('DELETE', url, true);
 
 		xhr.onload = function(){	
 				o = JSON.parse(this.responseText);	
-				console.log(o);
+				//console.log(o);
 				if(o.resultado == 'ok'){							
 					getProject();
 				}else{				
@@ -336,7 +336,7 @@ function addGroup(idgroup, order){
 		xhr.onload = function(){	
 
 			o = JSON.parse(this.responseText);	
-			console.log(o);
+			//console.log(o);
 			if(o.resultado == 'ok'){							
 				getProject();		
 				if( hasClass( document.querySelector(".menu-right") ,"active") )
@@ -375,7 +375,7 @@ function getElements(idgroup){
 				if(window.JSON) // Comprueba si soporta JSON nativo
 					elements = window.JSON.parse( this.responseText );
 
-				console.log(elements);				
+				//console.log(elements);				
 		};
 
 		xhr.send();		

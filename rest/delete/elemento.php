@@ -20,6 +20,11 @@ $RECURSO = explode("/", $_GET['prm']);
 $PARAMS = array_slice($_GET, 1, count($_GET) - 1,true);
 $ID = $RECURSO[0];
 
+$idproject = "";
+
+if(isset($PARAMS['idproject']))
+  $idproject = mysqli_real_escape_string( $link, $PARAMS['idproject']);
+
 // =================================================================================
 // CONFIGURACION DE SALIDA JSON
 // =================================================================================
@@ -44,7 +49,7 @@ if(isset($_SERVER['PHP_AUTH_USER']) &&  isset($_SERVER['PHP_AUTH_PW'])){
 
 if( !comprobarSesion($email,$clave) )
   $R = array('resultado' => 'error', 'descripcion' => 'Tiempo de sesión agotado.');
-else if(is_numeric($ID))
+else if(is_numeric($ID) && $idproject!="")
 { // Se elimina el elemento
 
     try{
@@ -55,7 +60,7 @@ else if(is_numeric($ID))
         if( $res = mysqli_query( $link, $mysql ) )
         {
             //Reajustamos el orden del resto de elementos padre, empezando por el 0
-            $mysql_orden = 'select * from elemento_usu WHERE idPadre IS NULL Order By Orden;';
+            $mysql_orden = 'select * from elemento_usu WHERE idPadre IS NULL Order By Orden AND idProyecto = '.$idproject.' AND id!='.$ID.';';
             $res_orden = mysqli_query( $link, $mysql_orden );
             if($res_orden){
                 $orden = 0;
