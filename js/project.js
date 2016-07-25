@@ -177,7 +177,7 @@ function moveElement(direction, order, idelement){
 		xhr.onload = function(){	
 
 			o = JSON.parse(this.responseText);	
-			//console.log(o);
+			console.log(o);
 			if(o.resultado == 'ok'){							
 				getProject();						
 			}else{
@@ -218,16 +218,18 @@ function removeElement(idelement){
 		//Cerramos el modal
 		document.querySelector(".sa-button-container .cancel").click();
 
-		var url = 'rest/elemento/' + idelement + "?idproject=" + sessionStorage.getItem("idProject");
+		//var url = 'rest/elemento/' + idelement + "?idproject=" + sessionStorage.getItem("idProject") ;
+		var url = 'rest/elemento/';
 		var xhr = new XMLHttpRequest();
-		xhr.open('DELETE', url, true);
+		xhr.open('POST', url, true);
 
 		xhr.onload = function(){	
 				o = JSON.parse(this.responseText);	
-				//console.log(o);
+				console.log(o);
 				if(o.resultado == 'ok'){							
 					getProject();
-				}else{				
+				}else{
+					console.log("aqui");				
 					swal({   
 						title: "¡Upps! Ha habido algún error",   
 						text: "Ha habido algún error elminando el elemento, inténtalo de nuevo más tarde.",   
@@ -236,9 +238,13 @@ function removeElement(idelement){
 					});
 				}
 		};
-
+		params = 'idproject='+ sessionStorage.getItem("idProject") + '&idelement='+idelement + '&delete='+true;
+		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		xhr.setRequestHeader("Authorization", "Basic " + Base64.encode(sessionStorage.usuario + ":" + sessionStorage.clave));
-		xhr.send();
+		xhr.send(params);
+		/*xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhr.setRequestHeader("Authorization", "Basic " + Base64.encode(sessionStorage.getItem("usuario") + ":" + sessionStorage.getItem("clave") ));
+		xhr.send();*/
 	});
 }
 

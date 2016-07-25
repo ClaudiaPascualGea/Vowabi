@@ -2089,7 +2089,7 @@ body.fixed .content {
 }
 
 #projectContainer .drop-element.first {
-  margin-top: 0;
+  margin-top: 0 !important;
 }
 
 #projectContainer .drop-element:last-child {

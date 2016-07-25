@@ -18,7 +18,7 @@ if($METODO<>'POST') exit();
 // =================================================================================
 // CONFIGURACION DE SALIDA JSON
 // =================================================================================
-header("Access-Control-Allow-Orgin: *");
+header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Methods: *");
 header("Content-Type: application/json");
 // =================================================================================
@@ -36,6 +36,7 @@ $idproject = "";
 $order = "";
 $idelement = "";
 $direction = "";
+$delete = "";
 
 if(isset($PARAMS['idgroup']))
   $idgroup = mysqli_real_escape_string( $link, $PARAMS['idgroup']);
@@ -51,6 +52,9 @@ if(isset($PARAMS['idelement']))
 
 if(isset($PARAMS['direction']))
   $direction = mysqli_real_escape_string($link, $PARAMS['direction']);
+
+if(isset($PARAMS['delete']))
+  $delete = mysqli_real_escape_string($link, $PARAMS['delete']);
 
 if(isset($_SERVER['PHP_AUTH_USER']) &&  isset($_SERVER['PHP_AUTH_PW'])){
     $email = $_SERVER['PHP_AUTH_USER'];
@@ -208,6 +212,41 @@ else if($idproject != "" && $idelement != "" && $order != "" && $direction != ""
       mysqli_query($link, "ROLLBACK");
     }
 
+}
+//Elimina el elemento indicado
+else if($idelement!='' && $delete!='' && $idproject!=''){
+    try{
+        // ******** INICIO DE TRANSACCION **********
+        mysqli_query($link, 'BEGIN');
+        $mysql  = 'delete from elemento_usu where id='. $idelement;
+
+        if( $res = mysqli_query( $link, $mysql ) )
+        {
+            //Reajustamos el orden del resto de elementos padre, empezando por el 0
+            $mysql_orden = 'select * from elemento_usu WHERE idPadre IS NULL Order By Orden AND idProyecto = '.$idproject.' AND id!='.$idelement.';';
+            $res_orden = mysqli_query( $link, $mysql_orden );
+            if($res_orden){
+                $orden = 0;
+                while( $row_orden = mysqli_fetch_assoc( $res_orden ) ){
+                    $mysql_updateOrden  = 'update elemento_usu set Orden = "'. $orden .'" where id = '. $row_orden["id"];
+                    if($res_updateOrden = mysqli_query( $link, $mysql_updateOrden) )
+                        $orden++;
+                }
+            }
+            
+            $R = array('resultado' => 'ok');
+        }
+        else
+        {
+          $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido eliminar el elemento');
+        }
+        // ******** FIN DE TRANSACCION **********
+        mysqli_query($link, "COMMIT");
+
+    } catch(Exception $e){
+        // Se ha producido un error, se cancela la transacción.
+        mysqli_query($link, "ROLLBACK");
+    }
 }
 else if($PARAMS['idproject']=='' || $PARAMS['idgroup']=='')
 {

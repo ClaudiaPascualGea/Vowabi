@@ -24,7 +24,7 @@ $ID = $RECURSO[0];
 // =================================================================================
 // CONFIGURACION DE SALIDA JSON
 // =================================================================================
-header("Access-Control-Allow-Orgin: *");
+header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Methods: *");
 header("Content-Type: application/json");
 // =================================================================================
@@ -43,8 +43,9 @@ if(isset($_SERVER['PHP_AUTH_USER']) &&  isset($_SERVER['PHP_AUTH_PW'])){
     $clave = "";
 }
 
-if( !comprobarSesion($email,$clave) )
-  $R = array('resultado' => 'error', 'descripcion' => 'Tiempo de sesión agotado.');
+if( !comprobarSesion($email,$clave) ){
+    $R = array('resultado' => 'error', 'descripcion' => 'Tiempo de sesión agotado.');
+}
 else if(is_numeric($ID))
 { // Se elimina el proyecto
 
