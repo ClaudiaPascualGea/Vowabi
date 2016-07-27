@@ -76,10 +76,10 @@ function getProject(){
 							html += "<button class='btn-blue btn btn-small'>";
 							html += "	<i class='icon-cog-1'></i>";
 							html += "</button>";
-							html += "<button class='btn-green btn btn-small' onclick='moveElement(\"down\", "+op+", "+idElemento+")'>";
+							html += "<button class='btn-green btn btn-small' onclick='moveElement(\"down\", this)'>";
 							html += "	<i class='icon-down-open'></i>";
 							html += "</button>";
-							html += "<button class='btn-green btn btn-small' onclick='moveElement(\"up\", "+op+", "+idElemento+")'>";
+							html += "<button class='btn-green btn btn-small' onclick='moveElement(\"up\", this)'>";
 							html += "	<i class='icon-up-open-1'></i>";
 							html += "</button>";
 							html += "<button class='btn btn-small btn-red' onclick='removeElement("+idElemento+")'>";
@@ -155,9 +155,14 @@ function getProject(){
 /**
 	Mueve un elemento
 **/
-function moveElement(direction, order, idelement){
+function moveElement(direction, element){
+
+	var order = element.parentNode.parentNode.getAttribute("data-order");
+	var id = element.parentNode.parentNode.id;
+	var idelement = id.replace("el-", "");
 
 	var numE = document.querySelectorAll("#projectContainer .project-element-parent").length;
+	var iniOrder = order;
 	var directionId = undefined;
 
 	if(direction == "up"){
@@ -169,6 +174,7 @@ function moveElement(direction, order, idelement){
 	}
 
 	if(order >= 0 && order < numE && idelement && directionId != undefined){
+
 		var url = 'rest/elemento/';
 		var xhr = new XMLHttpRequest();
 		var params = '';
@@ -179,7 +185,22 @@ function moveElement(direction, order, idelement){
 			o = JSON.parse(this.responseText);	
 			console.log(o);
 			if(o.resultado == 'ok'){							
-				getProject();						
+				//getProject();		
+				//Movemos los elementos con JS
+				var element = document.querySelector("#projectContainer #el-"+idelement);
+				var secondElement = document.querySelector("#projectContainer .project-element-parent[data-order='"+order+"']");				
+
+				element.setAttribute("data-order", order);
+				secondElement.setAttribute("data-order", iniOrder);
+
+				if(direction == "up"){			
+					element.parentNode.insertBefore(element, secondElement);
+					element.parentNode.insertBefore(secondElement, secondElement.nextSibling.nextSibling);
+				}else{
+					element.parentNode.insertBefore(element, secondElement.nextSibling);
+					element.parentNode.insertBefore(secondElement, secondElement.previousSibling);
+				}
+
 			}else{
 				swal({   
 					title: "¡Upps! Ha habido algún error moviendo el elemento",   
