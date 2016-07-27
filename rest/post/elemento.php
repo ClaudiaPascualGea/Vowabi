@@ -37,6 +37,7 @@ $order = "";
 $idelement = "";
 $direction = "";
 $delete = "";
+$html = "";
 
 if(isset($PARAMS['idgroup']))
   $idgroup = mysqli_real_escape_string( $link, $PARAMS['idgroup']);
@@ -56,6 +57,9 @@ if(isset($PARAMS['direction']))
 if(isset($PARAMS['delete']))
   $delete = mysqli_real_escape_string($link, $PARAMS['delete']);
 
+if(isset($PARAMS['html']))
+  $html = mysqli_real_escape_string($link, $PARAMS['html']);
+
 if(isset($_SERVER['PHP_AUTH_USER']) &&  isset($_SERVER['PHP_AUTH_PW'])){
     $email = $_SERVER['PHP_AUTH_USER'];
     $clave = $_SERVER['PHP_AUTH_PW'];
@@ -66,7 +70,7 @@ if(isset($_SERVER['PHP_AUTH_USER']) &&  isset($_SERVER['PHP_AUTH_PW'])){
 
 //Comprobamos la sesion del usuario para hacer la consulta
 if( !comprobarSesion($email,$clave) )
-  $R = array('resultado' => 'error', 'descripcion' => 'Tiempo de sesión agotado.');
+  $R = array('resultado' => 'error', 'descripcion' => 'Tiempo de sesión agotado.', 'code'=>408);
 //Copiamos los elementos de un grupo al proyecto del usuario
 else if($idproject != "" && $idgroup != "" && $order != ""){ 
 
@@ -248,10 +252,36 @@ else if($idelement!='' && $delete!='' && $idproject!=''){
         mysqli_query($link, "ROLLBACK");
     }
 }
+else if($idelement!='' && $html!=''){
+    try{
+        // ******** INICIO DE TRANSACCION **********
+        mysqli_query($link, 'BEGIN');
+        $mysql  = 'update html_usu SET HTML="'.mysqli_real_escape_string($link, $html).'" where idElemento_usu='. $idelement;
+
+        if( $res = mysqli_query( $link, $mysql ) )
+        {      
+            $R = array('resultado' => 'ok');
+        }
+        else
+        {
+          print_r($res);
+          print_r($link);
+          print_r($mysql);           
+
+          $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido modificar el HTML del elemento');
+        }
+        // ******** FIN DE TRANSACCION **********
+        mysqli_query($link, "COMMIT");
+
+    } catch(Exception $e){
+        // Se ha producido un error, se cancela la transacción.
+        mysqli_query($link, "ROLLBACK");
+    }
+}
 else if($PARAMS['idproject']=='' || $PARAMS['idgroup']=='')
 {
   $RESPONSE_CODE = 401;
-  $R = array('resultado' => 'error', 'descripcion' => 'Ha habido algún error añadiendo el grupo de elementos.');
+  $R = array('resultado' => 'error', 'descripcion' => 'Parámetros incorrectos.');
 }
 //Aqui iria la creacion de un elemento individual
 /*else

@@ -5,7 +5,7 @@ function project(){
 
 	var orderElements = 0;	
 	getProject();
-	getGroups();
+	getGroups();	
 }
 
 function getProject(){
@@ -33,7 +33,7 @@ function getProject(){
 
 				//Anyadimos el primer contenedor de drop
 				var elem_drop = document.createElement("div");
-				elem_drop.dataset.order = ordenPadres;
+				elem_drop.setAttribute("data-order", ordenPadres);
 				elem_drop.className = "drop-element first";
 
 				elem_drop.ondragover = function(e){
@@ -42,8 +42,8 @@ function getProject(){
 			    };
 			    elem_drop.ondrop = function(e){
 			        e.preventDefault();
-			        var id = e.dataTransfer.getData('text/plain');
-			        var order = e.target.dataset.order;
+			        var id = e.dataTransfer.getData('text');
+			        var order = e.target.getAttribute("data-order");
 			        addGroup(id, order);
 			    };
 			    elem_drop.ondragleave = function(e){
@@ -62,7 +62,7 @@ function getProject(){
 							var id = "el-" + idElemento;
 							var padre = createHTMLElement(HTML);
 							padre.id = id;
-							padre.dataset.order = op;
+							padre.setAttribute("data-order", op);
 							padre.className = "project-element-parent";	
 
 							if(CSS)
@@ -82,7 +82,7 @@ function getProject(){
 							html += "<button class='btn-green btn btn-small' onclick='moveElement(\"up\", this)'>";
 							html += "	<i class='icon-up-open-1'></i>";
 							html += "</button>";
-							html += "<button class='btn btn-small btn-red' onclick='removeElement("+idElemento+")'>";
+							html += "<button class='btn btn-small btn-red' onclick='removeElement(this)'>";
 							html += "	<i class='icon-trash'></i>";
 							html += "</button>";
 
@@ -99,12 +99,17 @@ function getProject(){
 									var idHijo = "el-" + elem["idElemento"];
 									var hijo = createHTMLElement(elem["HTML"]);
 									hijo.id = idHijo;
-									hijo.dataset.order = elem["oh"];
+									hijo.setAttribute("data-order", elem["oh"]);
 									hijo.className = "project-element";
 									ordenHijos++;
 
 									if(elem["CSS"])
 										setCSS(elem["CSS"], idHijo);
+
+									//Hacemos el contenido editable
+									hijo.contentEditable = true;
+									hijo.addEventListener("input", changeHTML, false);
+
 
 									padre.appendChild(hijo);
 								}
@@ -116,7 +121,7 @@ function getProject(){
 
 							//Element drop
 							var elem_drop = document.createElement("div");
-							elem_drop.dataset.order = ordenPadres;
+							elem_drop.setAttribute("data-order", ordenPadres);
 							elem_drop.className = "drop-element";
 						    //elem_drop.innerHTML = '<i class="icon-plus"></i>';
 
@@ -126,8 +131,8 @@ function getProject(){
 						    };
 						    elem_drop.ondrop = function(e){
 						        e.preventDefault();
-						        var id = e.dataTransfer.getData('text/plain');
-						        var order = e.target.dataset.order;
+						        var id = e.dataTransfer.getData('text');
+						        var order = e.target.getAttribute("data-order");
 						        addGroup(id, order);
 						    };
 						    elem_drop.ondragleave = function(e){
@@ -142,14 +147,52 @@ function getProject(){
 						}
 
 					}
-				}
-				
+				}	
+			
 		};
 
 		xhr.send();
 	}
 	else
 		location.href="dashboard.php";
+}
+
+/**
+	Cambia el HTML de un elemento cuando es Contenteditable
+**/
+function changeHTML(el){
+	
+	var id = this.id;
+	var idelement = id.replace("el-", "");
+	var elem = createHTMLElement(this.outerHTML);
+	var html = elem.outerHTML;
+
+	if(html && idelement){
+		var url = 'rest/elemento/';
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', url, true);
+
+		xhr.onload = function(){	
+				o = JSON.parse(this.responseText);	
+				//console.log(o);
+				if(o.resultado != 'ok'){												
+					swal({   
+						title: "¡Upps! Ha habido algún error",   
+						text: "Ha habido algún error cambiando el HTML del elemento, inténtalo de nuevo más tarde.",   
+						type: "error",     
+						confirmButtonText: "Aceptar",   
+						closeOnConfirm: false
+					}, function(){  
+						if(o.code == 408)
+							logout();
+					});
+				}
+		};
+		params = 'idelement='+idelement + '&html='+ html;
+		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhr.setRequestHeader("Authorization", "Basic " + Base64.encode(sessionStorage.usuario + ":" + sessionStorage.clave));
+		xhr.send(params);
+	}
 }
 
 /**
@@ -183,7 +226,7 @@ function moveElement(direction, element){
 		xhr.onload = function(){	
 
 			o = JSON.parse(this.responseText);	
-			console.log(o);
+			//console.log(o);
 			if(o.resultado == 'ok'){							
 				//getProject();		
 				//Movemos los elementos con JS
@@ -206,7 +249,11 @@ function moveElement(direction, element){
 					title: "¡Upps! Ha habido algún error moviendo el elemento",   
 					text: o.descripcion,   
 					type: "error",     
-					confirmButtonText: "Aceptar",   
+					confirmButtonText: "Aceptar", 
+					closeOnConfirm: false
+					}, function(){  
+						if(o.code == 408)
+							logout();
 				});
 			}
 		};
@@ -222,7 +269,12 @@ function moveElement(direction, element){
 /**
 Elimina el elemento del proyecto del usuario
 **/
-function removeElement(idelement){
+function removeElement(element){
+
+	var elementProject = element.parentNode.parentNode;
+	var order = elementProject.getAttribute("data-order");
+	var id = elementProject.id;
+	var idelement = id.replace("el-", "");
 
 	swal({   
 		title: "Eliminar elemento",   
@@ -248,14 +300,20 @@ function removeElement(idelement){
 				o = JSON.parse(this.responseText);	
 				console.log(o);
 				if(o.resultado == 'ok'){							
-					getProject();
-				}else{
-					console.log("aqui");				
+					//getProject();
+					elementProject.parentNode.removeChild(elementProject.previousSibling);
+					elementProject.parentNode.removeChild(elementProject);
+					resetOrder(order);
+				}else{						
 					swal({   
 						title: "¡Upps! Ha habido algún error",   
 						text: "Ha habido algún error elminando el elemento, inténtalo de nuevo más tarde.",   
 						type: "error",     
 						confirmButtonText: "Aceptar",   
+						closeOnConfirm: false
+					}, function(){  
+						if(o.code == 408)
+							logout();
 					});
 				}
 		};
@@ -267,6 +325,20 @@ function removeElement(idelement){
 		xhr.setRequestHeader("Authorization", "Basic " + Base64.encode(sessionStorage.getItem("usuario") + ":" + sessionStorage.getItem("clave") ));
 		xhr.send();*/
 	});
+}
+
+/**
+Cambia el orden de los elementos mayores que order tras un borrado
+**/
+function resetOrder(order){
+	var elements = document.querySelectorAll("#projectContainer .project-element-parent");
+	for(var i=0; i< elements.length; i++){
+		var elemOrder = elements[i].getAttribute("data-order");
+		if(elemOrder > order){
+			elements[i].setAttribute("data-order", parseInt(elemOrder)-1);
+			elements[i].previousSibling.setAttribute("data-order", parseInt(elemOrder)-1);
+		}
+	}
 }
 
 /**
@@ -323,7 +395,7 @@ function listGroups(groups, container){
 	if(groups.length){
 		for(var i=0; i<groups.length; i++){
 			var elem = document.createElement("li");
-			elem.dataset.id = groups[i].id;
+			elem.setAttribute("data-id", groups[i].id);
 
 			elem.innerHTML += "<h3>"+ groups[i].Nombre +"</h3>";
 			if(groups[i].Descripcion && groups[i].Descripcion != "")
@@ -336,7 +408,7 @@ function listGroups(groups, container){
 		    elem.setAttribute('draggable','true');
 		    elem.ondragstart = function(e){
 		    	document.getElementById('open-right').click();
-	            e.dataTransfer.setData('text/plain', e.target.dataset.id);
+	            e.dataTransfer.setData('text', e.target.getAttribute("data-id"));
 	        };
 
 			container.appendChild(elem);
@@ -441,10 +513,12 @@ function createHTMLElement(html) {
 	}else{
 		var aux = html.split("<");
 		var aux2 = aux[1].split(">");
-		var elemName = aux2[0];
+
+		var elementType = aux2[0].split(" ")[0];
+		//var elemName = aux2[0];
 		var elemContent = aux2[1];
 
-		var elem = document.createElement(elemName);
+		var elem = document.createElement(elementType);
 		elem.innerHTML = elemContent;
 	}
 
