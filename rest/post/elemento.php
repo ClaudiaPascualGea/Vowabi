@@ -92,6 +92,9 @@ else if($idproject != "" && $idgroup != "" && $order != ""){
     //SELECCIONAMOS LOS ELEMENTOS DEL GRUPO
     if( strlen($mysql)>0 && $res = mysqli_query( $link, $mysql ) )
     {
+        $elements = array();
+        $cont = 0;
+
         while( $row = mysqli_fetch_assoc( $res ) ){
           $R[] = $row;
           //row: grupo, id, Nombre, idPadre, idGrupo_elemento, Orden, HTML, CSS, JS
@@ -150,12 +153,14 @@ else if($idproject != "" && $idgroup != "" && $order != ""){
                 $res_js = mysqli_query( $link, $mysql_js ) &&
                 $res_css = mysqli_query( $link, $mysql_css )
             ) {
-               $R = array('resultado' => 'ok');
+              $elements[$cont] = array("idElemento"=>$id, "HTML"=>$row["HTML"], "idPadre"=>$idPadre, "CSS"=>$row["CSS"], "JS"=>$row["JS"], "order"=>$orden);
+              $cont++;
+              $R = array('resultado' => 'ok', "elements"=>$elements);
             }else{
               print_r($mysql_elemento);
               print_r($mysql_css);
               print_r($mysql_html);
-               $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido copiar el contenido del elemento.');
+              $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido copiar el contenido del elemento.');
                mysqli_query($link, "ROLLBACK");
             }
 
