@@ -194,3 +194,54 @@ body.fixed{
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
 }
+
+//TOOLTIPS
+.tooltip {
+	position: relative;
+
+	&.tooltip-right{
+		&:after{
+			right: 0;
+			left: auto;
+		}
+	}
+
+	&:hover{
+		&:after, &:before{
+			opacity: 1;
+		}
+	}
+}
+
+.tooltip:after {
+	background: rgba(0, 0, 0, 0.6);
+	border-radius: 2px;
+	color: #fff;
+	content: attr(data-title);
+	display: block;
+	padding: 5px;
+	position: absolute;
+	white-space: nowrap;
+	top: calc(100% + 10px);
+	text-transform: none;
+	left: -50%;
+	z-index: 98;
+	opacity: 0;
+	font-size: 12px;
+	@include trs(opacity 0.2s ease-in-out);
+}
+
+
+.tooltip:before {
+	border: solid;
+	border-color: rgba(0, 0, 0, 0.6) transparent;
+	border-width: 0 5px 5px 5px;
+	top: calc(100% + 5px);
+	content: "";
+	display: inline-block;
+	left: 50%;
+	position: absolute;
+	z-index: 99;
+	opacity: 0;
+	@include trs(opacity 0.2s ease-in-out);
+}

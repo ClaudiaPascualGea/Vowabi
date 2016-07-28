@@ -105,16 +105,16 @@ function createElementTools(){
 	element_tools.className = "element-tools";
 
 	var html = "";
-	html += "<button class='btn-blue btn btn-small'>";
+	html += "<button class='btn-blue btn btn-small tooltip' data-title='Configuración'>";
 	html += "	<i class='icon-cog-1'></i>";
 	html += "</button>";
-	html += "<button class='btn-green btn btn-small' onclick='moveElement(\"down\", this)'>";
+	html += "<button class='btn-green btn btn-small tooltip' data-title='Bajar bloque' onclick='moveElement(\"down\", this)'>";
 	html += "	<i class='icon-down-open'></i>";
 	html += "</button>";
-	html += "<button class='btn-green btn btn-small' onclick='moveElement(\"up\", this)'>";
+	html += "<button class='btn-green btn btn-small tooltip' data-title='Subir bloque' onclick='moveElement(\"up\", this)'>";
 	html += "	<i class='icon-up-open-1'></i>";
 	html += "</button>";
-	html += "<button class='btn btn-small btn-red' onclick='removeElement(this)'>";
+	html += "<button class='btn btn-small btn-red tooltip tooltip-right' data-title='Eliminar bloque' onclick='removeElement(this)'>";
 	html += "	<i class='icon-trash'></i>";
 	html += "</button>";
 
@@ -332,14 +332,24 @@ function resetOrder(order, type){
 		if(elemOrder > order){
 			if(type == 0){ //Tras el borrado
 				elements[i].setAttribute("data-order", parseInt(elemOrder)-1);
-				elements[i].previousSibling.setAttribute("data-order", parseInt(elemOrder)-1);
+				elements[i].previousSibling.setAttribute("data-order", parseInt(elemOrder)-1);					
 			}else{ //Tras un anyadido
 				elements[i].setAttribute("data-order", parseInt(elemOrder)+1);
-				elements[i].previousSibling.setAttribute("data-order", parseInt(elemOrder)+1);
+				elements[i].previousSibling.setAttribute("data-order", parseInt(elemOrder)+1);							
 			}
 
 		}
 	}
+
+	if(type == 0){
+		var elem = document.querySelector("#projectContainer .drop-element[data-order='"+parseInt(elements.length + 1)+"']");
+		elem.setAttribute("data-order", parseInt(elements.length));		
+	}else{
+		var elem = document.querySelectorAll("#projectContainer .drop-element[data-order='"+elements.length+"']");
+		if(elem[1])
+			elem[1].setAttribute("data-order", parseInt(elements.length)+1);	
+	}
+
 }
 
 
@@ -404,8 +414,7 @@ function listGroups(groups, container){
 			if(groups[i].Descripcion && groups[i].Descripcion != "")
 				elem.innerHTML += "<p>"+ groups[i].Descripcion +"</p>";
 
-			order = document.querySelectorAll("#projectContainer .project-element-parent").length;
-			elem.innerHTML += "<button class='btn btn-second btn-small' onclick='addGroup("+ groups[i].id +", "+order+")'>Añadir</button>";
+			elem.innerHTML += "<button class='btn btn-second btn-small' onclick='addGroup("+ groups[i].id +")'>Añadir</button>";
 
 			// PARTE DEL DRAG
 			elem.className = "grabbable";
@@ -430,6 +439,10 @@ Añade el grupo de elementos seleccionado al proyecto
 Recibe el id del grupo y el orden del padre
 **/
 function addGroup(idgroup, order){	
+
+	if(!order)
+		order = document.querySelectorAll("#projectContainer .project-element-parent").length;
+
 	if(idgroup){
 		var url = 'rest/elemento/';
 		var xhr = new XMLHttpRequest();
@@ -467,6 +480,9 @@ function addGroup(idgroup, order){
 	Añade un grupo de elementos en su posición adecuada
 **/
 function addGroupElements(elements){
+
+	var projectElements = document.querySelectorAll("#projectContainer .project-element-parent").length;
+
 	if(elements.length > 0){
 		with(elements[0]){
 			var id = "el-" + idElemento;
@@ -504,18 +520,30 @@ function addGroupElements(elements){
 			}				
 
 			resetOrder(order-1, 1);
-			var orderSibling = parseInt(order) + 1;
 
-			var elemDrop =  document.querySelector("#projectContainer .drop-element[data-order='"+(orderSibling)+"']");	
-			console.log(elemDrop);
+			var orderSibling = parseInt(order);
 
-			document.getElementById("projectContainer").insertBefore(padre, elemDrop); 
+			if(order < projectElements){
+				var orderSibling = parseInt(order) + 1;
+				var elemDrop =  document.querySelector("#projectContainer .drop-element[data-order='"+(orderSibling)+"']");	
+				document.getElementById("projectContainer").insertBefore(padre, elemDrop); 		
+			}else{
+				document.getElementById("projectContainer").appendChild(padre);
+			}
 
-			//Element drop
-			var elem_drop = createDropElement(ordenPadre);						   
-		    padre.parentNode.insertBefore(elem_drop, padre);
+			
+			//Element drop			
+			if(order < projectElements){   
+				var elem_drop = createDropElement(ordenPadre);		
+		    	padre.parentNode.insertBefore(elem_drop, padre);
+		    }else{
+		    	var elem_drop = createDropElement( parseInt(ordenPadre) + 1);	
+		    	document.getElementById("projectContainer").appendChild(elem_drop);
+		    }
 
-		    removeClass(document.querySelector("#projectContainer .drop-element.over"), "over");
+		    var overDrop = document.querySelector("#projectContainer .drop-element.over");
+		    if(overDrop)
+		    	removeClass(overDrop, "over");
 		}
 	}
 }

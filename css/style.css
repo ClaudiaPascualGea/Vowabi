@@ -1646,6 +1646,57 @@ body.fixed .content {
   cursor: -webkit-grabbing;
 }
 
+.tooltip {
+  position: relative;
+}
+
+.tooltip.tooltip-right:after {
+  right: 0;
+  left: auto;
+}
+
+.tooltip:hover:after, .tooltip:hover:before {
+  opacity: 1;
+}
+
+.tooltip:after {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 2px;
+  color: #fff;
+  content: attr(data-title);
+  display: block;
+  padding: 5px;
+  position: absolute;
+  white-space: nowrap;
+  top: calc(100% + 10px);
+  text-transform: none;
+  left: -50%;
+  z-index: 98;
+  opacity: 0;
+  font-size: 12px;
+  -webkit-transition: opacity 0.2s ease-in-out;
+  -moz-transition: opacity 0.2s ease-in-out;
+  -o-transition: opacity 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.tooltip:before {
+  border: solid;
+  border-color: rgba(0, 0, 0, 0.6) transparent;
+  border-width: 0 5px 5px 5px;
+  top: calc(100% + 5px);
+  content: "";
+  display: inline-block;
+  left: 50%;
+  position: absolute;
+  z-index: 99;
+  opacity: 0;
+  -webkit-transition: opacity 0.2s ease-in-out;
+  -moz-transition: opacity 0.2s ease-in-out;
+  -o-transition: opacity 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
+}
+
 .content.home {
   min-height: 100%;
   width: 100%;
@@ -2021,6 +2072,10 @@ body.fixed .content {
   right: 0;
   top: 0;
   z-index: 3;
+  -webkit-transition: opacity 0.3s ease-in-out;
+  -moz-transition: opacity 0.3s ease-in-out;
+  -o-transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
 }
 
 #projectContainer .drop-element {
@@ -2710,6 +2765,12 @@ body.fixed .content {
     transform: translate(300px, 0);
     width: 300px;
     background: #222c35;
+  }
+  .project-element-parent .element-tools {
+    opacity: 0;
+  }
+  .project-element-parent:hover > .element-tools {
+    opacity: 1;
   }
 }
 

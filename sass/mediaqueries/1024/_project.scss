@@ -18,3 +18,16 @@ $menu-width: 300px;
 	width:$menu-width;	
 	background: $background;	
 }
+
+.project-element-parent{
+
+	.element-tools{
+		opacity: 0;
+	}
+	
+	&:hover{
+		>.element-tools{
+			opacity: 1;
+		}
+	}
+}
