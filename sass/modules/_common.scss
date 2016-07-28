@@ -123,6 +123,10 @@ body.fixed{
 }
 
 
+.hidden{
+	display: none !important;
+}
+
 
 .userBar{
 	display: block;
@@ -245,3 +249,4 @@ body.fixed{
 	opacity: 0;
 	@include trs(opacity 0.2s ease-in-out);
 }
+

@@ -38,6 +38,7 @@ $idelement = "";
 $direction = "";
 $delete = "";
 $html = "";
+$css = "";
 
 if(isset($PARAMS['idgroup']))
   $idgroup = mysqli_real_escape_string( $link, $PARAMS['idgroup']);
@@ -59,6 +60,9 @@ if(isset($PARAMS['delete']))
 
 if(isset($PARAMS['html']))
   $html = mysqli_real_escape_string($link, $PARAMS['html']);
+
+if(isset($PARAMS['css']))
+  $css = mysqli_real_escape_string($link, $PARAMS['css']);
 
 if(isset($_SERVER['PHP_AUTH_USER']) &&  isset($_SERVER['PHP_AUTH_PW'])){
     $email = $_SERVER['PHP_AUTH_USER'];
@@ -274,6 +278,28 @@ else if($idelement!='' && $html!=''){
           print_r($mysql);           
 
           $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido modificar el HTML del elemento');
+        }
+        // ******** FIN DE TRANSACCION **********
+        mysqli_query($link, "COMMIT");
+
+    } catch(Exception $e){
+        // Se ha producido un error, se cancela la transacción.
+        mysqli_query($link, "ROLLBACK");
+    }
+}
+else if($idelement!='' && $css!=''){
+    try{
+        // ******** INICIO DE TRANSACCION **********
+        mysqli_query($link, 'BEGIN');
+        $mysql  = 'update css_usu SET CSS="'. $css .'" where idElemento_usu='. $idelement;
+
+        if( $res = mysqli_query( $link, $mysql ) )
+        {      
+            $R = array('resultado' => 'ok');
+        }
+        else
+        {        
+          $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido modificar el CSS del elemento');
         }
         // ******** FIN DE TRANSACCION **********
         mysqli_query($link, "COMMIT");

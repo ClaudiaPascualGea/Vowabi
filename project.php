@@ -35,16 +35,6 @@
          <!-- Menu colors -->
           <div class="menu-wrap">
               <nav class="menu">
-                 <ul>
-                     <li class="color" style="background-color: #FB6964;"></li>
-                     <li class="color" style="background-color: #eae7c4;"></li>
-                     <li class="color" style="background-color: #47AE73;"></li>
-                     <li class="color" style="background-color: #c1d5c0;"></li>
-                     <li class="color" style="background-color: #5FA1E0;"></li>
-                     <li class="color" style="background-color: #c0c3d5;"></li>
-                     <li class="color" style="background-color: #f0f0f0;"></li>
-                     <li class="color" style="background-color: #333333;"></li>
-                 </ul>
               </nav>
           </div>
 

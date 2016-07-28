@@ -190,6 +190,23 @@ function removeClass(ele,cls) {
   }
 }
 
+function removeClasses(elements,cls){
+    for (var i = 0; i < elements.length; i++) {
+        var ele = elements[i];
+        if (hasClass(ele,cls)) {
+            var reg = new RegExp('(\\s|^)'+cls+'(\\s|$)');
+            ele.className=ele.className.replace(reg,' ');
+        }
+    }
+}
+
+function addClasses(elements,cls){
+    for (var i = 0; i < elements.length; i++) {
+        var ele = elements[i];
+        if (!hasClass(ele,cls)) ele.className += " "+cls;
+    }
+}
+
 
 /********* HEADER BASE64 ********/
 

@@ -1557,6 +1557,10 @@ body.fixed .content {
   color: #8a969c;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .userBar {
   display: block;
   width: 100%;
@@ -2143,12 +2147,27 @@ body.fixed .content {
   transform: scale(1.1);
 }
 
-#projectContainer .drop-element.first {
-  margin-top: 0 !important;
-}
-
 #projectContainer .drop-element:last-child {
   margin-top: -50px;
+}
+
+#projectContainer .drop-element:first-child {
+  margin-top: 0;
+}
+
+#projectContainer h1.project-element.over, #projectContainer h1.project-element-parent.over, #projectContainer h2.project-element.over, #projectContainer h2.project-element-parent.over, #projectContainer h3.project-element.over, #projectContainer h3.project-element-parent.over, #projectContainer h4.project-element.over, #projectContainer h4.project-element-parent.over, #projectContainer h5.project-element.over, #projectContainer h5.project-element-parent.over, #projectContainer p.project-element.over, #projectContainer p.project-element-parent.over, #projectContainer span.project-element.over, #projectContainer span.project-element-parent.over, #projectContainer a.project-element.over, #projectContainer a.project-element-parent.over, #projectContainer strong.project-element.over, #projectContainer strong.project-element-parent.over {
+  text-shadow: -1px -1px 0 rgba(133, 125, 255, 0.5), 1px -1px 0 rgba(133, 125, 255, 0.5), -1px 1px 0 rgba(133, 125, 255, 0.5), 1px 1px 0 rgba(133, 125, 255, 0.5);
+}
+
+#projectContainer section.project-element.over, #projectContainer section.project-element-parent.over, #projectContainer div.project-element.over, #projectContainer div.project-element-parent.over, #projectContainer button.project-element.over, #projectContainer button.project-element-parent.over {
+  box-shadow: inset 0 0 0 3px #857dff;
+}
+
+#projectContainer .project-element, #projectContainer .project-element-parent {
+  -webkit-transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  -moz-transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  -o-transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
 /* Group List */
@@ -2706,8 +2725,14 @@ body.fixed .content {
   .content.home {
     padding: 40px;
   }
+  .menu {
+    max-height: 400px;
+    overflow: hidden;
+  }
   .menu ul {
     overflow: hidden;
+    max-height: 400px;
+    overflow-y: scroll;
   }
 }
 
