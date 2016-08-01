@@ -1,0 +1,9 @@
+.menu {
+	max-height: 400px;
+	overflow: hidden;
+	ul{
+    	overflow: hidden;
+    	max-height: 400px;
+    	overflow-y: scroll;
+	}
+}

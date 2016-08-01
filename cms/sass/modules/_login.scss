@@ -1,0 +1,94 @@
+.content.home{
+	min-height: 100%;	
+	width: 100%;
+	position: relative;
+	padding: 10px;
+	background: $background;	
+	@include flexbox();
+	@include flex-justify(center);
+	z-index: 0;
+
+	.container-home{
+		max-width: 350px;
+		.logo{
+			width: 40%;
+			display: block;
+			margin: 20px auto;
+		}
+
+		.title{
+			margin: 10px 0;
+		}
+
+		.text{
+			text-align: center;
+		}
+	}
+
+	.tabs{
+		display: block;
+		width: 100%;
+		margin: 20px 0;
+		@include flexbox();
+		@include flex-justify(flex-end);
+
+		li{		
+			padding: 10px;
+			cursor: pointer;
+			color: $hover;
+			font-weight: 600;
+			@include trs(color 0.3s ease-in-out);
+
+			&:hover{
+				color: $hover2;
+			}
+
+			&.active{
+				color: $link;
+			}
+		}			
+	}
+
+	.tab-content > div:last-child {
+	  display:none;
+	}
+
+
+	.formContainer{
+		display: block;
+		position: relative;
+
+		.input-container{
+			margin-bottom: 10px;
+		}
+
+		.subtitle{
+			margin: 10px 0;
+		}
+
+		label{
+			display: block;
+			text-align: left;
+		}
+
+		input{
+			width: 100%;
+			margin: 5px 0;
+			padding: 10px;
+			display: inline-block;
+		}
+
+		.send{
+			margin-top: 10px;
+			width: 100%;			
+		}
+
+		.link{
+			margin-top: 10px;
+			margin-bottom: 20px;
+			width: 100%;		
+			text-align: center;	
+		}			
+	}
+
+}

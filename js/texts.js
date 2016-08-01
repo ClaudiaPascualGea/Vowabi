@@ -38,7 +38,7 @@ function removeTextBar(){
 
 }
 
-function createTextToolbar(){
+function createTextToolbar(element){
 
   var div = document.createElement("div");
   div.className = "textBar";

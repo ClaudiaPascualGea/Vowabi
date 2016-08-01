@@ -1,0 +1,10 @@
+/* MEDIAQUERY 768PX
+*********************************************************************/
+@media all and (min-width: 768px) {
+
+	@import "768/common";
+	@import "768/login";
+	@import "768/popup";
+	@import "768/dashboard";
+	@import "768/project";
+} 

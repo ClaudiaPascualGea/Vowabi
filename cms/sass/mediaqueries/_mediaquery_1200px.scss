@@ -1,0 +1,9 @@
+/* MEDIAQUERY 900PX
+*********************************************************************/
+@media all and (min-width: 1200px) {
+
+	@import "1200/common";
+	@import "1200/login";
+	@import "1200/popup";
+	@import "1200/dashboard";
+} 

@@ -1,0 +1,130 @@
+/* Fuentes */
+$lato							: 'Lato', sans-serif;
+$opensans						: 'open sans', sans-serif;
+$futura							: 'Futura STD', sans-serif;
+$tangerine						: 'Tangerine', serif;
+
+//Rutas
+$rutaTema	: 'http://localhost/vowabi/';
+
+// Htc paths
+$pie: url(#{$rutaTema}js/lib/pie.htc);
+$backgroundsize: url(#{$rutaTema}js/lib/backgroundsize.htc);
+
+/*--------------------------------------------------------------------*/
+/*  Estilos de caracter 
+/*--------------------------------------------------------------------*/
+
+/* colores */
+$transparent			: transparent;
+$blanco					: #ffffff;
+$negro					: #000000;
+$turquesa				: #39657e;
+$turquesaclarito 		: #98eaf4;
+$turquesaclaritodos		: #e0f8fa;
+$turquesaclaritotres	: #b2ebf2;
+$grismuyclaro			: #ededed;
+$amarillito				: #fbe085;
+$turquesaclaro			: #c3d5d9;
+$grismarengo			: #575757;
+$turquesados			: #0080a0;
+$turquesatres 			: #00acc0;
+$turquesacuatro			: #2291ad;
+$rojo					: #C03;
+$rojoHover				: #8E0225;
+$naranjito				: #ff9801;
+$gris 					: #444444;
+$text	 				: #333333;
+$grisClaro				: #EEEEEE;
+
+
+$pink					: #FF5252;
+$pink_h					: #B35648;
+$pink2					: #9A746F;
+$pink2_h				: #694F4B;
+
+$teal1					: #155154;
+$teal2					: #1E7B7F;
+$teal3					: #469A9F;
+
+$blue1					: #222c35;
+
+$grey1					: #37474F;
+$grey2					: #455A64;
+$grey3					: #546E7A;
+
+$blue					: #103A55;
+
+//PALETA COLORES
+// $text					: #212121;
+// $text-second			: #FFFFFF;
+// $background				: #E6EBE0;
+// $button					: #ED6A5A;
+// $hover					: #E63946;
+// $hover2					: #ED6A5A;
+// $link					: #E63946;
+
+//PALETA COLORES
+$background				: #222c35;
+$background-second		: #F1FAEE;
+$text					: #FFFFFF;
+$text-second			: #FFFFFF;
+$button					: #607d8b;
+$hover					: #455A64;
+$hover2					: #8a969c;
+$link					: #F1FAEE;
+
+$red 					: #FF5252;
+$red-hover				: #D32F2F;
+$green 					: #8BC34A;
+$green-hover 			: #689F38;
+$blue 					: #00BCD4;
+$blue-hover 			: #0097A7;
+
+
+//PALETA FONDO CLARO
+// $background				: #f6f6f6;
+// $background-second		: #F1FAEE;
+// $text					: #222222;
+// $text-second			: #FFFFFF;
+// $button					: #222222;
+// $hover					: #2CD892;
+// $hover2					: #8a969c;
+// $link					: #999999;
+
+
+
+
+
+/* Font weights */
+$os_light				: 200;
+$os_book				: 300;
+$os_medium			    : 400;
+$os_condensed			: 500;
+$os_heavy			    : 600;
+$os_bold			    : 700;
+$os_extrabold			: 800;
+
+/* Parametros de inicialización */
+$base_font_size			: 14px;
+$primarytxt				: $lato;
+$primarycolor			: $text;
+$primaryfont			: normal $os_medium 15px $primarytxt;
+$primaryfont			: normal $os_medium rem($base_font_size) $primarytxt;
+
+/* Font */
+$style  				: normal;  
+$weight 				: 300; 
+$size 					: 14px; 
+$lineH 					: 16px; 
+$family  				: $lato;
+$familyOpen				: $lato;
+
+/* Colores GRID */
+$color1				: #39657e;
+$color2				: #ff4539;
+
+$color3			    : #e79723;
+$color4				: #9d9d9d;
+
+

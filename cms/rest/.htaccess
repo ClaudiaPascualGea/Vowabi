@@ -1,0 +1,113 @@
+Options +FollowSymLinks
+RewriteEngine On
+RewriteBase /vowabi/cms/rest/
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+# Con el valor 307 en la regla de abajo se redirigen todas las
+# peticiones, tanto las peticiones GET y POST
+
+##################################################
+### REGLA PARA REGISTRO
+##################################################
+# Regla que redirige a rest/post/registro.php
+# Con esta línea de abajo, sólo acepta peticiones POST
+RewriteCond %{THE_REQUEST} ^POST
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^registro/(.*)$ post/registro.php?prm=$1&%{QUERY_STRING} [R=307,L]
+
+##################################################
+### REGLA PARA LOGIN
+##################################################
+# Regla que redirige a rest/post/login.php
+# Con esta línea de abajo, sólo acepta peticiones POST
+RewriteCond %{THE_REQUEST} ^POST
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^login/(.*)$ post/login.php?prm=$1&%{QUERY_STRING} [R=307,L]
+
+# Regla para comprobar login disponible
+# Regla que redirige a rest/get/login.php
+RewriteCond %{THE_REQUEST} ^GET
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^login/(.*)$ get/login.php?prm=$1&%{QUERY_STRING} [R=307,L]
+
+##################################################
+### REGLAS PARA PROYECTO
+##################################################
+# Regla que redirige a rest/post/proyecto.php
+# Con esta línea de abajo, sólo acepta peticiones POST
+RewriteCond %{THE_REQUEST} ^POST
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^proyecto/(.*)$ post/proyecto.php?prm=$1&%{QUERY_STRING} [R=307,L]
+
+# Regla que redirige a rest/get/proyecto.php
+# Con esta línea de abajo, sólo acepta peticiones GET
+RewriteCond %{THE_REQUEST} ^GET
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^proyecto/(.*)$ get/proyecto.php?prm=$1&%{QUERY_STRING} [R=307,L]
+
+# Regla que redirige a rest/delete/proyecto.php
+# Con esta línea de abajo, sólo acepta peticiones DELETE
+RewriteCond %{THE_REQUEST} ^DELETE
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^proyecto/(.*)$ delete/proyecto.php?prm=$1&%{QUERY_STRING} [R=307,L]
+
+
+##################################################
+### REGLAS PARA ELEMENTO
+##################################################
+# Regla que redirige a rest/get/elemento.php
+# Con esta línea de abajo, sólo acepta peticiones GET
+RewriteCond %{THE_REQUEST} ^GET
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^elemento/(.*)$ get/elemento.php?prm=$1&%{QUERY_STRING} [R=307,L]
+
+# Regla que redirige a rest/post/elemento.php
+# Con esta línea de abajo, sólo acepta peticiones POST
+RewriteCond %{THE_REQUEST} ^POST
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^elemento/(.*)$ post/elemento.php?prm=$1&%{QUERY_STRING} [R=307,L]
+
+# Regla que redirige a rest/delete/elemento.php
+# Con esta línea de abajo, sólo acepta peticiones DELETE
+RewriteCond %{THE_REQUEST} ^DELETE
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^elemento/(.*)$ delete/elemento.php?prm=$1&%{QUERY_STRING} [R=307,L]
+
+
+##################################################
+### REGLAS PARA GRUPO
+##################################################
+# Regla que redirige a rest/get/grupo.php
+# Con esta línea de abajo, sólo acepta peticiones GET
+RewriteCond %{THE_REQUEST} ^GET
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^grupo/(.*)$ get/grupo.php?prm=$1&%{QUERY_STRING} [R=307,L]
+
+# Regla que redirige a rest/post/grupo.php
+# Con esta línea de abajo, sólo acepta peticiones POST
+RewriteCond %{THE_REQUEST} ^POST
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^grupo/(.*)$ post/grupo.php?prm=$1&%{QUERY_STRING} [R=307,L]
+
+##################################################
+### REGLAS PARA COLOR
+##################################################
+# Regla que redirige a rest/get/color.php
+# Con esta línea de abajo, sólo acepta peticiones GET
+RewriteCond %{THE_REQUEST} ^GET
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^color/(.*)$ get/color.php?prm=$1&%{QUERY_STRING} [R=307,L]
+
+

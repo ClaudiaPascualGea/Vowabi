@@ -1,0 +1,22 @@
+.dashboard{
+	.userContent{
+		padding: 20px;
+		@include flexbox();
+		@include flex-justify(space-between);
+		@include flex-align(flex-start);
+		@include flex-wrap(wrap);
+
+		.cont-50{
+			width: 49%;
+			float: left;
+			display: inline-block;
+			margin-bottom: 0;	
+		}
+
+		.cont-100{
+			width: 100%;
+			display: block;
+		}
+
+	}
+}

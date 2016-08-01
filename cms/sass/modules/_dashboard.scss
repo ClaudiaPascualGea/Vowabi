@@ -1,0 +1,77 @@
+.dashboard{
+	min-height: 100%;
+	background-color: $background;
+	//color: $negro;
+	font-weight: 400;
+	z-index: 1;
+	position: relative;
+
+	.userContent{
+		padding: 10px;	
+
+		.input-container{
+			display: block;
+			margin-bottom: 20px;
+
+			label{
+				width: 100%;
+				display: block;	
+				margin-bottom: 5px;			
+			}
+
+			input{
+				width: 100%;
+				padding: 10px;
+				background-color: $blanco;
+				//border-bottom: 2px solid $button;
+			}
+		}
+
+		.send{
+			width: 100%;
+		}
+		
+		.cont{
+			background-color: $hover;	
+			box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);			
+			margin-bottom: 20px;
+
+			.title{
+				background-color: rgba(0,0,0,0.2);
+				padding: 10px;
+			}
+
+			.cont-content{
+				padding: 15px;
+			}
+		}
+		
+		.projects-list, .list{
+
+			li{
+				@include flexbox();
+				@include flex-justify(space-between);
+				@include flex-align(center);
+				margin-bottom: 10px;
+				padding: 5px;
+
+				.text{
+					width: 60%;
+				}
+
+				&:last-child{
+					margin-bottom: 0;
+				}
+
+				.btn{
+					margin-left: 10px;
+					&:first-child{
+						margin-left: 0;
+					}
+				}
+			}
+		}
+
+	
+	}
+}

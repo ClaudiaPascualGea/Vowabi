@@ -1,0 +1,66 @@
+.plain-text {
+  
+  h1, h2, h3, h4, h5, h6 { 
+    font-weight: $os_bold;
+  }
+
+  h1 {
+    font-size: rem(50);
+    line-height: 7rem;
+  }
+
+  h2 {
+    font-size: rem(40);
+    line-height: 6rem;
+  }
+
+  h3 {
+    font-size: rem(30);
+    line-height: 5rem;
+  }
+
+  h4 {
+    font-size: rem(20);
+    line-height: 4rem;
+  }
+
+  h5 {
+    font-size: rem(18);
+    line-height: 3rem;
+  }
+
+  h6 {
+    font-size: rem(16);
+    line-height: 2rem;
+  }
+
+  em, i { font-style: italic; }
+
+  strong, b { font-weight: $os_bold; }
+
+  ol, ul {
+    padding: inherit !important;
+    list-style: disc inside none;
+    margin: 0 1em 1.5em 1em !important;
+  }
+
+  a { text-decoration: underline; }
+
+  p {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  sup {
+    vertical-align: super;
+    font-size: smaller;
+  }
+  sub {
+    vertical-align: sub;
+    font-size: smaller;
+  }
+  tt, code, kbd, samp {
+  font-family: monospace;
+  font-size: rem(18);
+  }
+}
