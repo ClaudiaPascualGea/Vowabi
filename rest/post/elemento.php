@@ -73,8 +73,11 @@ if(isset($_SERVER['PHP_AUTH_USER']) &&  isset($_SERVER['PHP_AUTH_PW'])){
 }
 
 //Comprobamos la sesion del usuario para hacer la consulta
-if( !comprobarSesion($email,$clave) )
+if( !comprobarSesion($email,$clave) ){
   $R = array('resultado' => 'error', 'descripcion' => 'Tiempo de sesión agotado.', 'code'=>408);
+  print json_encode($R);
+
+}
 //Copiamos los elementos de un grupo al proyecto del usuario
 else if($idproject != "" && $idgroup != "" && $order != ""){ 
 

@@ -75,35 +75,38 @@ function listColors(colors, container){
 
 function prepareDropElements(){
 	var elements = document.querySelectorAll("#projectContainer .project-element-parent");
-
+	
 	for (var i = 0; i < elements.length; i++) {
-		var elem = elements[i];
-
-		elem.ondragover = function(e){
-	        e.preventDefault();
-	        if(dragElement == "color")
-				addClass(e.target, "over");
-	    };
-	    elem.ondrop = function(e){
-	        e.preventDefault();
-	        if(dragElement == "color"){
-		        var color = e.dataTransfer.getData('text');
-		        var id = e.target.id;
-		        var idelement = id.replace("el-", "");
-
-		        var back = cssDOM[id]["general"]["background-color"];
-
-		        if(back != undefined)
-		        	changeCSS("background-color", color, idelement);		  
-		        else
-		        	changeCSS("color", color, idelement);
-		    }		   
-		    dragElement = "";
-	    };
-	    elem.ondragleave = function(e){
-	    	e.preventDefault();
-			removeClass(e.target, "over");
-	    }	    
-
+		var elem = elements[i];		
+		createDropColorElement(elem);
 	}
+	
+}
+
+function createDropColorElement(elem){
+	elem.ondragover = function(e){
+        e.preventDefault();
+        if(dragElement == "color")
+			addClass(e.target, "over");
+    };
+    elem.ondrop = function(e){
+        e.preventDefault();
+        if(dragElement == "color"){
+	        var color = e.dataTransfer.getData('text');
+	        var id = e.target.id;
+	        var idelement = id.replace("el-", "");
+
+	        var back = cssDOM[id]["general"]["background-color"];
+
+	        if(back != undefined)
+	        	changeCSS("background-color", color, idelement);		  
+	        else
+	        	changeCSS("color", color, idelement);
+	    }		   
+	    dragElement = "";
+    };
+    elem.ondragleave = function(e){
+    	e.preventDefault();
+		removeClass(e.target, "over");
+    }	    
 }

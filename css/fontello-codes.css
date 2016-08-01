@@ -43,3 +43,11 @@
 .icon-up-open-1:before { content: '\e829'; } /* '' */
 .icon-plus-1:before { content: '\e82a'; } /* '' */
 .icon-plus-2:before { content: '\e82b'; } /* '' */
+.icon-italic:before { content: '\e82c'; } /* '' */
+.icon-bold-1:before { content: '\e82d'; } /* '' */
+.icon-align-right:before { content: '\e82e'; } /* '' */
+.icon-align-left:before { content: '\e82f'; } /* '' */
+.icon-align-center:before { content: '\e830'; } /* '' */
+.icon-align-justify:before { content: '\e831'; } /* '' */
+.icon-strike:before { content: '\f0cc'; } /* '' */
+.icon-underline:before { content: '\f0cd'; } /* '' */

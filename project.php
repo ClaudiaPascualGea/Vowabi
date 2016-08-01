@@ -8,7 +8,7 @@
         <style id="projectStyle"></style>
     </head>
 
-    <body onLoad="project(); initColors();" class="body-project">
+    <body onLoad="project(); initColors(); initTexts();" class="body-project">
        
         <div class="content project">
         
@@ -54,6 +54,7 @@
         <?php require_once("include/foot.php"); ?>
         <script type='text/javascript' src="js/project.js"></script>
         <script type='text/javascript' src="js/colors.js"></script>
+        <script type='text/javascript' src="js/texts.js"></script>
 
     </body>
 </html>

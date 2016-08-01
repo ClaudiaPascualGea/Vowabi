@@ -77,6 +77,11 @@ function getProject(){
 									hijo.contentEditable = true;
 									hijo.addEventListener("input", changeHTML, false);
 
+									if(hijo.innerHTML != ""){										
+										hijo.addEventListener("focus", addTextBar, false);
+										hijo.addEventListener("blur", removeTextBar, false);								
+									}
+
 									padre.appendChild(hijo);
 								}
 							}				
@@ -529,6 +534,10 @@ function addGroupElements(elements){
 					//Hacemos el contenido editable
 					hijo.contentEditable = true;
 					hijo.addEventListener("input", changeHTML, false);
+					if(hijo.innerHTML != ""){										
+						hijo.addEventListener("focus", addTextBar, false);
+						hijo.addEventListener("blur", removeTextBar, false);								
+					}
 
 					padre.appendChild(hijo);
 				}
@@ -545,6 +554,8 @@ function addGroupElements(elements){
 			}else{
 				document.getElementById("projectContainer").appendChild(padre);
 			}
+
+			createDropColorElement(padre);
 
 			
 			//Element drop			
@@ -615,7 +626,12 @@ function createHTMLElement(html) {
 function changeCSS(key, value, idelement){
 
 	var id = "el-"+idelement;
-	cssDOM[id]["general"][key] = value;
+
+	if(cssDOM[id]["general"][key] == value)
+		delete cssDOM[id]["general"][key];
+	else
+		cssDOM[id]["general"][key] = value;
+
 	var css = deParse(cssDOM[id]);
 
 	if(css && idelement){
