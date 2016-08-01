@@ -4,8 +4,14 @@ function initTexts(){
 
 function addTextBar(){
 
+  var textBar = document.querySelector(".textBar");
+  if(textBar)
+    textBar.parentNode.removeChild(textBar);
+
   var element = this;
-  var textBar = createTextToolbar();
+
+  var textBar = createTextToolbar(element);
+
   element.parentNode.insertBefore(textBar, element);
 
   var childPos = element.getBoundingClientRect();
@@ -21,21 +27,10 @@ function addTextBar(){
 
 function removeTextBar(){
   var textBar = document.querySelector(".textBar");
-  var element = this;
-  var idelement = element.id;
-
 
   setTimeout(function(){
-    var selection = getSelectedContent();
-    var anchor_node = selection.anchorNode; 
-    var parent = anchor_node.parentNode;
-    var idelement2 = parent.id;
-
     var activeElement = document.activeElement.parentNode;
-    console.log(activeElement);
-    console.log(textBar + " - " + idelement + " - " + idelement2 + " - " + activeElement.className);
-
-    if(textBar && (!idelement2 || idelement2!=idelement || activeElement.className!="textBar") ){
+    if(textBar && textBar.parentNode && (activeElement.className!="textBar") ){
       textBar.parentNode.removeChild(textBar);
     }
   }, 100);
@@ -59,6 +54,8 @@ function createTextToolbar(){
   html += "   <button onclick='changeTextCss(this)' data-key='text-align' data-value='center' class='btn-small btn'><i class='icon-align-center'></i></button>";
   html += "   <button onclick='changeTextCss(this)' data-key='text-align' data-value='right' class='btn-small btn'><i class='icon-align-right'></i></button>";
   html += "   <button onclick='changeTextCss(this)' data-key='text-align' data-command='justifyFull' class='btn-small btn'><i class='icon-align-justify'></i></button>";
+
+  var fontSize = getStyle(element, 'font-size');
 
   div.innerHTML = html;
  
@@ -89,3 +86,21 @@ function getSelectedContent(){
 
   return selection;
 }
+
+function getStyle(el,styleProp) {
+  var camelize = function (str) {
+    return str.replace(/\-(\w)/g, function(str, letter){
+      return letter.toUpperCase();
+    });
+  };
+
+  if (el.currentStyle) {
+    return el.currentStyle[camelize(styleProp)];
+  } else if (document.defaultView && document.defaultView.getComputedStyle) {
+    return document.defaultView.getComputedStyle(el,null)
+                               .getPropertyValue(styleProp);
+  } else {
+    return el.style[camelize(styleProp)]; 
+  }
+}
+
