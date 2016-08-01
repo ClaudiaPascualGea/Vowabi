@@ -101,6 +101,7 @@ else if($idproject != "" && $idgroup != "" && $order != ""){
     {
         $elements = array();
         $cont = 0;
+        $idAnterior = "";
 
         while( $row = mysqli_fetch_assoc( $res ) ){
           $R[] = $row;
@@ -128,14 +129,17 @@ else if($idproject != "" && $idgroup != "" && $order != ""){
           }
           //En caso de que sea algun hijo
           else{
-            $orden = $row["Orden"];
+            $orden = $row["Orden"];         
+            if($idAnterior == $row["idPadre"])
+              $idPadre = $idAnteriorI;                        
           }
+
 
           //COPIAMOS EL ELEMENTO EN ELEMENTO_USU        
           mysqli_query($link, 'BEGIN');
 
-          $mysql_elemento  = 'insert into elemento_usu (idProyecto, Nombre, Orden, idPadre) values("';
-          $mysql_elemento .=  $idproject . '","' . $row["Nombre"] . '","' . $orden .  '", ' . $idPadre . '); ';
+          $mysql_elemento  = 'insert into elemento_usu (idProyecto, Nombre, Orden, idPadre, ContentEditable) values("';
+          $mysql_elemento .=  $idproject . '","' . $row["Nombre"] . '","' . $orden .  '", ' . $idPadre . ' , '. $row["ContentEditable"] . '); ';
           
           if( $res2 = mysqli_query( $link, $mysql_elemento ) ) {
           
@@ -143,6 +147,13 @@ else if($idproject != "" && $idgroup != "" && $order != ""){
             if(!$row["idPadre"]){
               $idPadre = $id;
             }
+            
+            if($idAnterior == $row["idPadre"]){
+              $idAnteriorI = $id;
+            }
+            $idAnterior = $row["id"];
+            
+            
             
             //COPIAMOS EL HTML, CSS Y JS DEL ELEMENTO
             $mysql_html  = 'insert into html_usu (idElemento_usu, HTML) values(';
@@ -160,7 +171,7 @@ else if($idproject != "" && $idgroup != "" && $order != ""){
                 $res_js = mysqli_query( $link, $mysql_js ) &&
                 $res_css = mysqli_query( $link, $mysql_css )
             ) {
-              $elements[$cont] = array("idElemento"=>$id, "HTML"=>$row["HTML"], "idPadre"=>$idPadre, "CSS"=>$row["CSS"], "JS"=>$row["JS"], "order"=>$orden);
+              $elements[$cont] = array("idElemento"=>$id, "HTML"=>$row["HTML"], "idPadre"=>$idPadre, "CSS"=>$row["CSS"], "JS"=>$row["JS"], "order"=>$orden, "ContentEditable"=>$row["ContentEditable"]);
               $cont++;
               $R = array('resultado' => 'ok', "elements"=>$elements);
             }else{
@@ -168,7 +179,7 @@ else if($idproject != "" && $idgroup != "" && $order != ""){
               print_r($mysql_css);
               print_r($mysql_html);
               $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido copiar el contenido del elemento.');
-               mysqli_query($link, "ROLLBACK");
+              mysqli_query($link, "ROLLBACK");
             }
 
           }else{

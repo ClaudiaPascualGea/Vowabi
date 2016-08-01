@@ -36,10 +36,10 @@ if(is_numeric($ID))
 { // Se debe devolver la información del proyecto
 
   $mysql = 'select c1.*, h.HTML , c.CSS, j.JS, pr.Nombre from proyecto pr, html_usu hu,
-    (select padre.Orden as op,hijo.Orden as oh, padre.id as idPadre, hijo.id as idElemento, padre.Nombre, padre.idProyecto from elemento_usu padre, elemento_usu hijo
+    (select padre.Orden as op,hijo.Orden as oh, padre.id as idPadre, hijo.id as idElemento, padre.Nombre, padre.idProyecto, hijo.ContentEditable from elemento_usu padre, elemento_usu hijo
     where padre.id=hijo.idPadre
     union
-    select p.Orden,0, p.id, p.id,p.Nombre, p.idProyecto from elemento_usu p
+    select p.Orden,0, p.id, p.id,p.Nombre, p.idProyecto, p.ContentEditable from elemento_usu p
     where p.idPadre is NULL
     order by op, oh) c1
         LEFT JOIN html_usu h

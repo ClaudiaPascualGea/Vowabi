@@ -4,7 +4,7 @@ function project(){
 	userName.innerHTML = sessionStorage.usuario;
 
 	var orderElements = 0;	
-	getProject();
+	getProject2();
 	getGroups();	
 }
 
@@ -101,6 +101,107 @@ function getProject(){
 
 				prepareDropElements();
 				$("body").getNiceScroll().resize();
+			
+		};
+
+		xhr.send();
+	}
+	else
+		location.href="dashboard.php";
+}
+
+function getProject2(){
+
+	if(sessionStorage.getItem("idProject")){ 
+
+		var idProject = sessionStorage.getItem("idProject");
+
+		var url= 'rest/proyecto/' + idProject;
+		var xhr = new XMLHttpRequest();
+		var proyecto;
+		xhr.open('GET', url, true);
+		document.getElementById("projectContainer").innerHTML = "";
+
+	  	xhr.onload = function(){
+		
+			if(window.JSON) // Comprueba si soporta JSON nativo
+				proyecto = window.JSON.parse( this.responseText );	
+
+			if(proyecto.length>0)
+				document.title = proyecto[0]["Nombre"];
+
+			var ordenPadres = 0;
+
+			//Anyadimos el primer contenedor de drop
+			var elem_drop = createDropElement(ordenPadres);
+		    document.getElementById("projectContainer").appendChild(elem_drop); 
+				
+			var padre;				
+
+			for(var i=0; i< proyecto.length; i++){
+				with(proyecto[i]){
+		
+					//Buscamos si su padre esta pintado
+					var elemento = [];
+					padre = document.getElementById("el-"+idPadre);
+
+					if(!padre){
+						var id = "el-" + idElemento;
+						var padre = createHTMLElement(HTML);
+						padre.id = id;
+						padre.setAttribute("data-order", op);
+						padre.className = "project-element-parent";	
+
+						if(CSS)
+							setCSS(CSS, id);
+
+						var element_tools = createElementTools();
+						padre.appendChild(element_tools);
+				
+						document.getElementById("projectContainer").appendChild(padre); 
+
+						ordenPadres++;
+
+						//Element drop
+						var elem_drop = createDropElement(ordenPadres);						   
+					    padre.parentNode.insertBefore(elem_drop, padre.nextSibling);			
+
+					    elemento = padre;			   
+
+					}else{
+											
+						var elem = proyecto[i];						
+						var idHijo = "el-" + elem["idElemento"];
+						var hijo = createHTMLElement(elem["HTML"]);
+						hijo.id = idHijo;
+						hijo.setAttribute("data-order", elem["oh"]);
+						hijo.className = "project-element";
+
+						if(elem["CSS"])
+							setCSS(elem["CSS"], idHijo);						
+
+						padre.appendChild(hijo);				
+
+						elemento = hijo;		
+					}
+
+					if(ContentEditable == 1 && elemento){
+						var elem = elemento;
+						//Hacemos el contenido editable
+						elem.contentEditable = true;
+						elem.addEventListener("input", changeHTML, false);
+
+						if(elem.innerHTML != ""){										
+							elem.addEventListener("focus", addTextBar, false);
+							elem.addEventListener("blur", removeTextBar, false);								
+						}
+					}
+
+				}
+			}	
+
+			prepareDropElements();
+			$("body").getNiceScroll().resize();
 			
 		};
 
@@ -503,6 +604,91 @@ function addGroupElements(elements){
 
 	var projectElements = document.querySelectorAll("#projectContainer .project-element-parent").length;
 
+	var padre;				
+	for(var i=0; i< elements.length; i++){
+		with(elements[i]){
+
+			//Buscamos si su padre esta pintado
+			var elemento = [];
+			padre = document.getElementById("el-"+idPadre);
+
+			if(!padre){
+				var id = "el-" + idElemento;
+				var padre = createHTMLElement(HTML);
+				padre.id = id;
+				padre.setAttribute("data-order", order);
+				padre.className = "project-element-parent";	
+
+				if(CSS)
+					setCSS(CSS, id);
+
+				var element_tools = createElementTools();
+				padre.appendChild(element_tools);
+				var ordenPadre = order;
+		
+				resetOrder(order-1, 1);
+
+				var orderSibling = parseInt(order);
+
+				if(order < projectElements){
+					var orderSibling = parseInt(order) + 1;
+					var elemDrop =  document.querySelector("#projectContainer .drop-element[data-order='"+(orderSibling)+"']");	
+					document.getElementById("projectContainer").insertBefore(padre, elemDrop); 		
+				}else{
+					document.getElementById("projectContainer").appendChild(padre);
+				}
+
+				createDropColorElement(padre);
+
+				
+				//Element drop			
+				if(order < projectElements){   
+					var elem_drop = createDropElement(ordenPadre);		
+			    	padre.parentNode.insertBefore(elem_drop, padre);
+			    }else{
+			    	var elem_drop = createDropElement( parseInt(ordenPadre) + 1);	
+			    	document.getElementById("projectContainer").appendChild(elem_drop);
+			    }
+
+			    var overDrop = document.querySelector("#projectContainer .drop-element.over");
+			    if(overDrop)
+			    	removeClass(overDrop, "over");
+
+			    $("body").getNiceScroll().resize();
+
+			}else{
+									
+				var elem = elements[i];						
+				var idHijo = "el-" + elem["idElemento"];
+				var hijo = createHTMLElement(elem["HTML"]);
+				hijo.id = idHijo;
+				hijo.setAttribute("data-order", elem["oh"]);
+				hijo.className = "project-element";
+
+				if(elem["CSS"])
+					setCSS(elem["CSS"], idHijo);						
+
+				padre.appendChild(hijo);				
+
+				elemento = hijo;		
+			}
+
+			if(ContentEditable == 1 && elemento){
+				var elem = elemento;
+				//Hacemos el contenido editable
+				elem.contentEditable = true;
+				elem.addEventListener("input", changeHTML, false);
+
+				if(elem.innerHTML != ""){										
+					elem.addEventListener("focus", addTextBar, false);
+					elem.addEventListener("blur", removeTextBar, false);								
+				}
+			}
+
+		}
+	}	
+
+	/*
 	if(elements.length > 0){
 		with(elements[0]){
 			var id = "el-" + idElemento;
@@ -573,7 +759,7 @@ function addGroupElements(elements){
 
 		    $("body").getNiceScroll().resize();
 		}
-	}
+	}*/
 }
 
 /**
