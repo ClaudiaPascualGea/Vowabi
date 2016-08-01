@@ -1,5 +1,6 @@
 function group(){
 	getGroup();
+	getElements();
 }
 
 function getGroup(){
