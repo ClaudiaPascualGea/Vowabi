@@ -11,10 +11,6 @@ body.fixed{
 	}
 }
 
-::-webkit-scrollbar { 
-    display: none; 
-}
-
 .flash{
 	opacity: 0;
 	@include trs(opacity 0.3s ease-in-out);

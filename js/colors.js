@@ -1,5 +1,5 @@
 function initColors(){
-	getColors();
+	getColors();	
 }
 
 /**
@@ -51,6 +51,26 @@ function listColors(colors, container){
 		ul.appendChild(li);
 	}
 	container.appendChild(ul);
+
+	$(ul).niceScroll({
+		autohidemode: true,     
+		cursorborderradius: '0px', 
+		background: '#222c35',     
+		cursorwidth: '5px',      
+		cursorcolor: '#999999',
+		hidecursordelay: 200,
+		enablescrollonselection: false,
+		nativeparentscrolling: false
+	});
+	$(ul).getNiceScroll().hide();
+
+	$(window).bind('scroll',function(){
+        $(ul).getNiceScroll().resize();
+    });
+    $(ul).mouseover(function() {
+	    $(ul).getNiceScroll().resize();
+	});
+	
 }
 
 function prepareDropElements(){

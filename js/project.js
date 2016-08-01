@@ -95,6 +95,7 @@ function getProject(){
 				}	
 
 				prepareDropElements();
+				$("body").getNiceScroll().resize();
 			
 		};
 
@@ -310,6 +311,7 @@ function removeElement(element){
 					//getProject();
 					elementProject.parentNode.removeChild(elementProject.previousSibling);
 					elementProject.parentNode.removeChild(elementProject);
+					$("body").getNiceScroll().resize();
 					resetOrder(order,0);
 				}else{						
 					swal({   
@@ -470,7 +472,7 @@ function addGroup(idgroup, order){
 				//getProject();		
 				addGroupElements(o.elements);
 				if( hasClass( document.querySelector(".menu-right") ,"active") )
-					document.getElementById('open-right').click();				
+					document.getElementById('open-right').click();			
 			}else{
 				swal({   
 					title: "¡Upps! Ha habido algún error",   
@@ -557,6 +559,8 @@ function addGroupElements(elements){
 		    var overDrop = document.querySelector("#projectContainer .drop-element.over");
 		    if(overDrop)
 		    	removeClass(overDrop, "over");
+
+		    $("body").getNiceScroll().resize();
 		}
 	}
 }
@@ -762,7 +766,7 @@ function closeProject(){
 		menuRight = document.querySelector( '.menu-right' ), 
 		openbtn = document.getElementById( 'open-button' ),
 		openright = document.getElementById( 'open-right' ),
-		closebtn = document.getElementById( 'close-button' ),
+		closebtn = document.getElementById( 'close-button' )
 		isOpen = false,
 		isOpenRight = false;
 
@@ -794,14 +798,17 @@ function closeProject(){
 	function toggleMenu() {
 		if( isOpen ) {
 			removeClass( bodyEl, 'show-menu' );
-			removeClass( openbtn, 'active' );
+			removeClass( openbtn, 'active' );			
+			$(".menu-wrap .menu ul").getNiceScroll().hide();
 		}
 		else {
 			addClass( bodyEl, 'show-menu' );
-			addClass( openbtn, 'active' );
+			addClass( openbtn, 'active' );		
+			$(".menu-wrap .menu ul").getNiceScroll().show();	
 		}
 		isOpen = !isOpen;
 	}
+
 
 	function toggleMenuRight() {
 		if( isOpenRight ) {

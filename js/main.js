@@ -2,6 +2,17 @@ $(document).ready(function() {
     $(window).load(function() {
         $(".flash").css ("opacity","1");
     });
+
+
+  $('body').niceScroll({
+    autohidemode: true,   
+    cursorborderradius: '0px',
+    cursorwidth: '5px',     
+    cursorcolor: '#222c35',
+    enablescrollonselection: false,
+    nativeparentscrolling: false,
+  });
+
     checkLogin();
 });
 

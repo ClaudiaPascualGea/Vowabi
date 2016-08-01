@@ -1430,10 +1430,6 @@ body.fixed .content {
   overflow: hidden;
 }
 
-::-webkit-scrollbar {
-  display: none;
-}
-
 .flash {
   opacity: 0;
   -webkit-transition: opacity 0.3s ease-in-out;
