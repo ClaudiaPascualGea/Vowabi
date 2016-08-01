@@ -43,7 +43,7 @@ else
   try{
     // ******** INICIO DE TRANSACCION **********
     mysqli_query($link, 'BEGIN');
-    $mysql  = 'insert into USUARIO(Email,Password) values("';
+    $mysql  = 'insert into usuario(Email,Password) values("';
     $mysql .= $usu . '","' . $pwd . '")';
     if( mysqli_query( $link, $mysql ) )
     {
