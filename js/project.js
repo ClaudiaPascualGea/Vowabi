@@ -295,7 +295,7 @@ function changeHTML(el){
 	
 	var id = this.id;
 	var idelement = id.replace("el-", "");
-	var elem = createHTMLElement(this.outerHTML);
+	var elem = createHTMLElement(this.outerHTML, true);
 	var html = elem.outerHTML;
 
 	if(html && idelement){
@@ -722,9 +722,8 @@ function getElements(idgroup){
 	}
 }
 
-function createHTMLElement(html) {
-
-
+function createHTMLElement(html, clean) {
+	
 	if( html.search("img") != -1){
 		var elem = document.createElement("img");	
 		var aux = html.split('"');
@@ -735,8 +734,11 @@ function createHTMLElement(html) {
 		var aux2 = aux[1].split(">");
 
 		var elementType = aux2[0].split(" ")[0];
-		//var elemName = aux2[0];
-		var elemContent = aux2[1];
+		
+		//var elemContent = aux2[1];
+		var cont1 = html.substring(aux[1].indexOf(">") + 2);
+		var regex1 = new RegExp('\\</'+elementType+'\\>', 'gi');
+		elemContent = cont1.replace(regex1, "");						
 
 		var elem = document.createElement(elementType);
 		elem.innerHTML = elemContent;

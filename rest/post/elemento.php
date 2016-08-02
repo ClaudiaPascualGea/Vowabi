@@ -279,7 +279,7 @@ else if($idelement!='' && $html!=''){
     try{
         // ******** INICIO DE TRANSACCION **********
         mysqli_query($link, 'BEGIN');
-        $mysql  = 'update html_usu SET HTML="'.mysqli_real_escape_string($link, $html).'" where idElemento_usu='. $idelement;
+        $mysql  = 'update html_usu SET HTML="'. $html .'" where idElemento_usu='. $idelement;
 
         if( $res = mysqli_query( $link, $mysql ) )
         {      
