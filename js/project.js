@@ -71,7 +71,7 @@ function getProject(){
 					var elem_drop = createDropElement(ordenPadres);						   
 				    padre.parentNode.insertBefore(elem_drop, padre.nextSibling);			
 
-				    if(hijos.length > 0)
+				    if(hijos && hijos.length > 0)
 				    	pintarHijos(hijos, padre);	
 
 					if(ContentEditable == 1 && padre)
