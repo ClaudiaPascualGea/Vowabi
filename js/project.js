@@ -751,13 +751,18 @@ function createHTMLElement(html, clean) {
 function changeCSS(key, value, idelement){
 
 	var id = "el-"+idelement;
+	console.log(cssDOM);
+	console.log(id);
+	if(cssDOM[id]){
+		if(cssDOM[id]["general"][key] == value)
+			delete cssDOM[id]["general"][key];
+		else
+			cssDOM[id]["general"][key] = value;
 
-	if(cssDOM[id]["general"][key] == value)
-		delete cssDOM[id]["general"][key];
-	else
-		cssDOM[id]["general"][key] = value;
-
-	var css = deParse(cssDOM[id]);
+		var css = deParse(cssDOM[id]);
+	}else{
+		var css = "";
+	}
 
 	if(css && idelement){
 		var url = 'rest/elemento/';

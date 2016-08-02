@@ -69,11 +69,17 @@ function changeTextCss(elem){
 
     if(anchor_node){
       var element = anchor_node.parentNode;
+
+      if(element.id == "")
+        element = element.parentNode;
+
       var idelement = element.id.replace("el-","");
 
       var key = elem.getAttribute("data-key");
       var value = elem.getAttribute("data-value");
-      changeCSS(key, value, idelement);
+      
+      if(idelement)
+        changeCSS(key, value, idelement);
     }
 }
 
