@@ -4,7 +4,7 @@ function project(){
 	userName.innerHTML = sessionStorage.usuario;
 
 	var orderElements = 0;	
-	getProject2();
+	getProject();
 	getGroups();	
 }
 
@@ -13,6 +13,7 @@ function project(){
 */
 var dragElement = "";
 var cssDOM = [];
+var loader = '<div class="loader"><span class="dot dot_1"></span><span class="dot dot_2"></span><span class="dot dot_3"></span><span class="dot dot_4"></span></div>';
 
 function getProject(){
 
@@ -24,83 +25,63 @@ function getProject(){
 		var xhr = new XMLHttpRequest();
 		var proyecto;
 		xhr.open('GET', url, true);
-		document.getElementById("projectContainer").innerHTML = "";
+		document.getElementById("projectContainer").innerHTML = loader;
 
 	  	xhr.onload = function(){
+		
+			if(window.JSON) // Comprueba si soporta JSON nativo
+				proyecto = window.JSON.parse( this.responseText );	
 
-				//console.log(this.responseText);
-				if(window.JSON) // Comprueba si soporta JSON nativo
-					proyecto = window.JSON.parse( this.responseText );	
+			if(proyecto.length>0)
+				document.title = proyecto[0]["Nombre"];
 
-				if(proyecto.length>0)
-					document.title = proyecto[0]["Nombre"];
+			var ordenPadres = 0;
 
-				var ordenPadres = 0;
-
-				//Anyadimos el primer contenedor de drop
-				var elem_drop = createDropElement(ordenPadres);
-			    document.getElementById("projectContainer").appendChild(elem_drop); 
+			//Anyadimos el primer contenedor de drop
+			var elem_drop = createDropElement(ordenPadres);
+		    document.getElementById("projectContainer").appendChild(elem_drop); 
 				
-				var padre;				
+			var padre;				
 
-				for(var i=0; i< proyecto.length; i++){
-					with(proyecto[i]){
-						//Solo si son padres
-						if(idElemento == idPadre){
-							var id = "el-" + idElemento;
-							var padre = createHTMLElement(HTML);
-							padre.id = id;
-							padre.setAttribute("data-order", op);
-							padre.className = "project-element-parent";	
+			for(var i=0; i< proyecto.length; i++){
+				with(proyecto[i]){
 
-							if(CSS)
-								setCSS(CSS, id);
+					//Buscamos si su padre esta pintado
+					var elemento = [];
+					padre = document.getElementById("el-"+idPadre);
+				
 
+					var id = "el-" + id;
+					var padre = createHTMLElement(HTML);
+					padre.id = id;
+					padre.setAttribute("data-order", Orden);
+					padre.className = "project-element-parent";	
 
-							var element_tools = createElementTools();
-							padre.appendChild(element_tools);
-						
-							//Buscamos los hijos
-							for(var j=0; j< proyecto.length; j++){
-								var elem = proyecto[j];
-								if(elem["idPadre"] == idElemento && idElemento != elem["idElemento"] ){
-									var idHijo = "el-" + elem["idElemento"];
-									var hijo = createHTMLElement(elem["HTML"]);
-									hijo.id = idHijo;
-									hijo.setAttribute("data-order", elem["oh"]);
-									hijo.className = "project-element";
+					if(CSS)
+						setCSS(CSS, id);
 
-									if(elem["CSS"])
-										setCSS(elem["CSS"], idHijo);
+					var element_tools = createElementTools();
+					padre.appendChild(element_tools);
+			
+					document.getElementById("projectContainer").appendChild(padre); 
 
-									//Hacemos el contenido editable
-									hijo.contentEditable = true;
-									hijo.addEventListener("input", changeHTML, false);
+					ordenPadres++;
 
-									if(hijo.innerHTML != ""){										
-										hijo.addEventListener("focus", addTextBar, false);
-										hijo.addEventListener("blur", removeTextBar, false);								
-									}
+					//Element drop
+					var elem_drop = createDropElement(ordenPadres);						   
+				    padre.parentNode.insertBefore(elem_drop, padre.nextSibling);			
 
-									padre.appendChild(hijo);
-								}
-							}				
+				    if(hijos.length > 0)
+				    	pintarHijos(hijos, padre);	
 
-							document.getElementById("projectContainer").appendChild(padre); 
+					if(ContentEditable == 1 && padre)
+						enableContentEditable(padre);
+				}
+			}	
 
-							ordenPadres++;
-
-							//Element drop
-							var elem_drop = createDropElement(ordenPadres);						   
-						    padre.parentNode.insertBefore(elem_drop, padre.nextSibling);						   
-
-						}
-
-					}
-				}	
-
-				prepareDropElements();
-				$("body").getNiceScroll().resize();
+			document.getElementById("projectContainer").removeChild(document.querySelector(".loader"));
+			prepareDropElements();
+			$("body").getNiceScroll().resize();
 			
 		};
 
@@ -110,7 +91,7 @@ function getProject(){
 		location.href="dashboard.php";
 }
 
-function getProject2(){
+function getProject_old(){
 
 	if(sessionStorage.getItem("idProject")){ 
 
@@ -151,6 +132,7 @@ function getProject2(){
 						padre.id = id;
 						padre.setAttribute("data-order", op);
 						padre.className = "project-element-parent";	
+						console.log(padre);
 
 						if(CSS)
 							setCSS(CSS, id);
@@ -211,6 +193,41 @@ function getProject2(){
 		location.href="dashboard.php";
 }
 
+
+function pintarHijos(hijos, padre){
+
+	for (var i = 0; i < hijos.length; i++) {
+
+		var elem = hijos[i];						
+		var idHijo = "el-" + elem["id"];
+		var hijo = createHTMLElement(elem["HTML"]);
+		hijo.id = idHijo;
+		hijo.setAttribute("data-order", elem["Orden"]);
+		hijo.className = "project-element";
+
+		if(elem["CSS"])
+			setCSS(elem["CSS"], idHijo);						
+
+		padre.appendChild(hijo);			
+
+		if(elem["hijos"] && elem["hijos"].length > 0)
+	    	pintarHijos(elem["hijos"], hijo);		
+
+		if(elem["ContentEditable"] == 1 && hijo)
+			enableContentEditable(hijo);	
+	}
+}
+
+function enableContentEditable(elem){					
+	//Hacemos el contenido editable
+	elem.contentEditable = true;
+	elem.addEventListener("input", changeHTML, false);
+
+	if(elem.innerHTML != ""){										
+		elem.addEventListener("focus", addTextBar, false);
+		elem.addEventListener("blur", removeTextBar, false);								
+	}
+}
 
 /**
 	Crea las herramientas para cada elemento
@@ -673,93 +690,13 @@ function addGroupElements(elements){
 				elemento = hijo;		
 			}
 
-			if(ContentEditable == 1 && elemento){
-				var elem = elemento;
-				//Hacemos el contenido editable
-				elem.contentEditable = true;
-				elem.addEventListener("input", changeHTML, false);
-
-				if(elem.innerHTML != ""){										
-					elem.addEventListener("focus", addTextBar, false);
-					elem.addEventListener("blur", removeTextBar, false);								
-				}
-			}
-
-		}
-	}	
-
-	/*
-	if(elements.length > 0){
-		with(elements[0]){
-			var id = "el-" + idElemento;
-			var padre = createHTMLElement(HTML);
-			padre.id = id;
-			padre.setAttribute("data-order", order);
-			var ordenPadre = order;
-			padre.className = "project-element-parent";	
-
-			if(CSS)
-				setCSS(CSS, id);
-
-			var element_tools = createElementTools();
-			padre.appendChild(element_tools);
-		
-			//Buscamos los hijos
-			for(var j=0; j< elements.length; j++){
-				var elem = elements[j];
-				if(elem["idPadre"] == idElemento && idElemento != elem["idElemento"] ){
-					var idHijo = "el-" + elem["idElemento"];
-					var hijo = createHTMLElement(elem["HTML"]);
-					hijo.id = idHijo;
-					hijo.setAttribute("data-order", elem["oh"]);
-					hijo.className = "project-element";
-
-					if(elem["CSS"])
-						setCSS(elem["CSS"], idHijo);
-
-					//Hacemos el contenido editable
-					hijo.contentEditable = true;
-					hijo.addEventListener("input", changeHTML, false);
-					if(hijo.innerHTML != ""){										
-						hijo.addEventListener("focus", addTextBar, false);
-						hijo.addEventListener("blur", removeTextBar, false);								
-					}
-
-					padre.appendChild(hijo);
-				}
-			}				
-
-			resetOrder(order-1, 1);
-
-			var orderSibling = parseInt(order);
-
-			if(order < projectElements){
-				var orderSibling = parseInt(order) + 1;
-				var elemDrop =  document.querySelector("#projectContainer .drop-element[data-order='"+(orderSibling)+"']");	
-				document.getElementById("projectContainer").insertBefore(padre, elemDrop); 		
-			}else{
-				document.getElementById("projectContainer").appendChild(padre);
-			}
-
-			createDropColorElement(padre);
-
+			if(ContentEditable == 1 && elemento)
+				enableContentEditable(elemento);				
 			
-			//Element drop			
-			if(order < projectElements){   
-				var elem_drop = createDropElement(ordenPadre);		
-		    	padre.parentNode.insertBefore(elem_drop, padre);
-		    }else{
-		    	var elem_drop = createDropElement( parseInt(ordenPadre) + 1);	
-		    	document.getElementById("projectContainer").appendChild(elem_drop);
-		    }
-
-		    var overDrop = document.querySelector("#projectContainer .drop-element.over");
-		    if(overDrop)
-		    	removeClass(overDrop, "over");
-
-		    $("body").getNiceScroll().resize();
 		}
-	}*/
+
+		$("body").getNiceScroll().resize();
+	}	
 }
 
 /**

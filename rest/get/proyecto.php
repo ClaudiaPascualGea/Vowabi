@@ -51,12 +51,63 @@ if(is_numeric($ID))
     where c1.idElemento = hu.idElemento_usu and c1.idProyecto = pr.id 
     and pr.id = ' . mysqli_real_escape_string($link,$ID) . '  
     order by op,oh';
+
+    $mysql = 'select e.*, h.HTML, c.CSS, j.JS, pr.Nombre 
+              FROM elemento_usu e
+                JOIN proyecto pr ON pr.id=e.idProyecto
+                JOIN html_usu h ON h.idElemento_usu=e.id
+                JOIN css_usu c ON c.idElemento_usu=e.id
+                JOIN js_usu j ON j.idElemento_usu=e.id
+              WHERE pr.id=' . mysqli_real_escape_string($link,$ID) . '
+            ORDER BY e.idPadre, e.Orden;';
+
+    // SE HACE LA CONSULTA  
+    if( strlen($mysql)>0 && count($R)==0 && $res = mysqli_query( $link, $mysql ) )
+    {
+      if( substr($mysql, 0, 6) == "select" )
+      {
+        while( $row = mysqli_fetch_assoc( $res ) )
+          $R[] = $row;
+        mysqli_free_result( $res );
+      }
+      else $R[] = $res;
+    }
+
+    $elementos = array();
+    $ids = array();
+    $cont = 0;
+
+    foreach ($R as $elemento) {
+      $hijos = getHijos($elemento, $R);
+      if(count($hijos)>0 && !$elemento["idPadre"]){
+        $elementos[$cont] = $elemento;
+        $elementos[$cont]["hijos"] = $hijos;
+        $cont++;
+      }
+    }
+
+    if(count($elementos)>0)
+      $R = $elementos;
+
 }
 else
 { // Se utilizan parámetros
 	if(isset($PARAMS['idusu']) && is_numeric($PARAMS['idusu']))
 	{ // se piden todos los proyectos del usuario
+
 		$mysql = 'select * from proyecto where idUsuario =' . mysqli_real_escape_string($link,$PARAMS['idusu']) . ' order by FechaCreacion desc';
+    // SE HACE LA CONSULTA  
+    if( strlen($mysql)>0 && count($R)==0 && $res = mysqli_query( $link, $mysql ) )
+    {
+      if( substr($mysql, 0, 6) == "select" )
+      {
+        while( $row = mysqli_fetch_assoc( $res ) )
+          $R[] = $row;
+        mysqli_free_result( $res );
+      }
+      else $R[] = $res;
+    }
+
 	}
 	else
 	{
@@ -64,23 +115,13 @@ else
 		$R = array("id", "2", "error", "Los parámetros no son correctos");
 	}
 }
-// =================================================================================
-// SE HACE LA CONSULTA
-// =================================================================================
-if( strlen($mysql)>0 && count($R)==0 && $res = mysqli_query( $link, $mysql ) )
-{
-  if( substr($mysql, 0, 6) == "select" )
-  {
-    while( $row = mysqli_fetch_assoc( $res ) )
-      $R[] = $row;
-    mysqli_free_result( $res );
-  }
-  else $R[] = $res;
-}
+
+
 // =================================================================================
 // SE CIERRA LA CONEXION CON LA BD
 // =================================================================================
 mysqli_close($link);
+
 // =================================================================================
 // SE DEVUELVE EL RESULTADO DE LA CONSULTA
 // =================================================================================
@@ -90,6 +131,23 @@ if(strlen($mysql)<1)
   $RESPONSE_CODE = 500;
 }
 
+
+function getHijos($el, $R){
+  $hijos = array();
+  $cont = 0;
+  foreach ($R as $element) {    
+    if($element["idPadre"]==$el["id"]){
+      $hijos[$cont] = $element;
+      $hijos2 = getHijos($element, $R);
+      if(count($hijos2)>0)
+        $hijos[$cont]["hijos"] = $hijos2;
+      $cont++;
+    }
+  }
+  return $hijos;
+}
+
 http_response_code($RESPONSE_CODE);
 print json_encode($R);
+
 ?>
