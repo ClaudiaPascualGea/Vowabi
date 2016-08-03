@@ -1445,6 +1445,18 @@ body.fixed .content {
   transition: opacity 0.3s ease-in-out;
 }
 
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
 .title {
   font-size: 40px;
   line-height: 40px;
@@ -1988,6 +2000,23 @@ body.fixed .content {
   position: relative;
 }
 
+.dashboard .inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.dashboard .inputfile + label {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  display: inline-block;
+  overflow: hidden;
+}
+
 .dashboard .userContent {
   padding: 10px;
 }
@@ -2026,6 +2055,45 @@ body.fixed .content {
 
 .dashboard .userContent .cont .cont-content {
   padding: 15px;
+}
+
+.dashboard .userContent .cont img {
+  display: block;
+  max-width: 80%;
+  margin: 10px auto;
+}
+
+.dashboard .userContent .colors-list {
+  display: -webkit-box;
+  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+  display: -ms-flexbox;
+  /* TWEENER - IE 10 */
+  display: -webkit-flex;
+  /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+  display: flex;
+  /* NEW, Spec - Firefox, Chrome, Opera */
+  -moz-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -o-flex-wrap: wrap;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  -webkit-justify-content: space-between;
+  -moz-justify-content: space-between;
+  -ms-justify-content: space-between;
+  -webkit-justify-items: space-between;
+  -moz-justify-items: space-between;
+  -ms-justify-items: space-between;
+}
+
+.dashboard .userContent .colors-list > li {
+  width: 48%;
+}
+
+.dashboard .userContent .colors-list .color {
+  border-radius: 2px;
+  width: 40px;
+  height: 40px;
 }
 
 .dashboard .userContent .projects-list li, .dashboard .userContent .list li {
@@ -2746,6 +2814,29 @@ body.fixed .content {
   .content.home {
     padding: 40px;
   }
+  .dashboard .userContent .cont.cont-flex {
+    display: -webkit-box;
+    /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+    display: -ms-flexbox;
+    /* TWEENER - IE 10 */
+    display: -webkit-flex;
+    /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+    display: flex;
+    /* NEW, Spec - Firefox, Chrome, Opera */
+    -moz-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -o-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
+  .dashboard .userContent .cont .title {
+    width: 100%;
+  }
+  .dashboard .userContent .cont .left, .dashboard .userContent .cont .right {
+    text-align: center;
+    width: 50%;
+    display: inline-block;
+  }
   .menu {
     max-height: 400px;
     overflow: hidden;
@@ -2799,7 +2890,6 @@ body.fixed .content {
   }
   .dashboard .userContent .cont-100 {
     width: 100%;
-    display: block;
   }
   .content.active {
     -webkit-transform: translate(-300px, 0);

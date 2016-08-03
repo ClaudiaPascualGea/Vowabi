@@ -35,7 +35,8 @@ $mysql='';
 if(is_numeric($ID))
 { // Se devuelve el grupo por ID
 
-  $mysql = 'select g.* FROM grupo g
+  $mysql = 'select g.*, i.FicheroCMS as Fichero, i.Nombre as Filename FROM grupo g
+               LEFT JOIN imagen i ON g.idImagen=i.id
             WHERE g.id = '.$ID.';';
 }
 
@@ -43,7 +44,8 @@ else
 { // Se utilizan parámetros
   if( isset($PARAMS['all']) )
   { // se piden todos los grupos que tienen elementos
-      $mysql = 'select g.* FROM grupo g 
+      $mysql = 'select g.*,i.FicheroCMS as Fichero, i.Nombre as Filename FROM grupo g
+                  LEFT JOIN imagen i ON g.idImagen=i.id
                 GROUP BY g.id
                 ORDER BY g.Orden;';
   }

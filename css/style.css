@@ -2277,6 +2277,10 @@ body.fixed .content {
   position: relative;
 }
 
+.group-list > li img {
+  width: 100%;
+}
+
 .group-list > li:nth-child(even):before {
   content: "";
   position: absolute;

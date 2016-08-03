@@ -5,6 +5,25 @@
 	font-weight: 400;
 	z-index: 1;
 	position: relative;
+	
+	.inputfile {
+		width: 0.1px;
+		height: 0.1px;
+		opacity: 0;
+		overflow: hidden;
+		position: absolute;
+		z-index: -1;
+	}
+
+	.inputfile + label {	   
+	    text-overflow: ellipsis;
+	    white-space: nowrap;
+	    cursor: pointer;
+	    display: inline-block;
+	    overflow: hidden;	   
+	}
+
+
 
 	.userContent{
 		padding: 10px;	
@@ -42,9 +61,33 @@
 			}
 
 			.cont-content{
-				padding: 15px;
+				padding: 15px;	
+			}
+
+			img{
+				display: block;
+				max-width: 80%;
+				margin: 10px auto;
+			}
+
+		}
+
+		.colors-list{
+			@include flexbox();
+			@include flex-wrap(wrap);
+			@include flex-justify(space-between);
+
+			>li{
+				width: 48%;
+			}
+
+			.color{
+				border-radius: 2px;
+				width: 40px;
+				height: 40px;
 			}
 		}
+
 		
 		.projects-list, .list{
 

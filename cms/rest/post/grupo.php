@@ -34,6 +34,8 @@ $PARAMS      = $_POST;
 $nombre = "";
 $descripcion = "";
 $idGrupo = "";
+$image = "";
+$imageName = "";
 
 if(isset($PARAMS['name']))
   $nombre = mysqli_real_escape_string( $link, $PARAMS['name']);
@@ -43,6 +45,12 @@ if(isset($PARAMS['description']))
 
 if(isset($PARAMS['idGrupo']))
   $idGrupo = mysqli_real_escape_string( $link, $PARAMS['idGrupo']);
+
+if(isset($_FILES['file']))
+  $image = $_FILES['file'];
+
+if(isset($PARAMS['fileName']))
+  $imageName = mysqli_real_escape_string( $link, $PARAMS['fileName']);
 
 if(isset($_SERVER['PHP_AUTH_USER']) &&  isset($_SERVER['PHP_AUTH_PW'])){
     $email = $_SERVER['PHP_AUTH_USER'];
@@ -68,12 +76,7 @@ else if($idGrupo != "" && $nombre != ""){ //Cambio de nombre
       mysqli_query($link, "ROLLBACK");
     }
 }
-else if($PARAMS['name']=='' || $PARAMS['description']=='')
-{
-  $RESPONSE_CODE = 401;
-  $R = array('resultado' => 'error', 'descripcion' => 'Creación de grupo incorrecta');
-}
-else
+else if($nombre != "" && $descripcion!= "")
 {
   try{
     // ******** INICIO DE TRANSACCION **********
@@ -97,6 +100,61 @@ else
     // Se ha producido un error, se cancela la transacción.
     mysqli_query($link, "ROLLBACK");
   }
+}else if($idGrupo!="" && $image!="" && $imageName!=""){
+
+  if (is_dir($uploaddir) && is_writable($uploaddir) && $image['tmp_name']) {
+
+      $ext = pathinfo($imageName, PATHINFO_EXTENSION);
+      $name = md5(rand(0,100)."VOWABI").".".$ext;
+
+      $uploadfile = $uploaddir . $name;
+
+      if(move_uploaded_file($image['tmp_name'], $uploadfile )){       
+          $src_cms = $uploaddirCMS . $name;     
+          $src = $uploaddirWeb . $name;     
+
+           try{
+              // ******** INICIO DE TRANSACCION **********
+              mysqli_query($link, 'BEGIN');
+              $mysql  = 'insert into imagen(Nombre,Fichero, FicheroCMS) values("';
+              $mysql .= $imageName . '","' . $src . '","' . $src_cms . '" )';
+
+              if( $res = mysqli_query( $link, $mysql ) )
+              {
+                $id = mysqli_insert_id($link);
+
+                $mysql  = 'update grupo set idImagen = "'. $id .'" where id = '. $idGrupo;
+
+                if( $res = mysqli_query( $link, $mysql ) )
+                  $R = array('resultado' => 'ok', 'img' => $src);
+                else
+                  $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido asignar la imagen al grupo');
+               
+              }
+              else
+              {
+                $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido crear la Imagen');
+              }
+              // ******** FIN DE TRANSACCION **********
+              mysqli_query($link, "COMMIT");
+
+            } catch(Exception $e){
+              // Se ha producido un error, se cancela la transacción.
+              mysqli_query($link, "ROLLBACK");
+            }
+
+          $R = array('resultado' => 'ok', 'imagen' => $src);          
+      }else{
+         $R = array('resultado' => 'error', 'descripcion' => 'Error moviendo la imagen');          
+      }
+
+  }else{
+    $R = array('resultado' => 'error', 'descripcion' => 'Carpeta innacesible.');  
+  }
+
+}else{
+  $RESPONSE_CODE = 401;
+  $R = array('resultado' => 'error', 'descripcion' => 'Creación de grupo incorrecta');
 }
 // =================================================================================
 // SE CIERRA LA CONEXION CON LA BD

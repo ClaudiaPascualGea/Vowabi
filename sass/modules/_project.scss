@@ -87,6 +87,10 @@
 	    padding: 20px 10px;
 	    position: relative;
 
+	    img{
+	    	width: 100%;
+	    }
+
 	    &:nth-child(even):before{
 			content: "";
 			position: absolute;

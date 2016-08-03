@@ -1,6 +1,23 @@
 .dashboard{
 
 	.userContent{
+		.cont{
 
+			&.cont-flex{
+				@include flexbox();
+				@include flex-wrap(wrap);
+			}
+
+			.title{
+				width: 100%;
+			}
+			.left, .right{
+				text-align: center;
+				width: 50%;
+				display: inline-block;
+			}
+			
+
+		}
 	}
 }

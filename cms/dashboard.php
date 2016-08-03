@@ -30,7 +30,7 @@
 
             <div class="cont-50 cont">
                 <h2 class="title title-small">Grupos</h2>
-                <ul class="group-list list">
+                <ul class="group-list list cont-content">
                     
                 </ul>
                 
@@ -59,15 +59,15 @@
                     
                 </ul>
 
-                <form style="display:none" class="cont-content" onsubmit="return createColor(this);">
+                <form class="cont-content" id="newColor" onsubmit="return createColor(this);">
                     <div class="input-container">
                         <label for="name_p">Nombre</label>
-                        <input type="text" id="name_p" required name="name" placeholder=""><br>                         
+                        <input type="text" id="name_p" required name="nombre" placeholder=""><br>                         
                     </div>
                     
                     <div class="input-container">
-                        <label for="description_p">Descripción</label>
-                        <input type="text" id="description_p" name="description" placeholder=""><br>
+                        <label for="description_p">Valor</label>
+                        <input type="text" id="description_p" name="valor" placeholder=""><br>
                     </div>
 
                     <span class="error">Error de prueba</span>

@@ -32,18 +32,47 @@ function listColors(colors){
 			elem.dataset.id = colors[i].id;
 
 				var div = document.createElement("div");
-				div.className = "text";
-				div.innerHTML += "<h3><span class='projectName'>"+ colors[i].Nombre +"</span> - <span class='date'>"+ colors[i].Valor +"</span></h3>";				
+				div.className = "color";
+				div.style.backgroundColor = colors[i].Valor;
+						
 
 			elem.appendChild(div);
 
 				var div = document.createElement("div");
-				div.className = "buttons";				
-				div.innerHTML += " 	<button class='btn btn-red btn-small' onclick='confirmDeleteColor("+ colors[i].id +")'><i class='icon-trash'></i></button>";
+				div.innerHTML += "<span class='projectName'>"+colors[i].Nombre +"</span>";		
+
+			elem.appendChild(div);
+
+
+			var span = document.createElement("span");
+				span.className = "order";		
+				span.contentEditable = true;
+				span.setAttribute("data-id", colors[i].id);
+				span.innerHTML = colors[i].Orden;	
+				span.addEventListener("input", changeColorOrder, false);
+
+			elem.appendChild(span);
+
+			var div = document.createElement("div");
+				div.className = "buttons";		
+				div.innerHTML += " 	<button class='btn btn-red btn-small' onclick='removeColor("+ colors[i].id +")'><i class='icon-trash'></i></button>";
 				
 	
 			elem.appendChild(div);
 			container.appendChild(elem);
+
+			document.querySelector
+			$('.projectName').blur(function() {
+			    if (contents!=$(this).html()){
+			    	if($(this).html() == ""){
+				        $(this).html(contents);
+				    }else{
+				        contents = $(this).html();
+				        var idProject = $(this).parent().parent().parent().attr("data-id");
+				        changeName(contents, idProject);
+				    }
+			    }
+			});
 		}
 	}else{
 		var elem = document.createElement("li");
@@ -52,8 +81,44 @@ function listColors(colors){
 	}
 }
 
+function changeColorOrder(el){
+	var id = this.getAttribute("data-id");
+	var order = this.innerHTML;
+	var reg = new RegExp('^\\d+$');
+	if(reg.test(order)){
+		var url = 'rest/color/';
+		var xhr = new XMLHttpRequest();
+		var params = '';
+		xhr.open('POST', url, true);
 
-function confirmDeleteColor(id){
+		xhr.onload = function(){	
+				o = JSON.parse(this.responseText);	
+
+				if(o.resultado == 'ok'){				
+					getColors();					
+				}else{
+					swal({   
+						title: "¡Upps! Ha habido algún error",   
+						text: o.descripcion,   
+						type: "error",     
+						confirmButtonText: "Aceptar",   
+					}, function(){  
+						if(o.code == 408)
+							logout();
+					});
+				}
+		};
+
+		params = 'idColor='+id + '&order='+order;
+		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhr.setRequestHeader("Authorization", "Basic " + Base64.encode(sessionStorage.usuario + ":" + sessionStorage.clave));
+		xhr.send(params);
+		return false;
+	}
+}
+
+
+function removeColor(id){
 
 	swal({   
 		title: "Eliminar Color",   
@@ -66,40 +131,35 @@ function confirmDeleteColor(id){
 		closeOnConfirm: false,
 		html: true
 	}, function(){   
-		//removeColor(id);
+
+		document.querySelector(".sa-button-container .cancel").click();
+
+		var url = 'rest/color/';
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', url, true);
+
+		xhr.onload = function(){	
+				o = JSON.parse(this.responseText);	
+				console.log(o);
+				if(o.resultado == 'ok'){							
+					getColors();					
+				}else{						
+					swal({   
+						title: "¡Upps! Ha habido algún error",   
+						text: o.descripcion,   
+						type: "error",     
+						confirmButtonText: "Aceptar",   
+					}, function(){  
+						if(o.code == 408)
+							logout();
+					});
+				}
+		};
+		params = 'idColor='+id + '&delete='+true;
+		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhr.setRequestHeader("Authorization", "Basic " + Base64.encode(sessionStorage.usuario + ":" + sessionStorage.clave));
+		xhr.send(params);
 	});
-}
-
-function removeColor(id){
-	var idcolor = id;
-	var url = 'rest/color/' + idProject;
-	var xhr = new XMLHttpRequest();
-	xhr.open('DELETE', url, true);
-
-	xhr.onload = function(){	
-			o = JSON.parse(this.responseText);	
-			console.log(o);
-			if(o.resultado == 'ok'){			
-				swal({   
-					title: "Proyecto eliminado correctamente",   
-					text: "Tu proyecto ha sido eliminado correctamente",   
-					type: "success",     
-					confirmButtonText: "Aceptar",   
-				});
-				getProjects();
-			}else{				
-				swal({   
-					title: "¡Upps! Ha habido algún error",   
-					text: "Ha habido algún error elminando tu proyecto, inténtalo de nuevo más tarde.",   
-					type: "error",     
-					confirmButtonText: "Aceptar",   
-				});
-			}
-	};
-
-	xhr.setRequestHeader("Authorization", "Basic " + Base64.encode(sessionStorage.usuario + ":" + sessionStorage.clave));
-	xhr.send();
-	return false;
 }
 
 function getGroups(){
@@ -130,7 +190,7 @@ function listGroups(groups, container){
 			var elem = document.createElement("li");
 			elem.setAttribute("data-id", groups[i].id);
 
-			elem.innerHTML += "<h3>"+ groups[i].Nombre +"</h3>";
+			elem.innerHTML += "<h3 class='text-left'>"+ groups[i].Nombre +"</h3>";
 			if(groups[i].Descripcion && groups[i].Descripcion != "")
 				elem.innerHTML += "<p>"+ groups[i].Descripcion +"</p>";
 
@@ -148,6 +208,41 @@ function listGroups(groups, container){
 		elem.innerHTML += "No se ha encontrado ningún grupo de elementos.";
 		container.appendChild(elem);
 	}
+}
+
+function createColor(form){
+
+	var nombre = form.nombre.value;	
+	var valor = form.valor.value;
+	var url = 'rest/color/';
+	var xhr = new XMLHttpRequest();
+	var params = '';
+	xhr.open('POST', url, true);
+
+	xhr.onload = function(){	
+			o = JSON.parse(this.responseText);	
+
+			if(o.resultado == 'ok'){				
+				getColors();
+				document.getElementById("newColor").reset();
+			}else{
+				swal({   
+					title: "¡Upps! Ha habido algún error",   
+					text: o.descripcion,   
+					type: "error",     
+					confirmButtonText: "Aceptar",   
+				}, function(){  
+					if(o.code == 408)
+						logout();
+				});
+			}
+	};
+
+	params = 'nombre='+nombre + '&valor='+valor;
+	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhr.setRequestHeader("Authorization", "Basic " + Base64.encode(sessionStorage.usuario + ":" + sessionStorage.clave));
+	xhr.send(params);
+	return false;
 }
 
 function createGroup(form){

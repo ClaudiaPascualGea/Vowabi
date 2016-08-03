@@ -548,10 +548,14 @@ function listGroups(groups, container){
 			elem.setAttribute("data-id", groups[i].id);
 
 			elem.innerHTML += "<h3>"+ groups[i].Nombre +"</h3>";
-			if(groups[i].Descripcion && groups[i].Descripcion != "")
-				elem.innerHTML += "<p>"+ groups[i].Descripcion +"</p>";
-
-			elem.innerHTML += "<button class='btn btn-second btn-small' onclick='addGroup("+ groups[i].id +")'>Añadir</button>";
+			
+			if(groups[i].Fichero){
+				elem.innerHTML += "<img src='"+groups[i].Fichero+"'>";			
+			}else{					
+				if(groups[i].Descripcion && groups[i].Descripcion != "")
+					elem.innerHTML += "<p>"+ groups[i].Descripcion +"</p>";
+				elem.innerHTML += "<button class='btn btn-second btn-small' onclick='addGroup("+ groups[i].id +")'>Añadir</button>";
+			}
 
 			// PARTE DEL DRAG
 			elem.className = "grabbable";
@@ -751,8 +755,7 @@ function createHTMLElement(html, clean) {
 function changeCSS(key, value, idelement){
 
 	var id = "el-"+idelement;
-	console.log(cssDOM);
-	console.log(id);
+
 	if(cssDOM[id]){
 		if(cssDOM[id]["general"][key] == value)
 			delete cssDOM[id]["general"][key];

@@ -110,4 +110,22 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^color/(.*)$ get/color.php?prm=$1&%{QUERY_STRING} [R=307,L]
 
+# Regla que redirige a rest/post/color.php
+# Con esta línea de abajo, sólo acepta peticiones POST
+RewriteCond %{THE_REQUEST} ^POST
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^color/(.*)$ post/color.php?prm=$1&%{QUERY_STRING} [R=307,L]
+
+
+##################################################
+### REGLAS PARA FOTOS
+##################################################
+# Regla que redirige a rest/post/color.php
+# Con esta línea de abajo, sólo acepta peticiones GET
+RewriteCond %{THE_REQUEST} ^POST
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^upload/(.*)$ post/upload.php?prm=$1&%{QUERY_STRING} [R=307,L]
+
 
