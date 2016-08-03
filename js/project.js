@@ -732,7 +732,7 @@ function createHTMLElement(html, clean) {
 		var elem = document.createElement("img");	
 		var aux = html.split('"');
 		var aux2 = aux[1].split('"');		
-		elem.src = aux2;
+		elem.src = aux2;		
 	}else{
 		var aux = html.split("<");
 		var aux2 = aux[1].split(">");
