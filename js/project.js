@@ -204,6 +204,7 @@ function pintarHijos(hijos, padre){
 		var hijo = createHTMLElement(elem["HTML"]);
 
 		if(hijo.tagName == "IMG"){
+			hijo.style.cursor = "pointer";
 			hijo.addEventListener("click", changeSRC, false);
 		}
 
@@ -766,6 +767,7 @@ function addGroupElements(elements){
 				hijo.className = "project-element";
 
 				if(hijo.tagName == "IMG"){
+					hijo.style.cursor = "pointer";
 					hijo.addEventListener("click", changeSRC, false);
 				}
 
