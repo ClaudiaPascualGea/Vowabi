@@ -2,7 +2,10 @@
 // ============================================================
 // PARAMETROS DE CONFIGURACION
 // ============================================================
-$uploaddir = '../../fotos/';
+$uploaddir = '../../uploads/';
+$uploaddirCMS = '../uploads/';
+$uploaddirWeb = 'uploads/';
+
 $uploaddirthumbnails = $uploaddir . 'thumbnails/' ;
 $final_width_of_image = 240; // en píxeles
 $tiempo_de_sesion = 1800000; // 30 minutos * 60 segundos = 1800 segundos

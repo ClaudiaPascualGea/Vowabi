@@ -30,7 +30,7 @@ function getGroup(){
 			html += "	</div>";
 
 			html += "	<div class='cont-content right'>";
-			html +=	"		<input type='file' name='file' id='file' class='inputfile' />";
+			html +=	"		<input type='file' name='file' id='file' class='inputfile'  accept='image/*'/>";
 			html += " 		<label class='btn btn-second btn-small' for='file'><span>Choose a file</span></label>"
 			html += "	</div>";
 

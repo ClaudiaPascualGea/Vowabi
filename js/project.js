@@ -6,6 +6,7 @@ function project(){
 	var orderElements = 0;	
 	getProject();
 	getGroups();	
+	prepareUploadInput();
 }
 
 /*
@@ -201,6 +202,11 @@ function pintarHijos(hijos, padre){
 		var elem = hijos[i];						
 		var idHijo = "el-" + elem["id"];
 		var hijo = createHTMLElement(elem["HTML"]);
+
+		if(hijo.tagName == "IMG"){
+			hijo.addEventListener("click", changeSRC, false);
+		}
+
 		hijo.id = idHijo;
 		hijo.setAttribute("data-order", elem["Orden"]);
 		hijo.className = "project-element";
@@ -289,13 +295,86 @@ function createDropElement(orden){
 }
 
 /**
+	Prepara el input file para la subida de imagenes
+**/
+function prepareUploadInput(){
+
+	var input = document.getElementById("uploadFile");
+
+	input.addEventListener( 'change', function( e )
+	{
+		var fileName = '';
+		fileName = e.target.value.split( '\\' ).pop();
+
+		uploadFile(this.files[0], fileName, this.getAttribute("data-id"));					
+
+	});
+}
+
+/**
+	Cambia el SRC de las imagenes
+**/
+function changeSRC(){
+	var id = this.id;
+	id = id.replace("el-", "");
+
+	var inp = document.getElementById("uploadFile");
+	inp.setAttribute("data-id", id);
+	inp.click();
+}
+
+
+function uploadFile(file, filename, idelement){
+
+	var formdata = new FormData();
+	formdata.append('file', file);
+	formdata.append('fileName', filename);
+	formdata.append('idelement', idelement);
+
+	var url = 'rest/elemento/';
+	var xhr = new XMLHttpRequest();
+	var params = '';
+	xhr.open('POST', url, true);
+
+	xhr.onload = function(){	
+			o = JSON.parse(this.responseText);	
+
+			if(o.resultado == 'ok'){				
+				console.log(o);
+				var el = document.getElementById("el-"+idelement);
+				el.src = o.imagen;
+				changeHTML(el);			
+			}else{
+				swal({
+					title: "Error", 
+					text: o.descripcion, 
+					type: "warning",
+					confirmButtonText: "Aceptar",  
+					html: true 
+				}); 		
+			}
+	};
+
+	// params = 'idGrupo='+sessionStorage.getItem("idGroup") + '&image='+file + '&imageName='+filename;
+	// xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhr.setRequestHeader("Authorization", "Basic " + Base64.encode(sessionStorage.usuario + ":" + sessionStorage.clave));
+	xhr.send(formdata);
+	return false;
+	
+}
+
+
+/**
 	Cambia el HTML de un elemento cuando es Contenteditable
 **/
 function changeHTML(el){
-	
-	var id = this.id;
+
+	if(this.id)
+		el = this;
+
+	var id = el.id;
 	var idelement = id.replace("el-", "");
-	var elem = createHTMLElement(this.outerHTML, true);
+	var elem = createHTMLElement(el.outerHTML, true);
 	var html = elem.outerHTML;
 
 	if(html && idelement){

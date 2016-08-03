@@ -100,7 +100,8 @@ else if($nombre != "" && $descripcion!= "")
     // Se ha producido un error, se cancela la transacción.
     mysqli_query($link, "ROLLBACK");
   }
-}else if($idGrupo!="" && $image!="" && $imageName!=""){
+}
+else if($idGrupo!="" && $image!="" && $imageName!=""){
 
   if (is_dir($uploaddir) && is_writable($uploaddir) && $image['tmp_name']) {
 

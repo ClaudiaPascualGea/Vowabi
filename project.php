@@ -26,7 +26,9 @@
             <div id="projectContainer">
                 
             </div>
-           
+
+            <input type="file" style="visibility:hidden;" id="uploadFile"  accept="image/*">
+
         </div>
 
         <div class="overlay"></div>

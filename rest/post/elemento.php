@@ -39,6 +39,8 @@ $direction = "";
 $delete = "";
 $html = "";
 $css = "";
+$image = "";
+$imageName = "";
 
 if(isset($PARAMS['idgroup']))
   $idgroup = mysqli_real_escape_string( $link, $PARAMS['idgroup']);
@@ -63,6 +65,12 @@ if(isset($PARAMS['html']))
 
 if(isset($PARAMS['css']))
   $css = mysqli_real_escape_string($link, $PARAMS['css']);
+
+if(isset($_FILES['file']))
+  $image = $_FILES['file'];
+
+if(isset($PARAMS['fileName']))
+  $imageName = mysqli_real_escape_string( $link, $PARAMS['fileName']);
 
 if(isset($_SERVER['PHP_AUTH_USER']) &&  isset($_SERVER['PHP_AUTH_PW'])){
     $email = $_SERVER['PHP_AUTH_USER'];
@@ -322,6 +330,60 @@ else if($idelement!='' && $css!=''){
         // Se ha producido un error, se cancela la transacción.
         mysqli_query($link, "ROLLBACK");
     }
+}
+//Sube un fichero y lo asocia al elemento
+else if($idelement!="" && $image!="" && $imageName!=""){
+
+  if (is_dir($uploaddir) && is_writable($uploaddir) && $image['tmp_name']) {
+
+      $ext = pathinfo($imageName, PATHINFO_EXTENSION);
+      $name = md5(rand(0,100)."VOWABI").".".$ext;
+
+      $uploadfile = $uploaddir . $name;
+
+      if(move_uploaded_file($image['tmp_name'], $uploadfile )){       
+          $src_cms = $uploaddirCMS . $name;     
+          $src = $uploaddirWeb . $name;     
+
+           try{
+              // ******** INICIO DE TRANSACCION **********
+              mysqli_query($link, 'BEGIN');
+              $mysql  = 'insert into imagen(Nombre,Fichero, FicheroCMS) values("';
+              $mysql .= $imageName . '","' . $src . '","' . $src_cms . '" )';
+
+              if( $res = mysqli_query( $link, $mysql ) )
+              {
+                $id = mysqli_insert_id($link);
+
+                $mysql  = 'update elemento_usu set idImagen = "'. $id .'" where id = '. $idelement;
+
+                if( $res = mysqli_query( $link, $mysql ) )
+                  $R = array('resultado' => 'ok', 'img' => $src);
+                else
+                  $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido asignar la imagen al elemento');
+               
+              }
+              else
+              {
+                $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido crear la Imagen');
+              }
+              // ******** FIN DE TRANSACCION **********
+              mysqli_query($link, "COMMIT");
+
+            } catch(Exception $e){
+              // Se ha producido un error, se cancela la transacción.
+              mysqli_query($link, "ROLLBACK");
+            }
+
+          $R = array('resultado' => 'ok', 'imagen' => $src);          
+      }else{
+         $R = array('resultado' => 'error', 'descripcion' => 'Error moviendo la imagen');          
+      }
+
+  }else{
+    $R = array('resultado' => 'error', 'descripcion' => 'Carpeta innacesible.');  
+  }
+
 }
 else if($PARAMS['idproject']=='' || $PARAMS['idgroup']=='')
 {
