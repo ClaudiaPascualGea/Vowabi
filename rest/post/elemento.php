@@ -66,7 +66,7 @@ if(isset($PARAMS['html']))
 if(isset($PARAMS['css']))
   $css = mysqli_real_escape_string($link, $PARAMS['css']);
 
-if(isset($_FILES['file']))
+if($_FILES && isset($_FILES['file']))
   $image = $_FILES['file'];
 
 if(isset($PARAMS['fileName']))
@@ -87,7 +87,7 @@ if( !comprobarSesion($email,$clave) ){
 
 }
 //Copiamos los elementos de un grupo al proyecto del usuario
-else if($idproject != "" && $idgroup != "" && $order != ""){ 
+else if($idproject != "" && $idgroup && $idgroup != "" && $order != ""){ 
 
   try{
 
@@ -102,7 +102,6 @@ else if($idproject != "" && $idgroup != "" && $order != ""){
                 JOIN grupo g ON g.id= '. mysqli_real_escape_string($link,$PARAMS['idgroup']) . '
                 JOIN grupo_elemento ge ON ge.idGrupo=g.id AND ge.idElemento=e.id
               order by ge.idPadre, ge.Orden;';
-
 
     //SELECCIONAMOS LOS ELEMENTOS DEL GRUPO
     if( strlen($mysql)>0 && $res = mysqli_query( $link, $mysql ) )

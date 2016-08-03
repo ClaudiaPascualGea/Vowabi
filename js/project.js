@@ -629,7 +629,7 @@ function listGroups(groups, container){
 			elem.innerHTML += "<h3>"+ groups[i].Nombre +"</h3>";
 			
 			if(groups[i].Fichero){
-				elem.innerHTML += "<img src='"+groups[i].Fichero+"'>";			
+				elem.innerHTML += "<img data-id='"+groups[i].id+"' src='"+groups[i].Fichero+"'>";			
 			}else{					
 				if(groups[i].Descripcion && groups[i].Descripcion != "")
 					elem.innerHTML += "<p>"+ groups[i].Descripcion +"</p>";
@@ -764,6 +764,10 @@ function addGroupElements(elements){
 				hijo.id = idHijo;
 				hijo.setAttribute("data-order", elem["oh"]);
 				hijo.className = "project-element";
+
+				if(hijo.tagName == "IMG"){
+					hijo.addEventListener("click", changeSRC, false);
+				}
 
 				if(elem["CSS"])
 					setCSS(elem["CSS"], idHijo);						
