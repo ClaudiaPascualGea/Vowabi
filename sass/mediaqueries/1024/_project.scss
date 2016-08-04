@@ -7,10 +7,16 @@ $menu-width: 300px;
 	}
 }
 
+
 .body-project.show-menu-right{
 	.menu-right-button{
 		@include trf(translate(-$menu-width, 0));
 	}
+
+	.tooltipRight{
+		@include trf(translate(-$menu-width, 0));
+	}
+
 }
 
 .menu-right{	

@@ -1704,6 +1704,82 @@ body.fixed .content {
   transition: opacity 0.2s ease-in-out;
 }
 
+.tooltip-content {
+  position: absolute;
+  background: #e35583;
+  z-index: 9999;
+  width: 200px;
+  bottom: 0;
+  padding: 20px;
+  border-radius: 20px;
+  font-size: 1.1em;
+  text-align: center;
+  color: #fff;
+  cursor: default;
+  pointer-events: none;
+  font-family: 'Gochi Hand', cursive;
+  -webkit-font-smoothing: antialiased;
+  opacity: 0;
+  -webkit-transition: opacity 0.3s, -webkit-transform 0.3s;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.tooltip-west .tooltip-content {
+  left: 4em;
+  -webkit-transform-origin: -2em 50%;
+  transform-origin: -2em 50%;
+}
+
+.tooltip-east .tooltip-content {
+  right: 4em;
+  -webkit-transform-origin: calc(100% + 2em) 50%;
+  transform-origin: calc(100% + 2em) 50%;
+  -webkit-transform: translate3d(0, 50%, 0) rotate3d(1, 1, 1, -30deg);
+  transform: translate3d(0, 50%, 0) rotate3d(1, 1, 1, -30deg);
+}
+
+.tooltip-content::before,
+.tooltip-content::after {
+  content: '';
+  position: absolute;
+}
+
+.tooltip-content::before {
+  height: 100%;
+  width: 3em;
+}
+
+.tooltip-content::after {
+  width: 2em;
+  height: 2em;
+  top: 50%;
+  margin: -1em 0 0;
+  background: url(../img/tooltip2.svg) no-repeat center center;
+  background-size: 100%;
+}
+
+.tooltip-west .tooltip-content::before,
+.tooltip-west .tooltip-content::after {
+  right: 99%;
+}
+
+.tooltip-east .tooltip-content::before,
+.tooltip-east .tooltip-content::after {
+  left: 99%;
+}
+
+.tooltip-east .tooltip-content::after {
+  -webkit-transform: scale3d(-1, 1, 1);
+  transform: scale3d(-1, 1, 1);
+}
+
+.tooltipRight.active .tooltip-content {
+  opacity: 1;
+  -webkit-transform: translate3d(0, 0, 0) rotate3d(0, 0, 0, 0);
+  transform: translate3d(0, 0, 0) rotate3d(0, 0, 0, 0);
+  pointer-events: auto;
+}
+
 /* LOADER */
 .loader {
   position: relative;
@@ -2306,7 +2382,7 @@ body.fixed .content {
 /* Menu Button */
 .menu-button, .menu-right-button {
   position: fixed;
-  bottom: 0;
+  bottom: 15px;
   z-index: 1000;
   margin: 1em;
   padding: 0;
@@ -2747,7 +2823,24 @@ body.fixed .content {
   transition: transform 0.3s ease;
 }
 
+.tooltipRight {
+  -webkit-transition: transform 0.3s ease;
+  -moz-transition: transform 0.3s ease;
+  -o-transition: transform 0.3s ease;
+  transition: transform 0.3s ease;
+  position: fixed;
+  bottom: 10px;
+  right: 45px;
+}
+
 .body-project.show-menu-right .menu-right-button {
+  -webkit-transform: translate(-200px, 0);
+  -moz-transform: translate(-200px, 0);
+  -o-transform: translate(-200px, 0);
+  transform: translate(-200px, 0);
+}
+
+.body-project.show-menu-right .tooltipRight {
   -webkit-transform: translate(-200px, 0);
   -moz-transform: translate(-200px, 0);
   -o-transform: translate(-200px, 0);
@@ -2856,6 +2949,9 @@ body.fixed .content {
     max-height: 400px;
     overflow-y: scroll;
   }
+  .menu-button, .menu-right-button {
+    bottom: 0;
+  }
 }
 
 /* MEDIAQUERY 1024PX
@@ -2900,6 +2996,12 @@ body.fixed .content {
     transform: translate(-300px, 0);
   }
   .body-project.show-menu-right .menu-right-button {
+    -webkit-transform: translate(-300px, 0);
+    -moz-transform: translate(-300px, 0);
+    -o-transform: translate(-300px, 0);
+    transform: translate(-300px, 0);
+  }
+  .body-project.show-menu-right .tooltipRight {
     -webkit-transform: translate(-300px, 0);
     -moz-transform: translate(-300px, 0);
     -o-transform: translate(-300px, 0);

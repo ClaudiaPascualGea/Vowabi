@@ -45,6 +45,11 @@
 
           
         <!-- Menu right -->
+
+        <div class="tooltipRight tooltip-east">
+            <span class="tooltip-content">Añade tu primer elemento arrastrándolo al lugar deseado</span>
+        </div>
+     
         <i class="icon-plus menu-right-button" id="open-right"></i>
         <nav class="menu-right">
             <ul class="group-list">

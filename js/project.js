@@ -33,8 +33,13 @@ function getProject(){
 			if(window.JSON) // Comprueba si soporta JSON nativo
 				proyecto = window.JSON.parse( this.responseText );	
 
-			if(proyecto.length>0)
+			if(proyecto.length>0){
 				document.title = proyecto[0]["Nombre"];
+				removeClass(document.querySelector(".tooltipRight"), "active");
+			}
+			else{
+				addClass(document.querySelector(".tooltipRight"), "active");
+			}
 
 			var ordenPadres = 0;
 
@@ -514,8 +519,12 @@ function removeElement(element){
 					//getProject();
 					elementProject.parentNode.removeChild(elementProject.previousSibling);
 					elementProject.parentNode.removeChild(elementProject);
-					$("body").getNiceScroll().resize();
+					$("body").getNiceScroll().resize();					
 					resetOrder(order,0);
+
+					var numE = document.querySelectorAll("#projectContainer .project-element-parent").length;
+					if(numE == 0)
+						addClass(document.querySelector(".tooltipRight"), "active");
 				}else{						
 					swal({   
 						title: "¡Upps! Ha habido algún error",   
@@ -680,6 +689,8 @@ function addGroup(idgroup, order){
 				addGroupElements(o.elements);
 				if( hasClass( document.querySelector(".menu-right") ,"active") )
 					document.getElementById('open-right').click();			
+
+				removeClass(document.querySelector(".tooltipRight"), "active");
 			}else{
 				swal({   
 					title: "¡Upps! Ha habido algún error",   
