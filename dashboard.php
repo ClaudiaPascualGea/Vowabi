@@ -37,7 +37,7 @@
             <div class="cont-50 cont">
                 <h2 class="title title-small">Crea un nuevo proyecto</h2>
 
-                <form class="cont-content" onsubmit="return createProject(this);">
+                <form id="createProject" class="cont-content" onsubmit="return createProject(this);">
                     <div class="input-container">
                         <label for="name_p">Nombre</label>
                         <input type="text" id="name_p" required name="name" placeholder=""><br>                         

@@ -177,6 +177,7 @@ function createProject(form){
 						confirmButtonText: "Aceptar",  
 						html: true 
 					}); 			
+				document.getElementById("createProject").reset();
 				getProjects();
 			}else{
 				$(".dashboard form .tooltip").html(o.descripcion);
