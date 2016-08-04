@@ -8,7 +8,7 @@
         <style id="projectStyle"></style>
     </head>
 
-    <body onLoad="project(); initColors(); initTexts();" class="body-project">
+    <body onLoad="initTexts(); project(); initColors();" class="body-project">
        
         <div class="content project">
         

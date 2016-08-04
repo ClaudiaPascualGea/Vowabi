@@ -127,6 +127,10 @@ body.fixed{
     display: inline-block;
 	position: relative;
     background: #fff url("../img/arrowdown.gif") no-repeat 90% 50%;
+	
+	&.big{
+		width: 200px;
+	}
 
     i{
 		color: #000;
