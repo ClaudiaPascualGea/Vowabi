@@ -17,7 +17,7 @@ xhr.open('POST', url, true);
 				sessionStorage.usuario = o.email;
 				sessionStorage.clave = o.clave;
 				console.log(sessionStorage);
-				location.href="dashboard.php";
+				location.href="dashboard";
 			}else{
 				$(".js-login-container .js-error").html(o.descripcion);
 				$(".js-login-container .js-error").css("height", "20px");
@@ -68,7 +68,7 @@ function register(form){
 							o = JSON.parse(this.responseText);	
 							if(o.resultado == 'ok'){
 								// var text = "Bienvenid@ a Vowabi <strong>" + o.login + "</strong><br>Inicia sesión.";
-								// modal_redirect = "index.php";
+								// modal_redirect = "index";
 								//showModal("Registro correcto", text, "Aceptar");
 								$(".js-register-container .js-error").html("");
 								$(".js-register-container .js-error").css("height", "0px");

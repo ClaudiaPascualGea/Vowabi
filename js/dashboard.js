@@ -104,7 +104,7 @@ function changeName(name, id){
 
 function editProject(id){
 	sessionStorage.setItem('idProject', id);
-	window.location.href="project.php";
+	window.location.href="project";
 }
 
 function confirmDeleteProject(id){

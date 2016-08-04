@@ -54,7 +54,7 @@
     
                             <input class="send btn btn-primary" type="submit" value="Login">
                         </form>     
-                        <button onclick="rememberPassword()" class="link">¿Forgot password?</button>
+                       <!--  <button onclick="rememberPassword()" class="link">¿Forgot password?</button> -->
                     </div>
 
                     <div class="js-register-container formContainer" id="tab-2">
