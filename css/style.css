@@ -1560,6 +1560,10 @@ body.fixed .content {
   color: #8a969c;
 }
 
+.styled-select::-ms-expand {
+  display: none;
+}
+
 .hidden {
   display: none !important;
 }

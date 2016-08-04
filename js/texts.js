@@ -23,6 +23,19 @@ function addTextBar(){
   var top = childOffset.top - 25;
   textBar.style.top = top + "px";
 
+  var id = element.id;
+  var idelement = id.replace("el-", "");
+
+  //FontSize Listener
+  var sel = document.querySelector(".textBar select[name='font-size']");
+  sel.addEventListener("click", function(){
+    var value = this.options[this.selectedIndex].value;
+    var currentValue = getStyle(element, 'font-size').replace("px", "");
+    console.log(currentValue + " " + idelement + " " + value);
+    if(value && idelement && currentValue!=value)
+      changeCSS("font-size", value + "px", idelement);
+  });
+
 }
 
 function removeTextBar(){
@@ -55,7 +68,19 @@ function createTextToolbar(element){
   html += "   <button onclick='changeTextCss(this)' data-key='text-align' data-value='right' class='btn-small btn'><i class='icon-align-right'></i></button>";
   html += "   <button onclick='changeTextCss(this)' data-key='text-align' data-command='justifyFull' class='btn-small btn'><i class='icon-align-justify'></i></button>";
 
+  //Font size
   var fontSize = getStyle(element, 'font-size');
+  var fs = fontSize.replace("px", "");
+  html += " <select class='styled-select btn-small btn' name='font-size'>";
+  for (var i = 8; i <= 52; i++) {
+
+    var cl = "";
+    if (i == fs)
+      cl = "selected"
+
+    html += " <option "+cl+">" + i + "</option>";
+  }
+  html += " </select>";
 
   div.innerHTML = html;
  

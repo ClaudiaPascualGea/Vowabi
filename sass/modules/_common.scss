@@ -118,6 +118,9 @@ body.fixed{
 	}
 }
 
+.styled-select::-ms-expand{
+  display:none;
+}
 
 .hidden{
 	display: none !important;

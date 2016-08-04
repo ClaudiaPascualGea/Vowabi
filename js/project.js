@@ -357,7 +357,10 @@ function uploadFile(file, filename, idelement){
 					type: "warning",
 					confirmButtonText: "Aceptar",  
 					html: true 
-				}); 		
+				}, function(){  
+					if(o.code == 408)
+						logout();
+				});		
 			}
 	};
 
@@ -697,6 +700,9 @@ function addGroup(idgroup, order){
 					text: o.descripcion,   
 					type: "error",     
 					confirmButtonText: "Aceptar",   
+				}, function(){  
+					if(o.code == 408)
+						logout();
 				});
 			}
 		};

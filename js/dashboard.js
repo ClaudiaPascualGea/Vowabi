@@ -92,6 +92,10 @@ function changeName(name, id){
 			}else{
 				$(".dashboard form .tooltip").html(o.descripcion);
 				$(".dashboard form .tooltip").css("height", "20px");
+
+				if(o.code == 408)
+					logout();
+		
 			}
 	};
 
@@ -147,6 +151,9 @@ function removeProject(id){
 					text: "Ha habido algún error elminando tu proyecto, inténtalo de nuevo más tarde.",   
 					type: "error",     
 					confirmButtonText: "Aceptar",   
+				}, function(){  
+					if(o.code == 408)
+						logout();
 				});
 			}
 	};
@@ -182,6 +189,10 @@ function createProject(form){
 			}else{
 				$(".dashboard form .tooltip").html(o.descripcion);
 				$(".dashboard form .tooltip").css("height", "20px");
+
+				if(o.code == 408)
+					logout();
+				
 			}
 	};
 
