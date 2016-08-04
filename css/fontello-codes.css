@@ -49,5 +49,8 @@
 .icon-align-left:before { content: '\e82f'; } /* '' */
 .icon-align-center:before { content: '\e830'; } /* '' */
 .icon-align-justify:before { content: '\e831'; } /* '' */
+.icon-text-height:before { content: '\e832'; } /* '' */
+.icon-font:before { content: '\e833'; } /* '' */
+.icon-fontsize:before { content: '\e834'; } /* '' */
 .icon-strike:before { content: '\f0cc'; } /* '' */
 .icon-underline:before { content: '\f0cd'; } /* '' */

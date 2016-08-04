@@ -1560,7 +1560,44 @@ body.fixed .content {
   color: #8a969c;
 }
 
-.styled-select::-ms-expand {
+.styled-select {
+  padding: 0;
+  margin: 0;
+  width: 50px;
+  border-radius: 2px;
+  background-color: #fff;
+  display: inline-block;
+  position: relative;
+  background: #fff url("../img/arrowdown.gif") no-repeat 90% 50%;
+}
+
+.styled-select i {
+  color: #000;
+  position: absolute;
+  bottom: calc(100% - 2px);
+  left: 0;
+  right: 0;
+  margin: auto;
+  background: #FFF;
+}
+
+.styled-select select {
+  padding: 6px 8px;
+  width: 100%;
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
+  background-image: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.styled-select select:focus {
+  outline: none;
+}
+
+.styled-select select::-ms-expand {
   display: none;
 }
 
@@ -2920,12 +2957,33 @@ body.fixed .content {
   right: 0;
   z-index: 10;
   margin: auto;
+  vertical-align: middle;
 }
 
 .textBar .btn {
   background: #FFF;
   padding: 5px;
   border-radius: 2px;
+  vertical-align: middle;
+}
+
+.textBar .styled-select {
+  margin: 0 2.5px;
+  border-radius: 2px;
+  vertical-align: middle;
+  border-left: 1px solid #f3f3f3;
+}
+
+.textBar .pre-select {
+  display: inline-block;
+  margin-right: -5.5px;
+  margin-left: 2.5px;
+  padding: 5px;
+  padding-bottom: 6px;
+  background: #FFF;
+  color: #000;
+  border-radius: 2px;
+  vertical-align: middle;
 }
 
 /*------------------------------------- Breakpoints ---------------------------------------*/

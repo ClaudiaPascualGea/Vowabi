@@ -426,10 +426,31 @@ $tooltip: calc(-#{$menu-width});
   right: 0;
   z-index: 10;
   margin: auto;
+  vertical-align: middle;
 
   .btn{
   	background: #FFF;
     padding: 5px;
     border-radius: 2px;
+    vertical-align: middle;
+  }
+
+  .styled-select{
+	margin: 0 2.5px;
+	border-radius: 2px;
+	vertical-align: middle;
+	border-left: 1px solid #f3f3f3;
+  }
+
+  .pre-select{
+    display: inline-block;
+    margin-right: -5.5px;
+    margin-left: 2.5px;
+    padding: 5px;
+    padding-bottom: 6px;
+    background: #FFF;
+    color: #000;
+    border-radius: 2px;
+    vertical-align: middle;
   }
 }
