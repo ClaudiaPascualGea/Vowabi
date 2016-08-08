@@ -66,6 +66,12 @@ function getExportProject(){
 
 					if(CSS)
 						setCSSExport(CSS, id);
+
+					if(CSS_768)
+						setCSSWidthExport(CSS_768, idHijo, "768");	
+
+					if(CSS_1024)
+						setCSSWidthExport(CSS_1024, idHijo, "1024");				
 					
 					//document.getElementById("exportContainer").appendChild(padre); 
 					body.appendChild(padre); 
@@ -107,10 +113,15 @@ function pintarHijosExport(hijos, padre){
 		hijo.id = idHijo;
 
 		if(elem["CSS"])
-			setCSSExport(elem["CSS"], idHijo);					
+			setCSSExport(elem["CSS"], idHijo);		
 
-		if(hijo.tagName == "IMG"){
-			
+		if(elem["CSS_768"])
+			setCSSWidthExport(elem["CSS_768"], idHijo, "768");	
+
+		if(elem["CSS_1024"])
+			setCSSWidthExport(elem["CSS_1024"], idHijo, "1024");					
+
+		if(hijo.tagName == "IMG"){			
 			var image = getBase64Image(hijo);
 			var aux = hijo.src.split('/');	
 			var name = aux[aux.length-1];
@@ -141,6 +152,28 @@ function setCSSExport(CSS, id){
 	}
 	doc.getElementById("exportCSS").innerHTML += css;
 }
+
+function setCSSWidthExport(CSS, id, width){
+
+	var css = '';
+	var v =  CSS.split('--');
+
+	css += "@media all and (min-width: "+width+"px) {";
+	for(var i=1; i<v.length; i=i+2){
+
+		if(v[i] == "general")
+			css += '#'+id+'{';
+		else if(v)
+			css += '#'+id + v[i] + '{';
+
+		css += v[i+1];
+		css += '}';
+	}
+	css += "}";
+
+	doc.getElementById("exportCSS").innerHTML += css;
+}
+
 
 function getBase64Image(img) {
     var canvas = doc.createElement("canvas");

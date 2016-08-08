@@ -14,6 +14,8 @@ function project(){
 */
 var dragElement = "";
 var cssDOM = [];
+var cssDOM768 = [];
+var cssDOM1024 = [];
 var loader = '<div class="loader"><span class="dot dot_1"></span><span class="dot dot_2"></span><span class="dot dot_3"></span><span class="dot dot_4"></span></div>';
 
 function getProject(){
@@ -61,6 +63,12 @@ function getProject(){
 					if(CSS)
 						setCSS(CSS, id);
 
+					if(CSS_768)
+						setCSSWidth(CSS_768, idHijo, "768");	
+
+					if(CSS_1024)
+						setCSSWidth(CSS_1024, idHijo, "1024");				
+
 					var element_tools = createElementTools();
 					padre.appendChild(element_tools);
 			
@@ -82,10 +90,8 @@ function getProject(){
 
 			document.getElementById("projectContainer").removeChild(document.querySelector(".loader"));
 			prepareDropElements();
-			$("body").getNiceScroll().resize();
-			
+			$("body").getNiceScroll().resize();			
 		};
-
 		xhr.send();
 	}
 	else
@@ -214,7 +220,13 @@ function pintarHijos(hijos, padre){
 		}
 
 		if(elem["CSS"])
-			setCSS(elem["CSS"], idHijo);						
+			setCSS(elem["CSS"], idHijo);	
+
+		if(elem["CSS_768"])
+			setCSSWidth(elem["CSS_768"], idHijo, "768");	
+
+		if(elem["CSS_1024"])
+			setCSSWidth(elem["CSS_1024"], idHijo, "1024");				
 
 		padre.appendChild(hijo);			
 
@@ -736,6 +748,12 @@ function addGroupElements(elements){
 				if(CSS)
 					setCSS(CSS, id);
 
+				if(CSS_768)
+					setCSSWidth(CSS_768, idHijo, "768");	
+
+				if(CSS_1024)
+					setCSSWidth(CSS_1024, idHijo, "1024");				
+
 				var element_tools = createElementTools();
 				padre.appendChild(element_tools);
 				var ordenPadre = order;
@@ -786,6 +804,12 @@ function addGroupElements(elements){
 
 				if(elem["CSS"])
 					setCSS(elem["CSS"], idHijo);						
+
+				if(elem["CSS_768"])
+					setCSSWidth(elem["CSS_768"], idHijo, "768");	
+
+				if(elem["CSS_1024"])
+					setCSSWidth(elem["CSS_1024"], idHijo, "1024");				
 
 				padre.appendChild(hijo);				
 
@@ -917,9 +941,54 @@ function setCSS(CSS, id){
 	document.getElementById("projectStyle").innerHTML += css;
 }
 
-function resetCSS(){
-	var obj = cssDOM;
+function setCSSWidth(CSS, id, width){
+
+	if(width == "768")
+		cssDOM768[id] = parseCSS(CSS);
+	else if(width == "1024")
+		cssDOM1024[id] = parseCSS(CSS);
+
 	var css = '';
+	var v =  CSS.split('--');
+
+	css += "@media all and (min-width: "+width+"px) {";
+	for(var i=1; i<v.length; i=i+2){
+
+		if(v[i] == "general")
+			css += '#'+id+'{';
+		else if(v)
+			css += '#'+id + v[i] + '{';
+
+		css += v[i+1];
+		css += '}';
+	}
+	css += "}";
+
+	document.getElementById("projectStyle").innerHTML += css;
+}
+
+function resetCSS(){
+	var css = '';
+
+	css += setCSSDOM(cssDOM);
+
+	if(cssDOM768){
+		css += "@media all and (min-width:768px){";
+		css += setCSSDOM(cssDOM768);
+		css += "}";
+	}
+
+	if(cssDOM1024){
+		css += "@media all and (min-width:1024px){";
+		css += setCSSDOM(cssDOM1024);
+		css += "}";
+	}
+
+	document.getElementById("projectStyle").innerHTML = css;
+}
+
+function setCSSDOM(obj){
+	var css = "";
 	for(var key in obj){	
 		if(obj[key]){
 			for(var key2 in obj[key]){
@@ -942,8 +1011,7 @@ function resetCSS(){
 			}
 		}
 	}
-	document.getElementById("projectStyle").innerHTML = css;
-
+	return css;
 }
 
 function parseCSS(css){

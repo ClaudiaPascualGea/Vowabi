@@ -52,7 +52,7 @@ if(is_numeric($ID))
     and pr.id = ' . mysqli_real_escape_string($link,$ID) . '  
     order by op,oh';
 
-    $mysql = 'select e.*, h.HTML, c.CSS, j.JS, pr.Nombre 
+    $mysql = 'select e.*, h.HTML, c.CSS, c.CSS_768, c.CSS_1024, j.JS, pr.Nombre 
               FROM elemento_usu e
                 JOIN proyecto pr ON pr.id=e.idProyecto
                 JOIN html_usu h ON h.idElemento_usu=e.id

@@ -90,7 +90,7 @@ else if($idproject != "" && $idgroup && $idgroup != "" && $order != ""){
 
   try{
 
-    $mysql = 'select g.id as grupo, ge.idPadre, ge.Orden, e.*, h.HTML , c.CSS, j.JS from 
+    $mysql = 'select g.id as grupo, ge.idPadre, ge.Orden, e.*, h.HTML , c.CSS, c.CSS_768, c.CSS_1024, j.JS from 
                   elemento e 
                            LEFT JOIN html h
                            ON h.idElemento=e.id
@@ -168,8 +168,8 @@ else if($idproject != "" && $idgroup && $idgroup != "" && $order != ""){
             $mysql_js  = ' insert into js_usu (idElemento_usu, JS) values(';
             $mysql_js .=  $id . ', "' . $row["JS"] . '" ); ';
 
-            $mysql_css  = 'insert into css_usu (idElemento_usu, CSS) values(';
-            $mysql_css .=  $id . ', "' . mysqli_real_escape_string($link, $row["CSS"]) . '"); ';
+            $mysql_css  = 'insert into css_usu (idElemento_usu, CSS, CSS_768, CSS_1024) values(';
+            $mysql_css .=  $id . ', "' . mysqli_real_escape_string($link, $row["CSS"]) . '", "' . mysqli_real_escape_string($link, $row["CSS_768"]) . '", "' . mysqli_real_escape_string($link, $row["CSS_1024"]) . '"); ';
            
 
             //echo $mysql_content;
@@ -177,7 +177,7 @@ else if($idproject != "" && $idgroup && $idgroup != "" && $order != ""){
                 $res_js = mysqli_query( $link, $mysql_js ) &&
                 $res_css = mysqli_query( $link, $mysql_css )
             ) {
-              $elements[$cont] = array("idElemento"=>$id, "HTML"=>$row["HTML"], "idPadre"=>$idPadre, "CSS"=>$row["CSS"], "JS"=>$row["JS"], "order"=>$orden, "ContentEditable"=>$row["ContentEditable"]);
+              $elements[$cont] = array("idElemento"=>$id, "HTML"=>$row["HTML"], "idPadre"=>$idPadre, "CSS"=>$row["CSS"], "CSS_768"=>$row["CSS_768"], "CSS_1024"=> $row["CSS_1024"], "JS"=>$row["JS"], "order"=>$orden, "ContentEditable"=>$row["ContentEditable"]);
               $cont++;
               $R = array('resultado' => 'ok', "elements"=>$elements);
             }else{
