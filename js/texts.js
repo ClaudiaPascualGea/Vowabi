@@ -127,7 +127,6 @@ function createTextToolbar(element){
     currentValue = cssDOM[id]["general"]["font-family"];
   if(cssDOM[id] && cssDOM[id]["general"] && cssDOM[id]["general"]["font-weight"] )
     currentValue = currentValue + ":" + cssDOM[id]["general"]["font-weight"];
-  
 
   html += "<i class='pre-select icon-font'></i>";
   html += "<div class='styled-select big'>";
@@ -215,6 +214,7 @@ function listFonts(currentValue){
   var r, s = '';
 
   currentValue = currentValue.replace(":400", "");
+  currentValue = currentValue.replace(":bold", "");
     
   for(var i=0; i<l; i++){
       r = fonts[i].replace(/[\+|:]/g, ' ');

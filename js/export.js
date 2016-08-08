@@ -2,8 +2,12 @@ var doc;
 var filename;
 var zip;
 var img;
+var bigLoader = '<section class="spinner-2"><div class="spinner"></div><p>Exportando...</p></section>';
 
 function exportProject(){
+
+	document.getElementById("projectContainer").innerHTML += bigLoader;
+	addClass(document.body, "fixed");
 
 	zip = new JSZip();
 	img = zip.folder("uploads");
@@ -81,6 +85,9 @@ function getExportProject(){
 					saveAs(content, "VowabiProject.zip");
 				});
 
+			document.getElementById("projectContainer").removeChild(document.querySelector(".spinner-2"));
+			removeClass(document.body, "fixed");
+
 		};
 
 		xhr.send();
@@ -107,7 +114,6 @@ function pintarHijosExport(hijos, padre){
 			var image = getBase64Image(hijo);
 			var aux = hijo.src.split('/');	
 			var name = aux[aux.length-1];
-
 			img.file(name, image, {base64: true});
 		}
 
