@@ -38,6 +38,33 @@ if(is_numeric($ID))
   $mysql = 'select g.*, i.FicheroCMS as Fichero, i.Nombre as Filename FROM grupo g
                LEFT JOIN imagen i ON g.idImagen=i.id
             WHERE g.id = '.$ID.';';
+
+  if($res = mysqli_query( $link, $mysql ) ){
+      while( $row = mysqli_fetch_assoc( $res ) )
+        $R[] = $row;
+    mysqli_free_result( $res );
+  }else 
+    $R[] = $res;
+
+  if($R[0]){
+    $mysql_elementos = 'select e.*, ge.idPadre, ge.Orden, h.HTML, c.CSS, c.CSS_768, c.CSS_1024, j.JS
+              FROM elemento e
+                JOIN grupo_elemento ge ON ge.idElemento=e.id
+                JOIN grupo g ON g.id=ge.idGrupo
+                LEFT JOIN html h ON h.idElemento=e.id
+                LEFT JOIN css c ON c.idElemento=e.id
+                LEFT JOIN js j ON j.idElemento=e.id
+              WHERE g.id='.$ID.'
+            ORDER BY ge.idPadre, ge.Orden;';
+
+    if($resEl = mysqli_query( $link, $mysql_elementos ) ){
+      while( $row = mysqli_fetch_assoc( $resEl ) )
+        $R[0]["elements"][] = $row;
+      mysqli_free_result( $resEl );
+    }
+  } 
+
+   
 }
 
 else
@@ -48,6 +75,16 @@ else
                   LEFT JOIN imagen i ON g.idImagen=i.id
                 GROUP BY g.id
                 ORDER BY g.Orden;';
+      if( strlen($mysql)>0 && count($R)==0 && $res = mysqli_query( $link, $mysql ) )
+      {
+      if( substr($mysql, 0, 6) == "select" )
+      {
+        while( $row = mysqli_fetch_assoc( $res ) )
+          $R[] = $row;
+        mysqli_free_result( $res );
+      }
+      else $R[] = $res;
+      }
   }
   else
   {
@@ -55,19 +92,7 @@ else
     $R = array("id", "2", "error", "Los parámetros no son correctos");
   }
 }
-// =================================================================================
-// SE HACE LA CONSULTA
-// =================================================================================
-if( strlen($mysql)>0 && count($R)==0 && $res = mysqli_query( $link, $mysql ) )
-{
-  if( substr($mysql, 0, 6) == "select" )
-  {
-    while( $row = mysqli_fetch_assoc( $res ) )
-      $R[] = $row;
-    mysqli_free_result( $res );
-  }
-  else $R[] = $res;
-}
+
 // =================================================================================
 // SE CIERRA LA CONEXION CON LA BD
 // =================================================================================

@@ -2057,6 +2057,21 @@ body.fixed .content {
   padding: 15px;
 }
 
+.dashboard .userContent .cont .cont-content textarea {
+  resize: vertical;
+  width: 100%;
+  height: auto;
+  min-height: 100px;
+}
+
+.dashboard .userContent .cont .cont-content textarea.small {
+  min-height: 0;
+}
+
+.dashboard .userContent .cont .cont-content button {
+  margin: 5px auto;
+}
+
 .dashboard .userContent .cont img {
   display: block;
   max-width: 80%;

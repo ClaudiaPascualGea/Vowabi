@@ -14,7 +14,7 @@
         
             <header class="userBar">
                 <div class="left">
-                    <img src="img/logo2.png" alt="Vowabi">
+                    <img src="img/logo.png" alt="Vowabi">
                     <span class="userName"></span>
                 </div>
                 <div class="right">

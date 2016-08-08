@@ -1,6 +1,5 @@
 function group(){
 	getGroup();
-	//getElements();
 }
 
 function getGroup(){
@@ -20,6 +19,8 @@ function getGroup(){
 			//console.log(this.responseText);
 			if(window.JSON) // Comprueba si soporta JSON nativo
 				grupo = window.JSON.parse( this.responseText )[0];	
+
+			console.log(grupo);
 
 			var html = "";
 			html += '<div class="cont-100 cont cont-flex">';
@@ -44,7 +45,7 @@ function getGroup(){
 				html += "</div>";
 			}
 
-			html += '<button onclick="addElement()" class="btn btn-small btn-primary">Añadir elemento</button>';
+			//html += '<button onclick="addElement()" class="btn btn-small btn-primary">Añadir elemento</button>';
 			document.querySelector(".userContent").innerHTML = html;
 
 			var inputs = document.querySelectorAll( '.inputfile' );
@@ -68,7 +69,10 @@ function getGroup(){
 				});
 			});
 
+			if(grupo["elements"])
+				listElements(grupo["elements"]);
 
+			$("body").getNiceScroll().resize();	
 		};
 
 		xhr.send();
@@ -78,6 +82,79 @@ function getGroup(){
 	else
 		location.href="dashboard";
 }
+
+function listElements(elements){
+
+	var html = "";	
+
+	for (var i = 0; i < elements.length; i++) {
+
+		html += '<div class="cont-100 cont cont-flex">';
+		html += "	<h3 class='title title-small'>Elemento "+ elements[i]["id"] +"</h3>";
+
+			html += "	<div class='cont-content left'>";
+			html += "		<p>ID Padre</p>";
+			html += "	</div>";
+			html += "	<div class='cont-content right'>";
+			html += "		<textarea class='small'>"+elements[i]["idPadre"]+"</textarea>";
+			//html += "		<button class='btn btn-second btn-small'>Guardar</button>";
+			html += "	</div>";
+
+			html += "	<div class='cont-content left'>";
+			html += "		<p>Orden</p>";
+			html += "	</div>";
+			html += "	<div class='cont-content right'>";
+			html += "		<textarea class='small'>"+elements[i]["Orden"]+"</textarea>";
+			//html += "		<button class='btn btn-second btn-small'>Guardar</button>";
+			html += "	</div>";
+
+			html += "	<div class='cont-content left'>";
+			html += "		<p>Nombre</p>";
+			html += "	</div>";
+			html += "	<div class='cont-content right'>";
+			html += "		<textarea name='nombre'>"+elements[i]["Nombre"]+"</textarea>";
+			//html += "		<button class='btn btn-second btn-small'>Guardar</button>";
+			html += "	</div>";
+
+			html += "	<div class='cont-content left'>";
+			html += "		<p>CSS</p>";
+			html += "	</div>";
+			html += "	<div class='cont-content right'>";
+			html += "		<textarea name='nombre'>"+elements[i]["CSS"]+"</textarea>";
+			//html += "		<button class='btn btn-second btn-small'>Guardar</button>";
+			html += "	</div>";
+
+			html += "	<div class='cont-content left'>";
+			html += "		<p>CSS 768</p>";
+			html += "	</div>";
+			html += "	<div class='cont-content right'>";
+			html += "		<textarea name='nombre'>"+elements[i]["CSS_768"]+"</textarea>";
+			//html += "		<button class='btn btn-second btn-small'>Guardar</button>";
+			html += "	</div>";
+
+			html += "	<div class='cont-content left'>";
+			html += "		<p>CSS 1024</p>";
+			html += "	</div>";
+			html += "	<div class='cont-content right'>";
+			html += "		<textarea name='nombre'>"+elements[i]["CSS_1024"]+"</textarea>";
+			//html += "		<button class='btn btn-second btn-small'>Guardar</button>";
+			html += "	</div>";
+
+			html += "	<div class='cont-content left'>";
+			html += "		<p>HTML</p>";
+			html += "	</div>";
+			html += "	<div class='cont-content right'>";
+			html += "		<textarea name='nombre'>"+elements[i]["HTML"]+"</textarea>";
+			//html += "		<button class='btn btn-second btn-small'>Guardar</button>";
+			html += "	</div>";
+		html += "</div>";
+	}
+
+	document.querySelector(".userContent").innerHTML += html;
+	$("body").getNiceScroll().resize();	
+
+}
+
 
 function uploadFile(file, filename){
 
