@@ -52,5 +52,14 @@
 .icon-text-height:before { content: '\e832'; } /* '' */
 .icon-font:before { content: '\e833'; } /* '' */
 .icon-fontsize:before { content: '\e834'; } /* '' */
+.icon-export:before { content: '\e835'; } /* '' */
+.icon-picture:before { content: '\e836'; } /* '' */
+.icon-mobile-1:before { content: '\e837'; } /* '' */
+.icon-download:before { content: '\e838'; } /* '' */
+.icon-download-1:before { content: '\e839'; } /* '' */
+.icon-export-1:before { content: '\f081'; } /* '' */
 .icon-strike:before { content: '\f0cc'; } /* '' */
 .icon-underline:before { content: '\f0cd'; } /* '' */
+.icon-desktop:before { content: '\f108'; } /* '' */
+.icon-tablet:before { content: '\f10a'; } /* '' */
+.icon-mobile:before { content: '\f10b'; } /* '' */
