@@ -60,7 +60,7 @@ function removeTextBar(){
   setTimeout(function(){
     var activeElement = document.activeElement.parentNode;
     var parent = activeElement.parentNode.className;
-    if(textBar && textBar.parentNode && (activeElement.className!="textBar" || parent!="textBar") ){
+    if(textBar && textBar.parentNode && activeElement.className!="textBar" && parent!="textBar" ){
       textBar.parentNode.removeChild(textBar);
     }
   }, 100);
@@ -199,7 +199,12 @@ function prepareFonts(){
 
   for(var i=0; i<fonts.length; i++){
     var link = settings.api + fonts[i];
-    obj.innerHTML += '<link href="' + link + '" rel="stylesheet" type="text/css">';
+    
+    var x = document.createElement("LINK");
+    x.setAttribute("rel", "stylesheet");
+    x.setAttribute("type", "text/css");
+    x.setAttribute("href", link);
+    document.head.appendChild(x);
   }
 
 }

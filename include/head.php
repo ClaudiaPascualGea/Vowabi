@@ -7,11 +7,12 @@
 <link rel="shortcut icon" type="image/png" href="img/favicon.ico">
 <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
 
-<link rel="canonical" href="https://alexcican.com/post/single-post">
 
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato">
 
 <script src="js/lib/sweetalert-master/sweetalert.min.js"></script>
 <link rel="stylesheet" type="text/css" href="js/lib/sweetalert-master/sweetalert.css">
+
 
 <!-- STYLES -->
 <link rel="stylesheet" href="css/fontello.css">
