@@ -19,7 +19,8 @@
                 </div>
                 <div class="right">
                     <button class="btn btn-small btn-primary button1 tooltip" data-title="Volver a Dashboard" onclick="closeProject()"><i class="icon-left-open"></i></button>
-                    <button class="btn btn-small btn-primary button1 logout tooltip tooltip-right" data-title="Cerrar sesión" onclick="logout()"><i class="icon-logout"></i></button>
+                    <button class="btn btn-small btn-primary button1 tooltip tooltip" data-title="Exportar Proyecto" onclick="exportProject()"><i class="icon-export-1"></i></button>
+                    <button class="btn btn-small btn-red button1 logout tooltip tooltip-right" data-title="Cerrar sesión" onclick="logout()"><i class="icon-logout"></i></button>
                 </div>
             </header>
 
@@ -62,6 +63,7 @@
         <script type='text/javascript' src="js/project.js"></script>
         <script type='text/javascript' src="js/colors.js"></script>
         <script type='text/javascript' src="js/texts.js"></script>
+        <script type='text/javascript' src="js/export.js"></script>
 
     </body>
 </html>

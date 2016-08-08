@@ -1651,8 +1651,12 @@ body.fixed .content {
   display: none;
 }
 
-.userBar .logout {
+.userBar .right button {
   margin-left: 10px;
+}
+
+.userBar .right button:first-child {
+  margin-left: 0;
 }
 
 .image-background, .image-foreground {
