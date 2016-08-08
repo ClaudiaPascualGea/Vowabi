@@ -106,7 +106,7 @@ else if($idGrupo!="" && $image!="" && $imageName!=""){
   if (is_dir($uploaddir) && is_writable($uploaddir) && $image['tmp_name']) {
 
       $ext = pathinfo($imageName, PATHINFO_EXTENSION);
-      $name = md5(rand(0,100)."VOWABI").".".$ext;
+      $name = md5(rand(0,100)."VOWABI"). time() . ".".$ext;
 
       $uploadfile = $uploaddir . $name;
 
