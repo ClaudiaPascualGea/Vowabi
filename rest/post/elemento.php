@@ -108,6 +108,7 @@ else if($idproject != "" && $idgroup && $idgroup != "" && $order != ""){
         $elements = array();
         $cont = 0;
         $idAnterior = "";
+        $idsInsertados = array();
 
         while( $row = mysqli_fetch_assoc( $res ) ){
           $R[] = $row;
@@ -135,9 +136,8 @@ else if($idproject != "" && $idgroup && $idgroup != "" && $order != ""){
           }
           //En caso de que sea algun hijo
           else{
-            $orden = $row["Orden"];         
-            if($idAnterior == $row["idPadre"])
-              $idPadre = $idAnterrioInsertado;                        
+            $orden = $row["Orden"];                         
+            $idPadre = $idsInsertados[$row["idPadre"]];
           }
 
 
@@ -155,9 +155,8 @@ else if($idproject != "" && $idgroup && $idgroup != "" && $order != ""){
             if(!$row["idPadre"]){
               $idPadre = $id;
             }
-            
-            $idAnterior = $row["id"];
-            $idAnterrioInsertado = $id;
+
+            $idsInsertados[$row["id"]] = $id;
             
                         
             //COPIAMOS EL HTML, CSS Y JS DEL ELEMENTO

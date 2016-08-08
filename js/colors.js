@@ -43,6 +43,7 @@ function listColors(colors, container){
         };
         li.ondragend = function(e){	    	
 	    	e.preventDefault();
+	    	dragElement = "";
 			removeClasses(document.querySelectorAll("#projectContainer .drop-element"), "hidden");
 			removeClasses(document.querySelectorAll("#projectContainer .project-element-parent"), "over");
 			removeClasses(document.querySelectorAll("#projectContainer .project-element"), "over");

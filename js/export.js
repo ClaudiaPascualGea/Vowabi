@@ -68,10 +68,10 @@ function getExportProject(){
 						setCSSExport(CSS, id);
 
 					if(CSS_768)
-						setCSSWidthExport(CSS_768, idHijo, "768");	
+						setCSSWidthExport(CSS_768, id, "768");	
 
 					if(CSS_1024)
-						setCSSWidthExport(CSS_1024, idHijo, "1024");				
+						setCSSWidthExport(CSS_1024, id, "1024");				
 					
 					//document.getElementById("exportContainer").appendChild(padre); 
 					body.appendChild(padre); 

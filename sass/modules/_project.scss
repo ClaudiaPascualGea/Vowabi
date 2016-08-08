@@ -14,13 +14,17 @@
 		width: 100%;
 		left: 0;
 		margin-top: -25px;
-		z-index: 2;
+		z-index: -1;
 		@include flexbox();
 		@include flex-align(center);
 		@include flex-justify(center);
 		@include trs(border-color 0.3s ease-in-out);
 		border: 2px dashed;
 		border-color: transparent;
+
+		&.active{
+			z-index: 2;
+		}
 
 		&:before{
 			content: "+";
@@ -41,9 +45,9 @@
 		}
 
 
-		&:last-child{
+		/* 		&:last-child{
 			margin-top: -50px;
-		}
+		} */
 		&:first-child{
 			margin-top: 0;
 		}
@@ -63,7 +67,7 @@
 		
 	}
 
-	section,div, button{
+	section,div, button, header{
 
 		&.project-element, &.project-element-parent{
 

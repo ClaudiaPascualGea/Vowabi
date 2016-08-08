@@ -48,7 +48,11 @@ function getGroup(){
 			//html += '<button onclick="addElement()" class="btn btn-small btn-primary">Añadir elemento</button>';
 			document.querySelector(".userContent").innerHTML = html;
 
+			if(grupo["elements"])
+				listElements(grupo["elements"]);
+
 			var inputs = document.querySelectorAll( '.inputfile' );
+
 			Array.prototype.forEach.call( inputs, function( input )
 			{
 				var label	 = input.nextElementSibling,
@@ -69,8 +73,6 @@ function getGroup(){
 				});
 			});
 
-			if(grupo["elements"])
-				listElements(grupo["elements"]);
 
 			$("body").getNiceScroll().resize();	
 		};
@@ -158,6 +160,7 @@ function listElements(elements){
 
 function uploadFile(file, filename){
 
+	console.log(file, filename);
 	var formdata = new FormData();
 	formdata.append('file', file);
 	formdata.append('fileName', filename);

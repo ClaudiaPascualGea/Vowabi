@@ -257,16 +257,16 @@ function createElementTools(){
 	element_tools.className = "element-tools";
 
 	var html = "";
-	html += "<button style='display:none;' class='btn-blue btn btn-small tooltip' data-title='Configuración'>";
+	html += "<button style='display:none;' class='btn-blue btn btn-small' data-title='Configuración'>";
 	html += "	<i class='icon-cog-1'></i>";
 	html += "</button>";
-	html += "<button class='btn-green btn btn-small tooltip' data-title='Bajar bloque' onclick='moveElement(\"down\", this)'>";
+	html += "<button class='btn-green btn btn-small' data-title='Bajar bloque' onclick='moveElement(\"down\", this)'>";
 	html += "	<i class='icon-down-open'></i>";
 	html += "</button>";
-	html += "<button class='btn-green btn btn-small tooltip' data-title='Subir bloque' onclick='moveElement(\"up\", this)'>";
+	html += "<button class='btn-green btn btn-small' data-title='Subir bloque' onclick='moveElement(\"up\", this)'>";
 	html += "	<i class='icon-up-open-1'></i>";
 	html += "</button>";
-	html += "<button class='btn btn-small btn-red tooltip tooltip-right' data-title='Eliminar bloque' onclick='removeElement(this)'>";
+	html += "<button class='btn btn-small btn-red' data-title='Eliminar bloque' onclick='removeElement(this)'>";
 	html += "	<i class='icon-trash'></i>";
 	html += "</button>";
 
@@ -664,7 +664,13 @@ function listGroups(groups, container){
 		    	document.getElementById('open-right').click();
 	            e.dataTransfer.setData('text', e.target.getAttribute("data-id"));
 	            dragElement = "group";
+	            addClasses(document.querySelectorAll(".drop-element"), "active");
 	        };
+	        elem.ondragend = function(e){	    	
+		    	e.preventDefault();
+		    	dragElement = "";		    	
+				removeClasses(document.querySelectorAll(".drop-element"), "active");
+		    }
 
 			container.appendChild(elem);
 		    

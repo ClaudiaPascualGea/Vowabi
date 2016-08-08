@@ -2395,7 +2395,7 @@ body.fixed .content {
   width: 100%;
   left: 0;
   margin-top: -25px;
-  z-index: 2;
+  z-index: -1;
   display: -webkit-box;
   /* OLD - iOS 6-, Safari 3.1-6, BB7 */
   display: -ms-flexbox;
@@ -2425,6 +2425,13 @@ body.fixed .content {
   transition: border-color 0.3s ease-in-out;
   border: 2px dashed;
   border-color: transparent;
+  /* 		&:last-child{
+			margin-top: -50px;
+		} */
+}
+
+#projectContainer .drop-element.active {
+  z-index: 2;
 }
 
 #projectContainer .drop-element:before {
@@ -2454,10 +2461,6 @@ body.fixed .content {
   transform: scale(1.1);
 }
 
-#projectContainer .drop-element:last-child {
-  margin-top: -50px;
-}
-
 #projectContainer .drop-element:first-child {
   margin-top: 0;
 }
@@ -2466,7 +2469,7 @@ body.fixed .content {
   text-shadow: -1px -1px 0 rgba(133, 125, 255, 0.5), 1px -1px 0 rgba(133, 125, 255, 0.5), -1px 1px 0 rgba(133, 125, 255, 0.5), 1px 1px 0 rgba(133, 125, 255, 0.5);
 }
 
-#projectContainer section.project-element.over, #projectContainer section.project-element-parent.over, #projectContainer div.project-element.over, #projectContainer div.project-element-parent.over, #projectContainer button.project-element.over, #projectContainer button.project-element-parent.over {
+#projectContainer section.project-element.over, #projectContainer section.project-element-parent.over, #projectContainer div.project-element.over, #projectContainer div.project-element-parent.over, #projectContainer button.project-element.over, #projectContainer button.project-element-parent.over, #projectContainer header.project-element.over, #projectContainer header.project-element-parent.over {
   box-shadow: inset 0 0 0 3px #857dff;
 }
 

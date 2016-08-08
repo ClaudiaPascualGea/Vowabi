@@ -164,7 +164,7 @@ function createDropElement(orden){
     };
     elem_drop.ondragleave = function(e){
     	e.preventDefault();
-		removeClass(e.target, "over");
+		removeClass(e.target, "over");		
     }
 
     return elem_drop;
@@ -440,9 +440,16 @@ function listGroups(groups, container){
 		    elem.setAttribute('draggable','true');
 		    elem.ondragstart = function(e){
 		    	document.getElementById('open-right').click();
+	            dragElement = "group";	            
+	            addClasses(document.querySelectorAll(".drop-element"), "active");
 	            e.dataTransfer.setData('text', e.target.getAttribute("data-id"));
-	            dragElement = "group";
 	        };
+	        elem.ondragend = function(e){	    	
+		    	e.preventDefault();
+		    	dragElement = "";
+		    	 console.log("finalizaa");
+				removeClasses(document.querySelectorAll(".drop-element"), "active");
+		    }
 
 			container.appendChild(elem);
 		    

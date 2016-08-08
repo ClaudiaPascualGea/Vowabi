@@ -22,6 +22,7 @@ function addTextBar(){
   }
   var top = childOffset.top - 30;
   textBar.style.top = top + "px";
+  textBar.style.width = "100vw";
 
   var id = element.id;
   var idelement = id.replace("el-", "");
@@ -213,9 +214,10 @@ function listFonts(currentValue){
   var l = fonts.length;
   var r, s = '';
 
-  currentValue = currentValue.replace(":400", "");
-  currentValue = currentValue.replace(":bold", "");
-    
+  currentValue = currentValue.replace(":bold", ":400");
+  if(currentValue.indexOf(":") == -1)
+    currentValue += ":400";
+
   for(var i=0; i<l; i++){
       r = fonts[i].replace(/[\+|:]/g, ' ');
       var t = fonts[i].split(':');
@@ -226,10 +228,10 @@ function listFonts(currentValue){
       
       var cl = "";
 
-      if(currentValue.indexOf(":") != -1)
-        var junto = s['font-family'] + ":" + s['font-weight'];
-      else
-        var junto = s['font-family'];
+      // if(currentValue.indexOf(":") != -1)
+      var junto = s['font-family'] + ":" + s['font-weight'];
+      // else
+      //   var junto = s['font-family'];
 
       if(currentValue == junto )
         cl = "selected";
@@ -433,6 +435,7 @@ var fonts = [
       "Quattrocento",
       "Quattrocento+Sans",
       "Radley",
+      "Raleway",
       "Raleway:100",
       "Redressed",
       "Rock+Salt",
