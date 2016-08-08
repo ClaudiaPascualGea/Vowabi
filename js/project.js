@@ -208,14 +208,15 @@ function pintarHijos(hijos, padre){
 		var idHijo = "el-" + elem["id"];
 		var hijo = createHTMLElement(elem["HTML"]);
 
-		if(hijo.tagName == "IMG"){
-			hijo.style.cursor = "pointer";
-			hijo.addEventListener("click", changeSRC, false);
-		}
 
 		hijo.id = idHijo;
 		hijo.setAttribute("data-order", elem["Orden"]);
 		hijo.className = "project-element";
+
+		if(hijo.tagName == "IMG"){
+			hijo.style.cursor = "pointer";
+			hijo.addEventListener("click", changeSRC, false);
+		}
 
 		if(elem["CSS"])
 			setCSS(elem["CSS"], idHijo);						

@@ -18,8 +18,8 @@
                     <span class="userName"></span>
                 </div>
                 <div class="right">
-                    <button class="btn btn-icon btn-small btn-primary button1" onclick="closeProject()"><i class="icon-left-open"></i><span>Volver</span></button>
-                    <button class="btn btn-icon btn-small btn-primary button1 logout" onclick="logout()"><i class="icon-logout"></i><span>Cerrar sesión</span></button>
+                    <button class="btn btn-small btn-primary button1 tooltip" data-title="Volver a Dashboard" onclick="closeProject()"><i class="icon-left-open"></i></button>
+                    <button class="btn btn-small btn-primary button1 logout tooltip tooltip-right" data-title="Cerrar sesión" onclick="logout()"><i class="icon-logout"></i></button>
                 </div>
             </header>
 
