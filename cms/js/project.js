@@ -107,7 +107,7 @@ function getProject(){
 		xhr.send();
 	}
 	else
-		location.href="dashboard.php";
+		location.href="dashboard";
 }
 
 
@@ -770,7 +770,7 @@ function deParse(obj){
 
 function closeProject(){
 	sessionStorage.removeItem("idProject");
-	location.href="dashboard.php";	
+	location.href="dashboard";	
 }
 
 //Menu colores

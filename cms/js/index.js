@@ -17,7 +17,7 @@ xhr.open('POST', url, true);
 				sessionStorage.usuario = o.email;
 				sessionStorage.clave = o.clave;
 				console.log(sessionStorage);
-				location.href="dashboard.php";
+				location.href="dashboard";
 			}else{
 				$(".js-login-container .js-error").html(o.descripcion);
 				$(".js-login-container .js-error").css("height", "20px");

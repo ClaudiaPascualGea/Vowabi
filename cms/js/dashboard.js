@@ -281,7 +281,7 @@ function createGroup(form){
 
 function editGroup(idGroup){
 	sessionStorage.setItem('idGroup', idGroup);
-	window.location.href = "grupo.php";
+	window.location.href = "grupo";
 }
 
 /****** END DASHBOARD *******/

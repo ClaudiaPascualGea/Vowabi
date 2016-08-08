@@ -76,7 +76,7 @@ function getGroup(){
 
 	}
 	else
-		location.href="dashboard.php";
+		location.href="dashboard";
 }
 
 function uploadFile(file, filename){
@@ -118,5 +118,5 @@ function uploadFile(file, filename){
 
 function closeGroup(){
 	sessionStorage.removeItem("idProject");
-	location.href="dashboard.php";	
+	location.href="dashboard";	
 }

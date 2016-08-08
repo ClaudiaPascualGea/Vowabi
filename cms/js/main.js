@@ -25,12 +25,12 @@ function checkLogin(){
     //Si esta logeado
     if(sessionStorage.usuario != undefined){
         if(pagina =='')
-            location.href="dashboard.php";
+            location.href="dashboard";
     }
     //No esta logeado
     else{
-        if(pagina !='index.php')
-            location.href="index.php";
+        if(pagina !='index')
+            location.href="index";
             
     }
 }
@@ -39,7 +39,7 @@ function logout(){
     sessionStorage.removeItem("usuario");
     sessionStorage.removeItem("clave");
     sessionStorage.removeItem("idUsuario");
-    location.href="index.php";
+    location.href="index";
 }
 
 
