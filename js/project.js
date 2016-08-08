@@ -64,10 +64,10 @@ function getProject(){
 						setCSS(CSS, id);
 
 					if(CSS_768)
-						setCSSWidth(CSS_768, idHijo, "768");	
+						setCSSWidth(CSS_768, id, "768");	
 
 					if(CSS_1024)
-						setCSSWidth(CSS_1024, idHijo, "1024");				
+						setCSSWidth(CSS_1024, id, "1024");				
 
 					var element_tools = createElementTools();
 					padre.appendChild(element_tools);
@@ -749,10 +749,10 @@ function addGroupElements(elements){
 					setCSS(CSS, id);
 
 				if(CSS_768)
-					setCSSWidth(CSS_768, idHijo, "768");	
+					setCSSWidth(CSS_768, id, "768");	
 
 				if(CSS_1024)
-					setCSSWidth(CSS_1024, idHijo, "1024");				
+					setCSSWidth(CSS_1024, id, "1024");				
 
 				var element_tools = createElementTools();
 				padre.appendChild(element_tools);

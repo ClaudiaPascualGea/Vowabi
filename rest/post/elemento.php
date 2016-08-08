@@ -137,8 +137,9 @@ else if($idproject != "" && $idgroup && $idgroup != "" && $order != ""){
           else{
             $orden = $row["Orden"];         
             if($idAnterior == $row["idPadre"])
-              $idPadre = $idAnteriorI;                        
+              $idPadre = $idAnterrioInsertado;                        
           }
+
 
 
           //COPIAMOS EL ELEMENTO EN ELEMENTO_USU        
@@ -150,17 +151,15 @@ else if($idproject != "" && $idgroup && $idgroup != "" && $order != ""){
           if( $res2 = mysqli_query( $link, $mysql_elemento ) ) {
           
             $id = mysqli_insert_id($link);
+
             if(!$row["idPadre"]){
               $idPadre = $id;
             }
             
-            if($idAnterior == $row["idPadre"]){
-              $idAnteriorI = $id;
-            }
             $idAnterior = $row["id"];
+            $idAnterrioInsertado = $id;
             
-            
-            
+                        
             //COPIAMOS EL HTML, CSS Y JS DEL ELEMENTO
             $mysql_html  = 'insert into html_usu (idElemento_usu, HTML) values(';
             $mysql_html .=  $id . ', "' . mysqli_real_escape_string($link, $row["HTML"]) . '"); ';
@@ -193,10 +192,9 @@ else if($idproject != "" && $idgroup && $idgroup != "" && $order != ""){
             $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido crear el elemento');
             mysqli_query($link, "ROLLBACK");
           }
-
+          
           mysqli_query($link, "COMMIT");
         }
-
         mysqli_free_result( $res );
     }
 
