@@ -2294,24 +2294,7 @@ body.fixed .content {
   margin-left: 0;
 }
 
-.project .userBar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-  height: 60px;
-}
-
-.project .loader {
-  margin-top: calc( 60px + 40px);
-}
-
 /* Project container */
-#projectContainer {
-  margin-top: 60px;
-}
-
 #projectContainer .element-tools {
   position: absolute;
   right: 0;

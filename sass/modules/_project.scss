@@ -1,24 +1,5 @@
-$userBar: 60px;
-
-.project{
-	.userBar{
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		z-index: 10;
-		height: $userBar;
-	}
-
-	.loader{
-		margin-top: calc( #{$userBar} + 40px)
-	}
-}
-
 /* Project container */
 #projectContainer{
-	margin-top: $userBar;
-
 	.element-tools{
 		position: absolute;
 		right: 0;

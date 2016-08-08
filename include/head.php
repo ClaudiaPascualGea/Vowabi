@@ -10,6 +10,9 @@
 
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato">
 
+<script src="js/lib/FileSaver.js"></script>
+<script src="js/lib/jszip.min.js"></script>
+
 <script src="js/lib/sweetalert-master/sweetalert.min.js"></script>
 <link rel="stylesheet" type="text/css" href="js/lib/sweetalert-master/sweetalert.css">
 

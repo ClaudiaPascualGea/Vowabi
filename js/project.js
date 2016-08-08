@@ -50,12 +50,7 @@ function getProject(){
 			var padre;				
 
 			for(var i=0; i< proyecto.length; i++){
-				with(proyecto[i]){
-
-					//Buscamos si su padre esta pintado
-					var elemento = [];
-					padre = document.getElementById("el-"+idPadre);
-				
+				with(proyecto[i]){	
 
 					var id = "el-" + id;
 					var padre = createHTMLElement(HTML);
