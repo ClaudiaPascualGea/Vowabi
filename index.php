@@ -27,7 +27,8 @@
                 <img class="logo" src="img/logo.png" alt="Vowabi">
                 <h1 class="title">Vowabi</h1>
                 <h2 class="text">Construye de manera sencilla y dinámica tu propia web con Vowabi.</h2>
-  
+                
+                
 
                 <ul class="tabs js-tabs">
                     <li class="active" data-tab="1">Login</li>

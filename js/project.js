@@ -17,7 +17,7 @@ var cssDOM = [];
 var cssDOM768 = [];
 var cssDOM1024 = [];
 var loader = '<div class="loader"><span class="dot dot_1"></span><span class="dot dot_2"></span><span class="dot dot_3"></span><span class="dot dot_4"></span></div>';
-var bigLoader2 = '<section class="spinner-2"><div class="spinner"></div><p>Añadiendo...</p></section>';
+var bigLoader2 = '<div class="spinner_2"><div class="spinner"></div><p>Añadiendo...</p></div>';
 
 function getProject(){
 
@@ -684,6 +684,14 @@ function listGroups(groups, container){
 	}
 }
 
+function addLoader(){
+	var div = document.createElement("div");
+	div.className = "spinner_2";
+	div.innerHTML += '<div class="spinner"></div><p>Añadiendo...</p>';
+	document.querySelector("body").appendChild(div);
+}
+
+
 /**
 Añade el grupo de elementos seleccionado al proyecto
 Recibe el id del grupo y el orden del padre
@@ -699,7 +707,7 @@ function addGroup(idgroup, order){
 		var params = '';
 		xhr.open('POST', url, true);
 
-		document.getElementById("projectContainer").innerHTML += bigLoader2;
+		addLoader();
 
 		xhr.onload = function(){	
 
@@ -795,7 +803,7 @@ function addGroupElements(elements){
 			enableContentEditable(padre);
 	}
 
-	document.getElementById("projectContainer").removeChild(document.querySelector(".spinner-2"));
+	document.querySelector("body").removeChild(document.querySelector(".spinner_2"));
 	$("body").getNiceScroll().resize();			
 }
 

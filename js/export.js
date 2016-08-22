@@ -2,11 +2,15 @@ var doc;
 var filename;
 var zip;
 var img;
-var bigLoader = '<section class="spinner-2"><div class="spinner"></div><p>Exportando...</p></section>';
+var bigLoader = '<section class="spinner_2"><div class="spinner"></div><p>Exportando...</p></section>';
 
 function exportProject(){
 
-	document.getElementById("projectContainer").innerHTML += bigLoader;
+	var div = document.createElement("div");
+	div.className = "spinner_2";
+	div.innerHTML += '<div class="spinner"></div><p>Exportando...</p>';
+	document.querySelector("body").appendChild(div);
+
 	addClass(document.body, "fixed");
 
 	zip = new JSZip();
@@ -91,7 +95,7 @@ function getExportProject(){
 					saveAs(content, "VowabiProject.zip");
 				});
 
-			document.getElementById("projectContainer").removeChild(document.querySelector(".spinner-2"));
+			document.querySelector("body").removeChild(document.querySelector(".spinner_2"));
 			removeClass(document.body, "fixed");
 
 		};
