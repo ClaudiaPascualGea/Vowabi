@@ -17,6 +17,7 @@ var cssDOM = [];
 var cssDOM768 = [];
 var cssDOM1024 = [];
 var loader = '<div class="loader"><span class="dot dot_1"></span><span class="dot dot_2"></span><span class="dot dot_3"></span><span class="dot dot_4"></span></div>';
+var bigLoader2 = '<section class="spinner-2"><div class="spinner"></div><p>Añadiendo...</p></section>';
 
 function getProject(){
 
@@ -139,7 +140,6 @@ function getProject_old(){
 						padre.id = id;
 						padre.setAttribute("data-order", op);
 						padre.className = "project-element-parent";	
-						console.log(padre);
 
 						if(CSS)
 							setCSS(CSS, id);
@@ -562,10 +562,12 @@ function removeElement(element){
 /**
 Cambia el orden de los elementos mayores que order tras un borrado (type=0) o tras anyadir un elemento (type=1)
 **/
-function resetOrder(order, type){
+function resetOrder(order, type, id){
 	var elements = document.querySelectorAll("#projectContainer .project-element-parent");
+
 	for(var i=0; i< elements.length; i++){
 		var elemOrder = elements[i].getAttribute("data-order");
+		var elemId = elements[i].id;
 		if(elemOrder > order){
 			if(type == 0){ //Tras el borrado
 				elements[i].setAttribute("data-order", parseInt(elemOrder)-1);
@@ -697,12 +699,14 @@ function addGroup(idgroup, order){
 		var params = '';
 		xhr.open('POST', url, true);
 
+		document.getElementById("projectContainer").innerHTML += bigLoader2;
+
 		xhr.onload = function(){	
 
 			o = JSON.parse(this.responseText);	
-			console.log(o);
+			//console.log(o);
 			if(o.resultado == 'ok'){							
-				//getProject();		
+				//getProject();										
 				addGroupElements(o.elements);
 				if( hasClass( document.querySelector(".menu-right") ,"active") )
 					document.getElementById('open-right').click();			
@@ -736,8 +740,72 @@ function addGroupElements(elements){
 
 	var projectElements = document.querySelectorAll("#projectContainer .project-element-parent").length;
 
+	with(elements[0]){
+		var id = "el-" + id;
+		var padre = createHTMLElement(HTML);
+		padre.id = id;
+		padre.setAttribute("data-order", parseInt(order) );
+		padre.className = "project-element-parent";	
+
+		if(CSS)
+			setCSS(CSS, id);
+
+		if(CSS_768)
+			setCSSWidth(CSS_768, id, "768");	
+
+		if(CSS_1024)
+			setCSSWidth(CSS_1024, id, "1024");				
+
+		var element_tools = createElementTools();
+		padre.appendChild(element_tools);
+		var ordenPadre = order;
+
+		resetOrder(order-1, 1);
+
+		var orderSibling = parseInt(order);
+
+		if(order < projectElements){
+			var orderSibling = parseInt(order) + 1;
+			var elemDrop =  document.querySelector("#projectContainer .drop-element[data-order='"+(orderSibling)+"']");	
+			document.getElementById("projectContainer").insertBefore(padre, elemDrop); 		
+		}else{
+			document.getElementById("projectContainer").appendChild(padre);
+		}
+
+		createDropColorElement(padre);
+
+		//Element drop			
+		if(order < projectElements){   
+			var elem_drop = createDropElement(ordenPadre);		
+	    	padre.parentNode.insertBefore(elem_drop, padre);
+	    }else{
+	    	var elem_drop = createDropElement( parseInt(ordenPadre) + 1);	
+	    	document.getElementById("projectContainer").appendChild(elem_drop);
+	    }
+
+	    var overDrop = document.querySelector("#projectContainer .drop-element.over");
+	    if(overDrop)
+	    	removeClass(overDrop, "over");
+
+
+	    if(hijos && hijos.length > 0)
+	    	pintarHijos(hijos, padre);	
+
+		if(ContentEditable == 1 && padre)
+			enableContentEditable(padre);
+	}
+
+	document.getElementById("projectContainer").removeChild(document.querySelector(".spinner-2"));
+	$("body").getNiceScroll().resize();			
+}
+
+function addGroupElements2(elements){
+
+	var projectElements = document.querySelectorAll("#projectContainer .project-element-parent").length;
+
 	var padre;				
 	for(var i=0; i< elements.length; i++){
+
 		with(elements[i]){
 
 			//Buscamos si su padre esta pintado

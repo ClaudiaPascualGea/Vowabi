@@ -99,7 +99,9 @@ function createDropColorElement(elem){
 
 	        var back = cssDOM[id]["general"]["background-color"];
 
-	        if(back != undefined)
+	        var elem = document.getElementById(id);
+
+	        if(hasClass(elem, "project-element-parent") || back != undefined)
 	        	changeCSS("background-color", color, idelement);		  
 	        else
 	        	changeCSS("color", color, idelement);

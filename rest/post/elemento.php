@@ -102,100 +102,51 @@ else if($idproject != "" && $idgroup && $idgroup != "" && $order != ""){
                 JOIN grupo_elemento ge ON ge.idGrupo=g.id AND ge.idElemento=e.id
               order by ge.idPadre, ge.Orden;';
 
-    //SELECCIONAMOS LOS ELEMENTOS DEL GRUPO
-    if( strlen($mysql)>0 && $res = mysqli_query( $link, $mysql ) )
+    //Primero hacemos la consulta y formateamos el resultado
+    if( strlen($mysql)>0 && count($R)==0 && $res = mysqli_query( $link, $mysql ) )
     {
-        $elements = array();
-        $cont = 0;
-        $idAnterior = "";
-        $idsInsertados = array();
-
-        while( $row = mysqli_fetch_assoc( $res ) ){
+        while( $row = mysqli_fetch_assoc( $res ) )
           $R[] = $row;
-          //row: grupo, id, Nombre, idPadre, idGrupo_elemento, Orden, HTML, CSS, JS
-
-          //En caso de que sea el padre del contenedor
-          if(!$row["idPadre"]){ 
-            $orden = $order;
-            $idPadre = "NULL";
-            //Comprobamos si hay que hacer reajuste de orden
-            //Si hay padres con orden mayor o igual al actual, les sumamos una unidad al orden
-            $mysql_orden = 'select * from elemento_usu WHERE idPadre IS NULL AND idProyecto = '.$idproject.' AND Orden >='.$orden.';';
-            $res_orden = mysqli_query( $link, $mysql_orden );
-            if($res_orden){
-              while( $row_orden = mysqli_fetch_assoc( $res_orden ) ){
-                $mysql_updateOrden  = 'update elemento_usu set Orden = "'. ($row_orden["Orden"]+1) .'" where id = '. $row_orden["id"];
-                mysqli_query( $link, $mysql_updateOrden);      
-                if(!$mysql_updateOrden){
-                  $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido modificar el orden del otro elemento');
-                  mysqli_query($link, "ROLLBACK");
-                }     
-              }
-            }
-
-          }
-          //En caso de que sea algun hijo
-          else{
-            $orden = $row["Orden"];                         
-            $idPadre = $idsInsertados[$row["idPadre"]];
-          }
-
-
-
-          //COPIAMOS EL ELEMENTO EN ELEMENTO_USU        
-          mysqli_query($link, 'BEGIN');
-
-          $mysql_elemento  = 'insert into elemento_usu (idProyecto, Nombre, Orden, idPadre, ContentEditable) values("';
-          $mysql_elemento .=  $idproject . '","' . $row["Nombre"] . '","' . $orden .  '", ' . $idPadre . ' , '. $row["ContentEditable"] . '); ';
-          
-          if( $res2 = mysqli_query( $link, $mysql_elemento ) ) {
-          
-            $id = mysqli_insert_id($link);
-
-            if(!$row["idPadre"]){
-              $idPadre = $id;
-            }
-
-            $idsInsertados[$row["id"]] = $id;
-            
-                        
-            //COPIAMOS EL HTML, CSS Y JS DEL ELEMENTO
-            $mysql_html  = 'insert into html_usu (idElemento_usu, HTML) values(';
-            $mysql_html .=  $id . ', "' . mysqli_real_escape_string($link, $row["HTML"]) . '"); ';
-
-            $mysql_js  = ' insert into js_usu (idElemento_usu, JS) values(';
-            $mysql_js .=  $id . ', "' . $row["JS"] . '" ); ';
-
-            $mysql_css  = 'insert into css_usu (idElemento_usu, CSS, CSS_768, CSS_1024) values(';
-            $mysql_css .=  $id . ', "' . mysqli_real_escape_string($link, $row["CSS"]) . '", "' . mysqli_real_escape_string($link, $row["CSS_768"]) . '", "' . mysqli_real_escape_string($link, $row["CSS_1024"]) . '"); ';
-           
-
-            //echo $mysql_content;
-            if( $res_html = mysqli_query( $link, $mysql_html ) && 
-                $res_js = mysqli_query( $link, $mysql_js ) &&
-                $res_css = mysqli_query( $link, $mysql_css )
-            ) {
-              $elements[$cont] = array("idElemento"=>$id, "HTML"=>$row["HTML"], "idPadre"=>$idPadre, "CSS"=>$row["CSS"], "CSS_768"=>$row["CSS_768"], "CSS_1024"=> $row["CSS_1024"], "JS"=>$row["JS"], "order"=>$orden, "ContentEditable"=>$row["ContentEditable"]);
-              $cont++;
-              $R = array('resultado' => 'ok', "elements"=>$elements);
-            }else{
-              print_r($mysql_elemento);
-              print_r($mysql_css);
-              print_r($mysql_html);
-              $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido copiar el contenido del elemento.');
-              mysqli_query($link, "ROLLBACK");
-            }
-
-          }else{
-
-            $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido crear el elemento');
-            mysqli_query($link, "ROLLBACK");
-          }
-          
-          mysqli_query($link, "COMMIT");
-        }
         mysqli_free_result( $res );
     }
+
+    $elementos = array();
+    $ids = array();
+    $cont = 0;
+
+    foreach ($R as $elemento) {
+      $hijos = getHijos($elemento, $R);
+      if(count($hijos)>0 && !$elemento["idPadre"]){
+        $elementos[$cont] = $elemento;
+        $elementos[$cont]["hijos"] = $hijos;
+        $cont++;
+      }
+    }
+
+    $resultado = array();
+    $cont = 0;
+
+    //Recorremos los elementos y los insertamos como elementos_usu
+    foreach ($elementos as $elemento) {
+      
+      resetOrder($idproject, $order, $link);
+
+      //Insertamos el padre
+      $idPadre = "NULL";
+      $mysql_elemento  = 'insert into elemento_usu (idProyecto, Nombre, Orden, idPadre, ContentEditable) values("';
+      $mysql_elemento .=  $idproject . '","' . $elemento["Nombre"] . '","' . $order .  '", ' . $idPadre . ' , '. $elemento["ContentEditable"] . '); ';
+      
+      if( $res2 = mysqli_query( $link, $mysql_elemento ) ) {
+
+        $id = mysqli_insert_id($link);
+        $resultado[0] = insertContent($id, $elemento, $link, $id, $order);            
+
+        if(isset($elemento["hijos"]) && count($elemento["hijos"] > 0))
+          $resultado[0]["hijos"] = pintarHijos($elemento["hijos"], $id, $idproject, $link);
+      }
+    }
+
+    $R = array('resultado' => 'ok', 'elements' => $resultado);
 
 
   } catch(Exception $e){
@@ -385,6 +336,7 @@ else if($PARAMS['idproject']=='' || $PARAMS['idgroup']=='')
   $RESPONSE_CODE = 401;
   $R = array('resultado' => 'error', 'descripcion' => 'Parámetros incorrectos.');
 }
+
 //Aqui iria la creacion de un elemento individual
 /*else
 {
@@ -392,6 +344,87 @@ else if($PARAMS['idproject']=='' || $PARAMS['idgroup']=='')
   
 
 }*/
+
+// =================================================================================
+// FUNCIONES
+// =================================================================================
+function getHijos($el, $R){
+  $hijos = array();
+  $cont = 0;
+  foreach ($R as $element) {    
+    if($element["idPadre"]==$el["id"]){
+      $hijos[$cont] = $element;
+      $hijos2 = getHijos($element, $R);
+      if(count($hijos2)>0)
+        $hijos[$cont]["hijos"] = $hijos2;
+      $cont++;
+    }
+  }
+  return $hijos;
+}
+
+//Comprobamos si hay que hacer reajuste de orden, Si hay padres con orden mayor o igual al actual, les sumamos una unidad al orden
+function resetOrder($idproject, $order, $link){
+  $mysql_orden = 'select * from elemento_usu WHERE idPadre IS NULL AND idProyecto = '.$idproject.' AND Orden >='.$order.';';
+      $res_orden = mysqli_query( $link, $mysql_orden );
+      if($res_orden){
+        while( $row_orden = mysqli_fetch_assoc( $res_orden ) ){
+          $mysql_updateOrden  = 'update elemento_usu set Orden = "'. ($row_orden["Orden"]+1) .'" where id = '. $row_orden["id"];
+          mysqli_query( $link, $mysql_updateOrden);      
+          if(!$mysql_updateOrden){
+            $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido modificar el orden del otro elemento');
+            mysqli_query($link, "ROLLBACK");
+          }     
+        }
+      }
+}
+
+function pintarHijos($elementos, $idPadre, $idproject, $link){
+  $resultado = array();
+  $cont = 0;
+
+  foreach ($elementos as $elemento) {
+
+    $mysql_elemento  = 'insert into elemento_usu (idProyecto, Nombre, Orden, idPadre, ContentEditable) values("';
+    $mysql_elemento .=  $idproject . '","' . $elemento["Nombre"] . '","' . $elemento["Orden"] .  '", ' . $idPadre . ' , '. $elemento["ContentEditable"] . '); ';
+    
+    if( $res2 = mysqli_query( $link, $mysql_elemento ) ) {
+
+      $id = mysqli_insert_id($link);
+      $resultado[$cont] = insertContent($id, $elemento, $link, $idPadre, $elemento["Orden"]);      
+
+      if(isset($elemento["hijos"]) && count($elemento["hijos"] > 0))
+        $resultado[$cont]["hijos"] = pintarHijos($elemento["hijos"], $id, $idproject, $link);
+
+      $cont++;      
+    }
+  }
+
+  return $resultado;
+}
+
+function insertContent($id, $elemento, $link, $idpadre, $order){
+  //COPIAMOS EL HTML, CSS Y JS DEL ELEMENTO
+  $mysql_html  = 'insert into html_usu (idElemento_usu, HTML) values(';
+  $mysql_html .=  $id . ', "' . mysqli_real_escape_string($link, $elemento["HTML"]) . '"); ';
+
+  $mysql_js  = ' insert into js_usu (idElemento_usu, JS) values(';
+  $mysql_js .=  $id . ', "' . $elemento["JS"] . '" ); ';
+
+  $mysql_css  = 'insert into css_usu (idElemento_usu, CSS, CSS_768, CSS_1024) values(';
+  $mysql_css .=  $id . ', "' . mysqli_real_escape_string($link, $elemento["CSS"]) . '", "' . mysqli_real_escape_string($link, $elemento["CSS_768"]) . '", "' . mysqli_real_escape_string($link, $elemento["CSS_1024"]) . '"); ';
+ 
+
+  //echo $mysql_content;
+  if( $res_html = mysqli_query( $link, $mysql_html ) && 
+      $res_js = mysqli_query( $link, $mysql_js ) &&
+      $res_css = mysqli_query( $link, $mysql_css )
+  ) {
+    return array("id"=>$id, "HTML"=>$elemento["HTML"], "idPadre"=>$idpadre, "CSS"=>$elemento["CSS"], "CSS_768"=>$elemento["CSS_768"], "CSS_1024"=> $elemento["CSS_1024"], "JS"=>$elemento["JS"], "order"=>$order, "ContentEditable"=>$elemento["ContentEditable"]);
+  }
+
+}
+
 
 // =================================================================================
 // SE CIERRA LA CONEXION CON LA BD
@@ -411,4 +444,109 @@ catch (SomeException $ex) {
     print json_encode($rtn);
 }
 // =================================================================================
+?>
+
+
+<?php 
+/*OLD*/
+/*
+
+
+
+    //SELECCIONAMOS LOS ELEMENTOS DEL GRUPO
+    if( strlen($mysql)>0 && $res = mysqli_query( $link, $mysql ) )
+    {
+        $elements = array();
+        $cont = 0;
+        $idAnterior = "";
+        $idsInsertados = array();
+
+        while( $row = mysqli_fetch_assoc( $res ) ){
+          $R[] = $row;
+          //row: grupo, id, Nombre, idPadre, idGrupo_elemento, Orden, HTML, CSS, JS
+
+          //En caso de que sea el padre del contenedor
+          if(!$row["idPadre"]){ 
+            $orden = $order;
+            $idPadre = "NULL";
+
+            //Comprobamos si hay que hacer reajuste de orden
+            //Si hay padres con orden mayor o igual al actual, les sumamos una unidad al orden
+            $mysql_orden = 'select * from elemento_usu WHERE idPadre IS NULL AND idProyecto = '.$idproject.' AND Orden >='.$orden.';';
+            $res_orden = mysqli_query( $link, $mysql_orden );
+            if($res_orden){
+              while( $row_orden = mysqli_fetch_assoc( $res_orden ) ){
+                $mysql_updateOrden  = 'update elemento_usu set Orden = "'. ($row_orden["Orden"]+1) .'" where id = '. $row_orden["id"];
+                mysqli_query( $link, $mysql_updateOrden);      
+                if(!$mysql_updateOrden){
+                  $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido modificar el orden del otro elemento');
+                  mysqli_query($link, "ROLLBACK");
+                }     
+              }
+            }
+
+          }
+          //En caso de que sea algun hijo
+          else{
+            $orden = $row["Orden"];                         
+            $idPadre = $idsInsertados[$row["idPadre"]];
+          }
+
+
+
+          //COPIAMOS EL ELEMENTO EN ELEMENTO_USU        
+          mysqli_query($link, 'BEGIN');
+
+          $mysql_elemento  = 'insert into elemento_usu (idProyecto, Nombre, Orden, idPadre, ContentEditable) values("';
+          $mysql_elemento .=  $idproject . '","' . $row["Nombre"] . '","' . $orden .  '", ' . $idPadre . ' , '. $row["ContentEditable"] . '); ';
+          
+          if( $res2 = mysqli_query( $link, $mysql_elemento ) ) {
+          
+            $id = mysqli_insert_id($link);
+
+            if(!$row["idPadre"]){
+              $idPadre = $id;
+            }
+
+            $idsInsertados[$row["id"]] = $id;
+            
+                        
+            //COPIAMOS EL HTML, CSS Y JS DEL ELEMENTO
+            $mysql_html  = 'insert into html_usu (idElemento_usu, HTML) values(';
+            $mysql_html .=  $id . ', "' . mysqli_real_escape_string($link, $row["HTML"]) . '"); ';
+
+            $mysql_js  = ' insert into js_usu (idElemento_usu, JS) values(';
+            $mysql_js .=  $id . ', "' . $row["JS"] . '" ); ';
+
+            $mysql_css  = 'insert into css_usu (idElemento_usu, CSS, CSS_768, CSS_1024) values(';
+            $mysql_css .=  $id . ', "' . mysqli_real_escape_string($link, $row["CSS"]) . '", "' . mysqli_real_escape_string($link, $row["CSS_768"]) . '", "' . mysqli_real_escape_string($link, $row["CSS_1024"]) . '"); ';
+           
+
+            //echo $mysql_content;
+            if( $res_html = mysqli_query( $link, $mysql_html ) && 
+                $res_js = mysqli_query( $link, $mysql_js ) &&
+                $res_css = mysqli_query( $link, $mysql_css )
+            ) {
+              $elements[$cont] = array("idElemento"=>$id, "HTML"=>$row["HTML"], "idPadre"=>$idPadre, "CSS"=>$row["CSS"], "CSS_768"=>$row["CSS_768"], "CSS_1024"=> $row["CSS_1024"], "JS"=>$row["JS"], "order"=>$orden, "ContentEditable"=>$row["ContentEditable"]);
+              $cont++;
+              $R = array('resultado' => 'ok', "elements"=>$elements);
+            }else{
+              print_r($mysql_elemento);
+              print_r($mysql_css);
+              print_r($mysql_html);
+              $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido copiar el contenido del elemento.');
+              mysqli_query($link, "ROLLBACK");
+            }
+
+          }else{
+
+            $R = array('resultado' => 'error', 'descripcion' => 'No se ha podido crear el elemento');
+            mysqli_query($link, "ROLLBACK");
+          }
+          
+          mysqli_query($link, "COMMIT");
+        }
+        mysqli_free_result( $res );
+    }
+*/
 ?>
