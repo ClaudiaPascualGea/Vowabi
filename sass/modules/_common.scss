@@ -262,6 +262,7 @@ body.fixed{
 		&:after, &:before{
 			opacity: 1;
 			z-index: 98;
+			visibility: visible;
 		}
 	}
 }
@@ -282,6 +283,7 @@ body.fixed{
 	opacity: 0;
 	font-size: 12px;
 	@include trs(opacity 0.2s ease-in-out);
+	visibility: hidden;
 }
 
 
@@ -297,6 +299,7 @@ body.fixed{
 	z-index: 99;
 	opacity: 0;
 	@include trs(opacity 0.2s ease-in-out);
+	visibility: hidden;
 }
 
 

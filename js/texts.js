@@ -20,7 +20,7 @@ function addTextBar(){
       top: childPos.top - parentPos.top,
       left: childPos.left - parentPos.left
   }
-  var top = childOffset.top - 30;
+  var top = childOffset.top - 40;
   textBar.style.top = top + "px";
 
   var id = element.id;
