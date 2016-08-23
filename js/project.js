@@ -350,6 +350,11 @@ function uploadFile(file, filename, idelement){
 	var params = '';
 	xhr.open('POST', url, true);
 
+	var div = document.createElement("div");
+	div.className = "spinner_2";
+	div.innerHTML += '<div class="spinner"></div><p>Subiendo Foto...</p>';
+	document.querySelector("body").appendChild(div);
+
 	xhr.onload = function(){	
 			o = JSON.parse(this.responseText);	
 
@@ -357,7 +362,8 @@ function uploadFile(file, filename, idelement){
 				console.log(o);
 				var el = document.getElementById("el-"+idelement);
 				el.src = o.imagen;
-				changeHTML(el);			
+				changeHTML(el);		
+				document.querySelector("body").removeChild(document.querySelector(".spinner_2"));	
 			}else{
 				swal({
 					title: "Error", 
