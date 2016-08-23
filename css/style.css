@@ -3054,6 +3054,12 @@ body.fixed .content {
   vertical-align: middle;
 }
 
+.textBar .buttons-container {
+  display: inline-block;
+  width: auto;
+  white-space: nowrap;
+}
+
 .textBar .btn {
   background: #FFF;
   padding: 5px;
@@ -3069,11 +3075,10 @@ body.fixed .content {
 }
 
 .textBar .pre-select {
-  display: inline-block;
+  display: inline;
   margin-right: -5.5px;
   margin-left: 2.5px;
   padding: 5px;
-  padding-bottom: 6px;
   background: #FFF;
   color: #000;
   border-radius: 2px;

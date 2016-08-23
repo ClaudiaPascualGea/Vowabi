@@ -431,6 +431,12 @@ $tooltip: calc(-#{$menu-width});
   margin: auto;
   vertical-align: middle;
 
+  .buttons-container{
+  	display: inline-block;
+  	width: auto;
+  	white-space: nowrap;
+  }
+
   .btn{
   	background: #FFF;
     padding: 5px;
@@ -446,11 +452,10 @@ $tooltip: calc(-#{$menu-width});
   }
 
   .pre-select{
-    display: inline-block;
+    display: inline;
     margin-right: -5.5px;
     margin-left: 2.5px;
     padding: 5px;
-    padding-bottom: 6px;
     background: #FFF;
     color: #000;
     border-radius: 2px;

@@ -22,7 +22,6 @@ function addTextBar(){
   }
   var top = childOffset.top - 30;
   textBar.style.top = top + "px";
-  textBar.style.width = "100vw";
 
   var id = element.id;
   var idelement = id.replace("el-", "");
@@ -61,7 +60,8 @@ function removeTextBar(){
   setTimeout(function(){
     var activeElement = document.activeElement.parentNode;
     var parent = activeElement.parentNode.className;
-    if(textBar && textBar.parentNode && activeElement.className!="textBar" && parent!="textBar" ){
+    console.log(parent);
+    if(textBar && textBar.parentNode && activeElement.className!="textBar" && parent!="textBar" && parent!="buttons-container" ){
       textBar.parentNode.removeChild(textBar);
     }
   }, 100);
@@ -73,7 +73,7 @@ function createTextToolbar(element){
   var div = document.createElement("div");
   div.className = "textBar";
 
-  var html = "";
+  var html = "<div class='buttons-container'>";
 
   html += "   <button onclick='changeTextCss(this)' data-key='text-transform' data-value='uppercase' class='btn-small btn tooltip' data-title='Mayúsculas'>AA</button>";
 
@@ -86,7 +86,6 @@ function createTextToolbar(element){
   html += "   <button onclick='changeTextCss(this)' data-key='text-align' data-value='center' class='btn-small btn tooltip' data-title='Texto centrado'><i class='icon-align-center'></i></button>";
   html += "   <button onclick='changeTextCss(this)' data-key='text-align' data-value='right' class='btn-small btn tooltip' data-title='Texto a la derecha'><i class='icon-align-right'></i></button>";
   html += "   <button onclick='changeTextCss(this)' data-key='text-align' data-command='justifyFull' class='btn-small btn tooltip' data-title='Texto justificado'><i class='icon-align-justify'></i></button>";
-
   //Font size
   var fontSize = getStyle(element, 'font-size');
   var fs = fontSize.replace("px", "");
@@ -139,6 +138,7 @@ function createTextToolbar(element){
   html += "</div>";
 
 
+  html += "</div>";
 
   div.innerHTML = html;
  
