@@ -362,8 +362,7 @@ function uploadFile(file, filename, idelement){
 				console.log(o);
 				var el = document.getElementById("el-"+idelement);
 				el.src = o.imagen;
-				changeHTML(el);		
-				document.querySelector("body").removeChild(document.querySelector(".spinner_2"));	
+				changeHTML(el);						
 			}else{
 				swal({
 					title: "Error", 
@@ -408,6 +407,7 @@ function changeHTML(el){
 		xhr.onload = function(){	
 				o = JSON.parse(this.responseText);	
 				//console.log(o);
+				document.querySelector("body").removeChild(document.querySelector(".spinner_2"));	
 				if(o.resultado != 'ok'){												
 					swal({   
 						title: "¡Upps! Ha habido algún error",   
