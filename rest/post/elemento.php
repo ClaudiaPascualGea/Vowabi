@@ -195,7 +195,7 @@ else if($idproject != "" && $idelement != "" && $order != "" && $direction != ""
 
 }
 //Elimina el elemento indicado
-else if($idelement!='' && $delete!='' && $idproject!=''){
+else if($idelement!='' && $delete!='' && $idproject!='' && $order!=''){
     try{
         // ******** INICIO DE TRANSACCION **********
         mysqli_query($link, 'BEGIN');
@@ -204,14 +204,14 @@ else if($idelement!='' && $delete!='' && $idproject!=''){
         if( $res = mysqli_query( $link, $mysql ) )
         {
             //Reajustamos el orden del resto de elementos padre, empezando por el 0
-            $mysql_orden = 'select * from elemento_usu WHERE idPadre IS NULL Order By Orden AND idProyecto = '.$idproject.' AND id!='.$idelement.';';
+            $mysql_orden = 'select * from elemento_usu WHERE idPadre IS NULL AND Orden >'.$order.' AND idProyecto = '.$idproject.';';
             $res_orden = mysqli_query( $link, $mysql_orden );
             if($res_orden){
-                $orden = 0;
                 while( $row_orden = mysqli_fetch_assoc( $res_orden ) ){
+                    $orden = (int) $row_orden["Orden"] - 1;
                     $mysql_updateOrden  = 'update elemento_usu set Orden = "'. $orden .'" where id = '. $row_orden["id"];
-                    if($res_updateOrden = mysqli_query( $link, $mysql_updateOrden) )
-                        $orden++;
+                    if(!$res_updateOrden = mysqli_query( $link, $mysql_updateOrden) )
+                      $R = array('resultado' => 'error');
                 }
             }
             

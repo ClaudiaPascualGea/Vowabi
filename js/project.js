@@ -530,7 +530,7 @@ function removeElement(element){
 					//getProject();
 					elementProject.parentNode.removeChild(elementProject.previousSibling);
 					elementProject.parentNode.removeChild(elementProject);
-					$("body").getNiceScroll().resize();					
+					$("body").getNiceScroll().resize();				
 					resetOrder(order,0);
 
 					var numE = document.querySelectorAll("#projectContainer .project-element-parent").length;
@@ -549,7 +549,7 @@ function removeElement(element){
 					});
 				}
 		};
-		params = 'idproject='+ sessionStorage.getItem("idProject") + '&idelement='+idelement + '&delete='+true;
+		params = 'idproject='+ sessionStorage.getItem("idProject") + '&idelement='+idelement + '&order='+order + '&delete='+true;
 		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		xhr.setRequestHeader("Authorization", "Basic " + Base64.encode(sessionStorage.usuario + ":" + sessionStorage.clave));
 		xhr.send(params);
