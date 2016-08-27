@@ -398,6 +398,7 @@ $tooltip: calc(-#{$menu-width});
 	height: 100vh;
 	background: $background;
 	@include trs(transform 0.3s ease);
+	overflow-y: scroll;
 
 	ul{
 		opacity: 0;

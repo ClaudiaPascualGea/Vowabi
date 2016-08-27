@@ -83,8 +83,8 @@ function getExportProject(){
 					//document.getElementById("exportContainer").appendChild(padre); 
 					body.appendChild(padre); 
 
-					if(cssDOMExport[idHijo]["general"] && cssDOMExport[idHijo]["general"]["background-image"]){
-						var bi = cssDOMExport[idHijo]["general"]["background-image"];
+					if(cssDOMExport[id]["general"] && cssDOMExport[id]["general"]["background-image"]){
+						var bi = cssDOMExport[id]["general"]["background-image"];
 						var url = bi.replace("url(", "").replace(")","").replace(new RegExp("'", 'g'),"");
 						var aux = url.split('/');	
 						var name = aux[aux.length-1];

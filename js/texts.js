@@ -16,11 +16,14 @@ function addTextBar(){
 
   var childPos = element.getBoundingClientRect();
   var parentPos = element.parentNode.getBoundingClientRect();
+
   var childOffset = {
       top: childPos.top - parentPos.top,
       left: childPos.left - parentPos.left
   }
-  var top = childOffset.top - 40;
+
+  var top = childPos.top - 40;
+  textBar.style.position = "fixed";
   textBar.style.top = top + "px";
 
   var id = element.id;
@@ -52,6 +55,10 @@ function addTextBar(){
       selectFont(value, idelement);
   });
 
+  document.addEventListener("scroll", function(){
+    removeTextBar();
+  })
+
 }
 
 function removeTextBar(){
@@ -60,7 +67,7 @@ function removeTextBar(){
   setTimeout(function(){
     var activeElement = document.activeElement.parentNode;
     var parent = activeElement.parentNode.className;
-    console.log(parent);
+
     if(textBar && textBar.parentNode && activeElement.className!="textBar" && parent!="textBar" && parent!="buttons-container" ){
       textBar.parentNode.removeChild(textBar);
     }

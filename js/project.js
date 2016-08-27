@@ -1241,8 +1241,18 @@ function closeProject(){
 			removeClass( menuRight, 'active' );
 			removeClass( openright, 'active' );
 			removeClass( bodyEl, 'show-menu-right' );
+
 		}
 		else {
+			$('.menu-right').niceScroll({
+			    autohidemode: true,   
+			    cursorborderradius: '0px',
+			    cursorwidth: '5px',     
+			    cursorcolor: '#222c35',
+			    enablescrollonselection: false,
+			    nativeparentscrolling: false,
+			    spacebarenabled: false,
+			});
 			addClass( content, 'active' );
 			addClass( menuRight, 'active' );
 			addClass( openright, 'active' );
