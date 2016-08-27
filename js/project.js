@@ -61,8 +61,11 @@ function getProject(){
 					padre.setAttribute("data-order", Orden);
 					padre.className = "project-element-parent";	
 
-					if(CSS)
+					if(CSS){
 						setCSS(CSS, id);
+						if(cssDOM[id]["general"] && cssDOM[id]["general"]["background-image"])
+							console.log(cssDOM[id]["general"]);
+					}
 
 					if(CSS_768)
 						setCSSWidth(CSS_768, id, "768");	
@@ -219,8 +222,13 @@ function pintarHijos(hijos, padre){
 			hijo.addEventListener("click", changeSRC, false);
 		}
 
-		if(elem["CSS"])
+		if(elem["CSS"]){
 			setCSS(elem["CSS"], idHijo);	
+			if(cssDOM[idHijo]["general"] && cssDOM[idHijo]["general"]["background-image"]){
+				hijo.style.cursor = "pointer";
+				hijo.addEventListener("click", changeBackgroundImage, false);
+			}
+		}
 
 		if(elem["CSS_768"])
 			setCSSWidth(elem["CSS_768"], idHijo, "768");	
@@ -337,6 +345,15 @@ function changeSRC(){
 	inp.click();
 }
 
+function changeBackgroundImage(){
+	var id = this.id;
+	id = id.replace("el-", "");
+
+	var inp = document.getElementById("uploadFile");
+	inp.setAttribute("data-id", id);
+	inp.click();
+}
+
 
 function uploadFile(file, filename, idelement){
 
@@ -357,12 +374,16 @@ function uploadFile(file, filename, idelement){
 
 	xhr.onload = function(){	
 			o = JSON.parse(this.responseText);	
-
+			document.querySelector("body").removeChild(document.querySelector(".spinner_2"));	
 			if(o.resultado == 'ok'){				
 				console.log(o);
 				var el = document.getElementById("el-"+idelement);
-				el.src = o.imagen;
-				changeHTML(el);						
+				if(el.tagName == "IMG"){
+					el.src = o.imagen;
+					changeHTML(el);						
+				}else{
+					changeCSS("background-image", "url("+o.imagen+")", idelement);
+				}
 			}else{
 				swal({
 					title: "Error", 
@@ -406,8 +427,7 @@ function changeHTML(el){
 
 		xhr.onload = function(){	
 				o = JSON.parse(this.responseText);	
-				//console.log(o);
-				document.querySelector("body").removeChild(document.querySelector(".spinner_2"));	
+				//console.log(o);				
 				if(o.resultado != 'ok'){												
 					swal({   
 						title: "¡Upps! Ha habido algún error",   
