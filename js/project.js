@@ -63,8 +63,10 @@ function getProject(){
 
 					if(CSS){
 						setCSS(CSS, id);
-						if(cssDOM[id]["general"] && cssDOM[id]["general"]["background-image"])
-							console.log(cssDOM[id]["general"]);
+						if(cssDOM[id]["general"] && cssDOM[id]["general"]["background-image"]){
+							padre.style.cursor = "pointer";
+							padre.addEventListener("click", changeBackgroundImage, false);
+						}
 					}
 
 					if(CSS_768)
@@ -376,7 +378,7 @@ function uploadFile(file, filename, idelement){
 			o = JSON.parse(this.responseText);	
 			document.querySelector("body").removeChild(document.querySelector(".spinner_2"));	
 			if(o.resultado == 'ok'){				
-				console.log(o);
+				//console.log(o);
 				var el = document.getElementById("el-"+idelement);
 				if(el.tagName == "IMG"){
 					el.src = o.imagen;
@@ -551,7 +553,7 @@ function removeElement(element){
 
 		xhr.onload = function(){	
 				o = JSON.parse(this.responseText);	
-				console.log(o);
+				//console.log(o);
 				if(o.resultado == 'ok'){							
 					//getProject();
 					elementProject.parentNode.removeChild(elementProject.previousSibling);

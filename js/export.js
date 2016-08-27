@@ -2,6 +2,9 @@ var doc;
 var filename;
 var zip;
 var img;
+var cssDOMExport = [];
+var cssDOM768Export = [];
+var cssDOM1024Export = [];
 var bigLoader = '<section class="spinner_2"><div class="spinner"></div><p>Exportando...</p></section>';
 
 function exportProject(){
@@ -80,6 +83,17 @@ function getExportProject(){
 					//document.getElementById("exportContainer").appendChild(padre); 
 					body.appendChild(padre); 
 
+					if(cssDOMExport[idHijo]["general"] && cssDOMExport[idHijo]["general"]["background-image"]){
+						var bi = cssDOMExport[idHijo]["general"]["background-image"];
+						var url = bi.replace("url(", "").replace(")","").replace(new RegExp("'", 'g'),"");
+						var aux = url.split('/');	
+						var name = aux[aux.length-1];
+						var imageE = document.createElement("img");
+						imageE.src = url;
+						var image = getBase64Image(imageE);
+						img.file(name, image, {base64: true});
+					}
+
 					ordenPadres++;
 					
 				    if(hijos && hijos.length > 0)
@@ -132,7 +146,18 @@ function pintarHijosExport(hijos, padre){
 			img.file(name, image, {base64: true});
 		}
 
-		padre.appendChild(hijo);			
+		if(cssDOMExport[idHijo]["general"] && cssDOMExport[idHijo]["general"]["background-image"]){
+			var bi = cssDOMExport[idHijo]["general"]["background-image"];
+			var url = bi.replace("url(", "").replace(")","").replace(new RegExp("'", 'g'),"");
+			var aux = url.split('/');	
+			var name = aux[aux.length-1];
+			var imageE = document.createElement("img");
+			imageE.src = url;
+			var image = getBase64Image(imageE);
+			img.file(name, image, {base64: true});
+		}
+		padre.appendChild(hijo);		
+
 		
 		if(elem["hijos"] && elem["hijos"].length > 0)
 	    	pintarHijosExport(elem["hijos"], hijo);			
@@ -141,6 +166,7 @@ function pintarHijosExport(hijos, padre){
 
 function setCSSExport(CSS, id){
 
+	cssDOMExport[id] = parseCSS(CSS);
 	var css = '';
 	var v =  CSS.split('--');
 	for(var i=1; i<v.length; i=i+2){
@@ -158,6 +184,11 @@ function setCSSExport(CSS, id){
 }
 
 function setCSSWidthExport(CSS, id, width){
+
+	if(width == "768")
+		cssDOM768Export[id] = parseCSS(CSS);
+	else if(width == "1024")
+		cssDOM1024Export[id] = parseCSS(CSS);
 
 	var css = '';
 	var v =  CSS.split('--');
@@ -190,6 +221,7 @@ function getBase64Image(img) {
 
     return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
 }
+
 
 function prepareExportFonts(){
   for(var i=0; i<fonts.length; i++){
