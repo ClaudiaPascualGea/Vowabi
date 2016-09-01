@@ -6,6 +6,7 @@ var cssDOMExport = [];
 var cssDOM768Export = [];
 var cssDOM1024Export = [];
 var bigLoader = '<section class="spinner_2"><div class="spinner"></div><p>Exportando...</p></section>';
+var cssExport = "";
 
 function exportProject(){
 
@@ -20,7 +21,7 @@ function exportProject(){
 	img = zip.folder("uploads");
 
 	doc = document.implementation.createHTMLDocument("New Document");
-	fileName = "prueba.html";
+	//fileName = "prueba.html";
 
 	var headMeta = '<meta charset="UTF-8">';
 	headMeta += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
@@ -28,8 +29,15 @@ function exportProject(){
 
 	var style = doc.createElement("style");
 	style.id = "exportCSS";
-	doc.head.appendChild(style);
-	doc.getElementById("exportCSS").innerHTML += "body{margin:0;}";
+	//doc.head.appendChild(style);
+	cssExport += "body{margin:0;}";
+	//doc.getElementById("exportCSS").innerHTML += "body{margin:0;}";
+
+	var x = document.createElement("LINK");
+    x.setAttribute("rel", "stylesheet");
+    x.setAttribute("type", "text/css");
+    x.setAttribute("href", "style.css");
+    doc.head.appendChild(x);
 
 	prepareExportFonts();
 
@@ -104,6 +112,7 @@ function getExportProject(){
 			var html = doc.documentElement.outerHTML;
 
 			zip.file("index.html", html);
+			zip.file("style.css", cssExport);
 			zip.generateAsync({type:"blob"})
 				.then(function(content) {	
 					saveAs(content, "VowabiProject.zip");
@@ -184,7 +193,8 @@ function setCSSExport(CSS, id){
 		
 	}
 
-	doc.getElementById("exportCSS").innerHTML += css;
+	//doc.getElementById("exportCSS").innerHTML += css;
+	cssExport += css;
 }
 
 
@@ -212,7 +222,8 @@ function setCSSWidthExport(CSS, id, width){
 	}
 	css += "}";
 
-	doc.getElementById("exportCSS").innerHTML += css;
+	//doc.getElementById("exportCSS").innerHTML += css;
+	cssExport += css;
 }
 
 
