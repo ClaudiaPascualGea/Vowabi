@@ -1142,20 +1142,7 @@ function parseCSS(css){
 		
 		aux[v[i]] = v2;
 	}
-
 	return aux;
-	/*	
-	var v = css.split(';');
-	var aux = new Object();
-
-	v.forEach(function(e){
-		var regla = e.split(':');
-
-		if(regla[0].length > 0)
-			aux[regla[0].trim()] = regla[1].trim();
-	});
-
-	return aux; */
 }
 
 function deParse(obj){
