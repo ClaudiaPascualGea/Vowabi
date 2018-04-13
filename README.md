@@ -9,7 +9,7 @@ Autor: Claudia Pascual Gea
 Ofrecer un sistema a través del cual cualquier usuario, independientemente de sus conocimientos informáticos o su poder adquisitivo, pueda crear su propia página web de manera sencilla, dinámica y visual.
 
 ### Defensa del problema
-Este trabajo, por tanto, tanta de cubrir las siguientes necesidades principales:
+Vowabi trata de cubrir las siguientes necesidades principales:
 *  Unir a un mayor número de personas
 *  Facilitar la creación de páginas web
 *  Dar visibilidad global a los productos o servicios de cualquier persona que lo necesite
@@ -21,6 +21,7 @@ Para conseguir cubrir estas necesidades, este sistema se basa en cuatro principi
 *  Personalización
 *  Dinamismo
 *  Bajo coste
+
 En resumen, Vowabi trata de cubrir las necesidades profesionales y personales de cualquier perfil en el mundo online a un bajo coste.
 
 ## Implementación
